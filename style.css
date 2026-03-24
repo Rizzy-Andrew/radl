@@ -38,3 +38,11 @@ ol li {
   background-color: #fff;
   color: #000;
 }
+
+.info-box {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px auto;
+  width: 500px;
+}
