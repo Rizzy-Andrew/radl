@@ -171,7 +171,7 @@ h2 {
    LEVEL LIST
    ============================================ */
 ol {
-  list-style: decimal; /* removes default numbers */
+  list-style: none; /* removes default numbers */
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -190,7 +190,7 @@ ol li {
 
   /* transition smoothly animates changes */
   transition: border-color 0.2s, transform 0.2s;
-  counter-increment: list-counter; /* CSS counters - for custom numbering */
+   
 }
 
 ol li:hover {
