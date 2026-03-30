@@ -187,6 +187,7 @@ ol li {
   padding: 0; /* padding goes on the <a> instead so the whole row is clickable */
   margin-bottom: 0;
   list-style-type: none;
+     counter-increment: list-counter;
 
   /* transition smoothly animates changes */
   transition: border-color 0.2s, transform 0.2s;
@@ -232,7 +233,6 @@ ol {
 
 ol li::before {
   content: counter(list-counter);
-  counter-increment: list-counter;
   font-family: 'Bebas Neue', cursive;
   font-size: 20px;
   color: var(--text-muted);
