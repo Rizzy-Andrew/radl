@@ -237,7 +237,10 @@ ol li::before {
   color: var(--text-muted);
   min-width: 28px;
   text-align: center;
-  padding-left: 14px;
+  padding: 14px 0 14px 14px;  
+  align-self: stretch;         
+  display: flex;               
+  align-items: center;         
 }
 
 /* Top 3 rank numbers get special colors */
