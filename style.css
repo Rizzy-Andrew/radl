@@ -184,13 +184,13 @@ ol li {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 0; /* padding goes on the <a> instead so the whole row is clickable */
+  padding: 0;
   margin-bottom: 0;
   list-style-type: none;
-
-  /* transition smoothly animates changes */
   transition: border-color 0.2s, transform 0.2s;
-  counter-increment: list-counter; /* CSS counters - for custom numbering */
+  counter-increment: list-counter;
+  display: flex;
+  align-items: center;  
 }
 
 ol li:hover {
