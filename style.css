@@ -84,7 +84,7 @@ header {
 
 h1 {
   /* Bebas Neue is a tall, bold display font - great for titles */
-  font-family: 'Bebas Neue', cursive;
+  font-family: 'Shantell Sans', cursive;
   font-size: clamp(72px, 14vw, 130px); /* clamp(min, preferred, max) - scales with screen */
   letter-spacing: 10px;
   line-height: 1;
