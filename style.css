@@ -89,6 +89,7 @@ h1 {
   letter-spacing: 10px;
   line-height: 1;
   margin-bottom: 12px;
+   text-align: center;
 
   /* GRADIENT TEXT - one of the coolest CSS tricks
      1. Set the gradient as background
@@ -146,6 +147,7 @@ h2 {
   letter-spacing: 3px;
   color: var(--text);
   margin-top: 0; /* removing old margin-top */
+   text-align: center;
 }
 
 .section-count {
