@@ -1,48 +1,390 @@
+/* ============================================
+   RADL - Upgraded Stylesheet
+   
+   NEW CONCEPTS IN THIS FILE:
+   - Google Fonts (@import)
+   - CSS gradients (linear-gradient)
+   - box-shadow (drop shadows)
+   - CSS transitions (smooth hover animations)
+   - CSS variables (--var-name)
+   - Better flexbox layouts
+   ============================================ */
+
+/* GOOGLE FONTS
+   Instead of <link> in HTML, you can also import fonts directly in CSS.
+   @import must always be at the very top of your CSS file. */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Shantell+Sans:wght@500;600&display=swap');
+
+/* CSS VARIABLES
+   Define your colors once here, use them everywhere.
+   Change a color here and it updates the whole site instantly. */
+:root {
+  --bg: #0d0d1a;           /* main background - deep dark blue */
+  --surface: #16162a;      /* card background */
+  --border: #2a2a4a;       /* subtle borders */
+  --accent: #ff6b35;       /* orange - main color */
+  --accent2: #a855f7;      /* purple - secondary color */
+  --accent3: #22d3ee;      /* cyan - third color */
+  --text: #f0f0ff;         /* main text - slightly blue-white */
+  --text-muted: #8888aa;   /* dimmed text */
+}
+
+/* BASE RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-  background-color: #F2F2F2;
-  color: black;
+  background-color: var(--bg);
+  color: var(--text);
+
+  font-family: 'Shantell Sans', cursive;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+
+  /* text-align: center is removed from body - we'll control alignment per element */
+}
+
+/* BACKGROUND GRID EFFECT
+   A subtle pattern using CSS gradients - no image needed! */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(168, 85, 247, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 85, 247, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* CONTAINER - centers and limits content width */
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+header {
   text-align: center;
+  padding: 60px 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 48px;
 }
 
 h1 {
-  font-size: 50px;
-  color: #222;
+  /* Bebas Neue is a tall, bold display font - great for titles */
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(72px, 14vw, 130px); /* clamp(min, preferred, max) - scales with screen */
+  letter-spacing: 10px;
+  line-height: 1;
+  margin-bottom: 12px;
+
+  /* GRADIENT TEXT - one of the coolest CSS tricks
+     1. Set the gradient as background
+     2. Clip the background to just the text shape
+     3. Make the text color transparent so background shows through */
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--accent3) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 14px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.subtitle span {
+  color: var(--accent2);
+}
+
+/* ============================================
+   DESCRIPTION BOX
+   ============================================ */
+.description {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent2); /* colored left stripe */
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 48px;
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.description strong {
+  color: var(--accent);
+}
+
+/* ============================================
+   SECTION HEADINGS
+   ============================================ */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
 }
 
 h2 {
-  color: #333;
-  font-size: 40px;
-  margin-top: 40px;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 32px;
+  letter-spacing: 3px;
+  color: var(--text);
+  margin-top: 0; /* removing old margin-top */
 }
 
-h3 {
-  font-size: 30px;
-}
-
-.back-button {
-  background-color: #333;
+.section-count {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: var(--accent);
   color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-decoration: none;
-  display: block;        
-  width: fit-content;    
-  margin-left: 20px;    
+  padding: 3px 10px;
+  border-radius: 100px;
 }
 
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+/* ============================================
+   LEVEL LIST
+   ============================================ */
+ol {
+  list-style: none; /* removes default numbers */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 56px;
+  padding: 0;
+}
+
+/* Each list item is now a styled row */
 ol li {
-  margin-bottom: 10px;
-  list-style-type: decimal;
-  border-radius: 5px;
-  padding: 10px;
-  background-color: #fff;
-  color: #000;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0; /* padding goes on the <a> instead so the whole row is clickable */
+  margin-bottom: 0;
+  list-style-type: none;
+
+  /* transition smoothly animates changes */
+  transition: border-color 0.2s, transform 0.2s;
+  counter-increment: list-counter; /* CSS counters - for custom numbering */
 }
 
+ol li:hover {
+  border-color: var(--accent2);
+  transform: translateX(4px);
+}
+
+/* Special colors for top 3 */
+ol li:nth-child(1) { border-left: 3px solid #ffd700; }
+ol li:nth-child(2) { border-left: 3px solid #c0c0c0; }
+ol li:nth-child(3) { border-left: 3px solid #cd7f32; }
+
+/* Style links inside list items */
+ol li a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* No link yet = plain text, style the same */
+ol li:not(:has(a)) {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 600;
+  color: var(--text-muted); /* dimmed because no page yet */
+}
+
+/* The rank number - using CSS counter */
+ol {
+  counter-reset: list-counter;
+}
+
+ol li::before {
+  content: counter(list-counter);
+  counter-increment: list-counter;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 20px;
+  color: var(--text-muted);
+  min-width: 28px;
+  text-align: center;
+}
+
+/* Top 3 rank numbers get special colors */
+ol li:nth-child(1)::before { color: #ffd700; font-size: 24px; }
+ol li:nth-child(2)::before { color: #c0c0c0; font-size: 22px; }
+ol li:nth-child(3)::before { color: #cd7f32; font-size: 21px; }
+
+/* Arrow on hover - CSS only, no JS! */
+ol li a::after {
+  content: '→';
+  margin-left: auto;
+  color: var(--accent2);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+ol li:hover a::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ============================================
+   BACK BUTTON (used on level pages)
+   ============================================ */
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 32px 0;
+  padding: 10px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.back-button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateX(-4px);
+}
+
+/* ============================================
+   INFO BOXES (used on level pages)
+   ============================================ */
 .info-box {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  margin: 20px auto;
-  width: 500px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin: 0 auto 16px auto;
+  max-width: 680px;
+  text-align: left;
+
+  /* box-shadow adds a glow/shadow underneath */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.info-box:hover {
+  border-color: var(--accent2);
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.15);
+}
+
+.info-box h2 {
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 8px;
+  font-family: 'Shantell Sans', cursive;
+  font-weight: 800;
+}
+
+.info-box p {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.8;
+}
+
+/* ============================================
+   LEVEL PAGE HERO (title section)
+   ============================================ */
+.level-hero {
+  text-align: center;
+  padding: 40px 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 40px;
+}
+
+.level-rank {
+  font-size: 13px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.level-hero h1 {
+  font-size: clamp(40px, 8vw, 80px);
+  letter-spacing: 3px;
+  margin-bottom: 0;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  letter-spacing: 1px;
+  margin-top: 20px;
+}
+
+footer span {
+  color: var(--accent);
+}
+
+footer a {
+  color: var(--accent2);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================
+   h3 (kept from original)
+   ============================================ */
+h3 {
+  font-size: 22px;
+  color: var(--text-muted);
+  font-weight: 600;
+  max-width: 680px;
+  margin: 0 auto 40px auto;
+  line-height: 1.7;
+  text-align: center;
 }
