@@ -1,4 +1,4 @@
 const searchInput = document.getElementById("searchInput");
-searchInput.addEventListener("???", function() {
+searchInput.addEventListener("input", function() {
   console.log("typing...");
 });
