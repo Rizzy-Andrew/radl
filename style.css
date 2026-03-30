@@ -89,12 +89,11 @@ h1 {
   letter-spacing: 10px;
   line-height: 1;
   margin-bottom: 12px;
-   text-align: center;
 
   /* GRADIENT TEXT - one of the coolest CSS tricks
-     1. Set the gradient as the background
+     1. Set the gradient as background
      2. Clip the background to just the text shape
-     3. Make the text color transparent so the background shows through */
+     3. Make the text color transparent so background shows through */
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--accent3) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -146,7 +145,6 @@ h2 {
   font-size: 32px;
   letter-spacing: 3px;
   color: var(--text);
-   text-align: center;
   margin-top: 0; /* removing old margin-top */
 }
 
@@ -187,11 +185,10 @@ ol li {
   padding: 0; /* padding goes on the <a> instead so the whole row is clickable */
   margin-bottom: 0;
   list-style-type: none;
-     counter-increment: list-counter;
 
   /* transition smoothly animates changes */
   transition: border-color 0.2s, transform 0.2s;
-   
+  counter-increment: list-counter; /* CSS counters - for custom numbering */
 }
 
 ol li:hover {
@@ -374,7 +371,7 @@ footer a {
   text-decoration: none;
 }
 
-footer a:hover {
+footer a: hover {
   text-decoration: underline;
 }
 
