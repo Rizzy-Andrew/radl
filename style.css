@@ -226,12 +226,8 @@ ol li:not(:has(a)) {
 }
 
 /* The rank number - using CSS counter */
-ol {
-  counter-reset: list-counter;
-}
 
 ol li::before {
-  content: counter(list-counter);
   font-family: 'Bebas Neue', cursive;
   font-size: 20px;
   color: var(--text-muted);
@@ -243,10 +239,6 @@ ol li::before {
   align-items: center;         
 }
 
-/* Top 3 rank numbers get special colors */
-ol li:nth-child(1)::before { color: #ffd700; font-size: 24px; }
-ol li:nth-child(2)::before { color: #c0c0c0; font-size: 22px; }
-ol li:nth-child(3)::before { color: #cd7f32; font-size: 21px; }
 
 /* Arrow on hover - CSS only, no JS! */
 ol li a::after {
