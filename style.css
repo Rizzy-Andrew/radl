@@ -233,6 +233,7 @@ ol li:not(:has(a)) {
   min-width: 40px;
   text-align: center;
   padding-left: 14px;
+   flex-shrink: 0;
 }
 
 ol li:nth-child(1) .rank { color: #ffd700; font-size: 24px; }
