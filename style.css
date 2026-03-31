@@ -315,6 +315,32 @@ ol li:hover a::after {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+nav {
+  position: sticky;    /* sticks to the top as you scroll! */
+  top: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  z-index: 100;
+}
+
+nav a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+nav a:hover {
+  color: var(--accent2);
+}
+
 #searchInput:focus {
   border-color: var(--accent2);
   box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
