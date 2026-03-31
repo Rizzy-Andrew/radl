@@ -188,7 +188,6 @@ ol li {
   margin-bottom: 0;
   list-style-type: none;
   transition: border-color 0.2s, transform 0.2s;
-  counter-increment: list-counter;
   display: flex;
   align-items: center;  
 }
@@ -226,18 +225,6 @@ ol li:not(:has(a)) {
 }
 
 /* The rank number - using CSS counter */
-
-ol li::before {
-  font-family: 'Bebas Neue', cursive;
-  font-size: 20px;
-  color: var(--text-muted);
-  min-width: 28px;
-  text-align: center;
-  padding: 14px 0 14px 14px;  
-  align-self: stretch;         
-  display: flex;               
-  align-items: center;         
-}
 
 .rank {
   font-family: 'Bebas Neue', cursive;
