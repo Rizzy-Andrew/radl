@@ -1,40 +1,38 @@
 <!DOCTYPE html>
 <html>
-
   <head>
     <link rel="stylesheet" href="style.css">
+    <title>Placement History</title>
   </head>
-  
   <body>
-        <a class="back-button" href="../radl/index.html">← Back</a>
-<h1>Placement History</h1>
+    <nav>
+      <a href="index.html#classic">Classic Levels</a>
+      <a href="index.html#platformer">Platformer Levels</a>
+      <a href="placement-history.html">Placement History</a>
+    </nav>
 
-<p>11/14/25 - Speed Racer placed at #1</p>
-    <p>11/25/25 - phjork placed at #2</p>
-    <p>11/26/25 - Tabasco placed at #1</p>
-    <p>11/27/25 - iS placed at #3</p>
-    <p>11/29/25 - STARPUNK placed at #3</p>
-    <p>12/26/25 - MAYMORY placed at #2 (Moved down to #3 later that day)</p>
-    <p>12/26/25 - X placed at #2</p>
-    <p>12/31/25 - Artificial Powder placed at #1</p>
-    <p>12/31/25 - PXTTXRN SXXKXR placed at #4</p>
-    <p>1/3/26 - B placed at #2</p>
-    <p>1/7/26 - Wack placed at #5</p>
-    <p>1/8/26 - DeCode placed at #3</p>
-    <p>1/14/26 - weird placed at #9</p>
-    <p>1/18/26 - The Nightmare placed at #14 (Moved down to #15 later that day)</p>
-    <p>1/18/26 - THE LIGHTNING ROAD placed at #14
-    <p>1/31/26 - Clubstep placed at #6</p>
-    <p>2/13/26 - Shiver placed at #15</p>
-    <p>2/14/26 - Ultimate Phase AgaiN placed at #1</p>
-    <p>2/14/26 - Skeletal Shenanigans placed at #3</p>
-    <p>2/15/26 - Platinum Adventure placed at #18</p>
-    <p>2/15/26 - Ultra Paracosm placed at #12</p>
-    <p>2/26/26 - Crescendo placed at #15</p>
-    <p>3/1/26 - demon mixed placed at #21</p>
-    <p>3/21/26 - bims level placed at #5</p>
-    <p>3/25/26 - iSpyWithMyLittleEye placed at #15</p>
-    <p>3/26/26 - Lonely Path placed at #21</p>
-    <p>4/1/26 - TOUCH THE ORBS BUB placed at #9</p>
-    </body>
+    <h1>Placement History</h1>
+    <ul id="history-list"></ul>
+
+    <script>
+      fetch('levels.json')
+        .then(response => response.json())
+        .then(levels => {
+          // Sort by date, oldest first
+          levels.sort((a, b) => new Date(a.datePlaced) - new Date(b.datePlaced));
+
+          const list = document.getElementById('history-list');
+
+          levels.forEach((level, index) => {
+            // Format date: "2026-02-14" → "2/14/2026"
+            const date = new Date(level.datePlaced);
+            const formatted = `${date.getUTCMonth() + 1}/${date.getUTCDate()}/${date.getUTCFullYear()}`;
+
+            const item = document.createElement('li');
+            item.textContent = `${formatted} - ${level.name} placed at #${level.initialPlacement}`;
+            list.appendChild(item);
+          });
+        });
+    </script>
+  </body>
 </html>
