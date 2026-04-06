@@ -24,9 +24,7 @@
           const list = document.getElementById('history-list');
 
           levels.forEach((level, index) => {
-            // Format date: "2026-02-14" → "2/14/2026"
-            const date = new Date(level.datePlaced);
-            const formatted = `${date.getUTCMonth() + 1}/${date.getUTCDate()}/${date.getUTCFullYear()}`;
+const formatted = level.datePlaced;
 
             const item = document.createElement('li');
             item.textContent = `${formatted} - ${level.name} placed at #${level.initialPlacement}`;
