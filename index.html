@@ -35,7 +35,6 @@
   fetch('levels.json')
     .then(response => response.json())
     .then(levels => {
-      // Sort by rank, just in case
       levels.sort((a, b) => a.rank - b.rank);
 
       const list = document.getElementById('classic-list');
@@ -44,6 +43,28 @@
         const li = document.createElement('li');
         li.innerHTML = `<span class="rank">#${level.rank}</span><a href="levels/${level.slug}.html">${level.name}</a>`;
         list.appendChild(li);
+      });
+
+      // Search runs after list is built
+      const searchInput = document.getElementById('searchInput');
+      const noResults = document.getElementById('no-results');
+
+      searchInput.addEventListener('input', function() {
+        const query = searchInput.value.toLowerCase();
+        const items = document.querySelectorAll('#classic-list li');
+        let visibleCount = 0;
+
+        items.forEach(function(item) {
+          const name = item.textContent.toLowerCase();
+          if (name.includes(query)) {
+            item.style.display = '';
+            visibleCount++;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+
+        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
       });
     });
 </script>
