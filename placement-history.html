@@ -15,22 +15,21 @@
     <ul id="history-list"></ul>
 
     <script>
-      fetch('levels.json')
-        .then(response => response.json())
-        .then(levels => {
-          // Sort by date, oldest first
-          levels.sort((a, b) => new Date(a.datePlaced) - new Date(b.datePlaced));
-
-          const list = document.getElementById('history-list');
-
-          levels.forEach((level, index) => {
-const formatted = level.datePlaced;
-
-            const item = document.createElement('li');
-            item.textContent = `${formatted} - ${level.name} placed at #${level.initialPlacement}`;
-            list.appendChild(item);
-          });
-        });
+  fetch('levels.json')
+    .then(response => response.json())
+    .then(levels => {
+      levels.sort((a, b) => new Date(a.datePlaced) - new Date(b.datePlaced));
+      const list = document.getElementById('history-list');
+      levels.forEach((level, index) => {
+        const formatted = level.datePlaced;
+        const item = document.createElement('li');
+        item.textContent = `${formatted} - ${level.name} placed at #${level.initialPlacement}`;
+        list.appendChild(item);
+      });
+    })
+    .catch(error => {
+      document.getElementById('history-list').textContent = 'Error: ' + error;
+    });
     </script>
   </body>
 </html>
