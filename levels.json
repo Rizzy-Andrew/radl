@@ -21,10 +21,11 @@
   { "rank": 20, "name": "STARPUNK",               "slug": "starpunk",               "datePlaced": "11/29/2025", "initialPlacement": 3  },
   { "rank": 21, "name": "iS",                     "slug": "is",                     "datePlaced": "11/27/2025", "initialPlacement": 3  },
   { "rank": 22, "name": "phjork",                 "slug": "phjork",                 "datePlaced": "11/25/2025", "initialPlacement": 2  },
-  { "rank": 23, "name": "Lonely Path",            "slug": "lonely-path",            "datePlaced": "3/26/2026",  "initialPlacement": 21 },
-  { "rank": 24, "name": "Shiver",                 "slug": "shiver",                 "datePlaced": "2/13/2026",  "initialPlacement": 15 },
-  { "rank": 25, "name": "Platinum Adventure",     "slug": "platinum-adventure",     "datePlaced": "2/15/2026",  "initialPlacement": 18 },
-  { "rank": 26, "name": "demon mixed",            "slug": "demon-mixed",            "datePlaced": "3/1/2026",   "initialPlacement": 21 },
-  { "rank": 27, "name": "THE LIGHTNING ROAD",     "slug": "the-lightning-road",     "datePlaced": "1/18/2026",  "initialPlacement": 14 },
-  { "rank": 28, "name": "The Nightmare",          "slug": "the-nightmare",          "datePlaced": "1/18/2026",  "initialPlacement": 15 }
+  { "rank": 23, "name": "red alert",                 "slug": "red-alert",                 "datePlaced": "4/7/2026", "initialPlacement": 23  },
+  { "rank": 24, "name": "Lonely Path",            "slug": "lonely-path",            "datePlaced": "3/26/2026",  "initialPlacement": 21 },
+  { "rank": 25, "name": "Shiver",                 "slug": "shiver",                 "datePlaced": "2/13/2026",  "initialPlacement": 15 },
+  { "rank": 26, "name": "Platinum Adventure",     "slug": "platinum-adventure",     "datePlaced": "2/15/2026",  "initialPlacement": 18 },
+  { "rank": 27, "name": "demon mixed",            "slug": "demon-mixed",            "datePlaced": "3/1/2026",   "initialPlacement": 21 },
+  { "rank": 28, "name": "THE LIGHTNING ROAD",     "slug": "the-lightning-road",     "datePlaced": "1/18/2026",  "initialPlacement": 14 },
+  { "rank": 29, "name": "The Nightmare",          "slug": "the-nightmare",          "datePlaced": "1/18/2026",  "initialPlacement": 15 }
 ]
