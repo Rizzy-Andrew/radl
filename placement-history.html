@@ -3,6 +3,54 @@
   <head>
     <link rel="stylesheet" href="style.css">
     <title>Placement History</title>
+    <style>
+      .history-entry {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: border-color 0.2s, transform 0.2s;
+      }
+
+      .history-entry:hover {
+        border-color: var(--accent2);
+        transform: translateX(4px);
+      }
+
+      .history-date {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 18px;
+        color: var(--accent);
+        min-width: 110px;
+        flex-shrink: 0;
+      }
+
+      .history-name {
+        font-weight: 600;
+        color: var(--text);
+        flex: 1;
+      }
+
+      .history-placement {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 20px;
+        color: var(--accent2);
+        min-width: 50px;
+        text-align: right;
+      }
+
+      .history-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+    </style>
   </head>
   <body>
     <nav>
@@ -11,25 +59,38 @@
       <a href="placement-history.html">Placement History</a>
     </nav>
 
-    <h1>Placement History</h1>
-    <ul id="history-list"></ul>
+    <div class="container">
+      <header>
+        <h1>History</h1>
+        <p class="subtitle">Every placement, <span>in order</span></p>
+      </header>
+
+      <ul class="history-list" id="history-list"></ul>
+    </div>
 
     <script>
-  fetch('levels.json')
-    .then(response => response.json())
-    .then(levels => {
-      levels.sort((a, b) => new Date(a.datePlaced) - new Date(b.datePlaced));
-      const list = document.getElementById('history-list');
-      levels.forEach((level, index) => {
-        const formatted = level.datePlaced;
-        const item = document.createElement('li');
-        item.textContent = `${formatted} - ${level.name} placed at #${level.initialPlacement}`;
-        list.appendChild(item);
-      });
-    })
-    .catch(error => {
-      document.getElementById('history-list').textContent = 'Error: ' + error;
-    });
+      fetch('levels.json')
+        .then(response => response.json())
+        .then(levels => {
+          levels.sort((a, b) => new Date(a.datePlaced) - new Date(b.datePlaced));
+
+          const list = document.getElementById('history-list');
+
+          levels.forEach(level => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <div class="history-entry">
+                <span class="history-date">${level.datePlaced}</span>
+                <span class="history-name">${level.name}</span>
+                <span class="history-placement">#${level.initialPlacement}</span>
+              </div>
+            `;
+            list.appendChild(li);
+          });
+        })
+        .catch(error => {
+          document.getElementById('history-list').textContent = 'Error: ' + error;
+        });
     </script>
   </body>
 </html>
