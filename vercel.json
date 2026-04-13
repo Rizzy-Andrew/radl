@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/level/:slug", "destination": "/levels/level.html" }
+  ]
+}
