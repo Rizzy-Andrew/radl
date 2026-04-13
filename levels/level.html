@@ -16,62 +16,68 @@
       <div id="content"></div>
     </div>
 
-    <script>
-const parts = window.location.pathname.split('/');
-const slug = parts[parts.length - 1];
+<script>
+  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv';
 
-      fetch('../levels.json')
-        .then(response => response.json())
-        .then(levels => {
-          const level = levels.find(l => l.slug === slug);
+  const parts = window.location.pathname.split('/');
+  const slug = parts[parts.length - 1];
 
-          if (!level) {
-            document.getElementById('content').textContent = 'Level not found.';
-            return;
-          }
+  fetch(SHEET_URL)
+    .then(response => response.text())
+    .then(csv => {
+      const rows = csv.trim().split('\n').slice(1);
 
-          document.title = level.name + ' - RADL';
+      const levels = rows.map(row => {
+        const cols = row.split(',');
+        return {
+          rank: cols[0],
+          name: cols[1],
+          slug: cols[2],
+          publisher: cols[3],
+          points: cols[4],
+          video: cols[5],
+          datePlaced: cols[6],
+          initialPlacement: cols[7]
+        };
+      });
 
-          const videoHTML = level.video
-            ? `<div class="info-box">
-                <h2>Video</h2>
-                <iframe width="100%" height="360" src="${level.video}" frameborder="0" allowfullscreen></iframe>
-               </div>`
-            : '';
+      const level = levels.find(l => l.slug === slug);
 
-          const victorsHTML = level.victors && level.victors.length > 0
-            ? level.victors.map(v => `<p>${v}</p>`).join('')
-            : '<p>None yet</p>';
+      if (!level) {
+        document.getElementById('content').textContent = 'Level not found.';
+        return;
+      }
 
-          const historyHTML = level.placementHistory
-            ? level.placementHistory.map(h => `<p>#${h.rank} - ${h.date} - ${h.note}</p>`).join('')
-            : '<p>No history yet</p>';
+      document.title = level.name + ' - RADL';
 
-          document.getElementById('content').innerHTML = `
-            <h1>${level.name}</h1>
-            <h2>#${level.rank}</h2>
-            ${videoHTML}
-            <div class="info-box">
-              <h2>Publisher</h2>
-              <p>${level.publisher || 'Unknown'}</p>
-            </div>
-            <div class="info-box">
-              <h2>Points</h2>
-              <p>${level.points} points</p>
-            </div>
-            <div class="info-box">
-              <h2>Position History</h2>
-              ${historyHTML}
-            </div>
-            <div class="info-box">
-              <h2>Victors</h2>
-              ${victorsHTML}
-            </div>
-          `;
-        })
-        .catch(() => {
-          document.getElementById('content').textContent = 'Error loading level data.';
-        });
-    </script>
+      const videoHTML = level.video
+        ? `<div class="info-box">
+            <h2>Video</h2>
+            <iframe width="100%" height="360" src="${level.video}" frameborder="0" allowfullscreen></iframe>
+           </div>`
+        : '';
+
+      document.getElementById('content').innerHTML = `
+        <h1>${level.name}</h1>
+        <h2>#${level.rank}</h2>
+        ${videoHTML}
+        <div class="info-box">
+          <h2>Publisher</h2>
+          <p>${level.publisher || 'Unknown'}</p>
+        </div>
+        <div class="info-box">
+          <h2>Points</h2>
+          <p>${level.points} points</p>
+        </div>
+        <div class="info-box">
+          <h2>Date Beaten</h2>
+          <p>${level.datePlaced}</p>
+        </div>
+      `;
+    })
+    .catch(error => {
+      document.getElementById('content').textContent = 'Error: ' + error;
+    });
+</script>
   </body>
 </html>
