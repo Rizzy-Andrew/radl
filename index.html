@@ -41,8 +41,7 @@
 
       levels.forEach(level => {
         const li = document.createElement('li');
-li.innerHTML = `<span class="rank">#${level.rank}</span><a href="levels/level.html?slug=${level.slug}">${level.name}</a>`;
-        list.appendChild(li);
+li.innerHTML = `<span class="rank">#${level.rank}</span><a href="/level/${level.slug}">${level.name}</a>`;        list.appendChild(li);
       });
 
       // Search runs after list is built
