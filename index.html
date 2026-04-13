@@ -32,19 +32,39 @@
     </ol>
 <p id="no-results" style="display: none;">No levels found.</p>
 <script>
-  fetch('levels.json')
-    .then(response => response.json())
-    .then(levels => {
+  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv';
+
+  fetch(SHEET_URL)
+    .then(response => response.text())
+    .then(csv => {
+      // Split into rows, skip the header
+      const rows = csv.trim().split('\n').slice(1);
+
+      const levels = rows.map(row => {
+        const cols = row.split(',');
+        return {
+          rank: cols[0],
+          name: cols[1],
+          slug: cols[2],
+          publisher: cols[3],
+          points: cols[4],
+          video: cols[5],
+          datePlaced: cols[6],
+          initialPlacement: cols[7]
+        };
+      });
+
       levels.sort((a, b) => a.rank - b.rank);
 
       const list = document.getElementById('classic-list');
 
       levels.forEach(level => {
         const li = document.createElement('li');
-li.innerHTML = `<span class="rank">#${level.rank}</span><a href="/level/${level.slug}">${level.name}</a>`;        list.appendChild(li);
+        li.innerHTML = `<span class="rank">#${level.rank}</span><a href="/level/${level.slug}">${level.name}</a>`;
+        list.appendChild(li);
       });
 
-      // Search runs after list is built
+      // Search
       const searchInput = document.getElementById('searchInput');
       const noResults = document.getElementById('no-results');
 
@@ -65,7 +85,10 @@ li.innerHTML = `<span class="rank">#${level.rank}</span><a href="/level/${level.
 
         noResults.style.display = visibleCount === 0 ? 'block' : 'none';
       });
+    })
+    .catch(error => {
+      document.getElementById('classic-list').textContent = 'Error loading levels: ' + error;
     });
 </script>
-    </body>
+  </body>
 </html>
