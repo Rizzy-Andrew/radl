@@ -44,11 +44,11 @@
   },
   {
     "rank": 4,
-    "name": "VeritY",
-    "slug": "verity",
-    "publisher": "Serponge",
-    "points": 44,
-    "video": "https://www.youtube.com/embed/V0jiXqj11q0",
+    "name": "Sakupen Egg",
+    "slug": "sakupen-egg",
+    "publisher": "Sivlol",
+    "points": 45,
+    "video": "https://www.youtube.com/embed/og-SJUJIUFY",
     "victors": ["rizzyandrew", "Tylerv08"],
     "datePlaced": "4/12/2026",
     "initialPlacement": 4,
@@ -58,6 +58,21 @@
   },
   {
     "rank": 5,
+    "name": "VeritY",
+    "slug": "verity",
+    "publisher": "Serponge",
+    "points": 44,
+    "video": "https://www.youtube.com/embed/V0jiXqj11q0",
+    "victors": ["rizzyandrew", "Tylerv08"],
+    "datePlaced": "4/12/2026",
+    "initialPlacement": 4,
+    "placementHistory": [
+      { "rank": 4, "date": "4/12/2026", "note": "Placed at #4" },
+      { "rank": 5, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
+    ]
+  },
+  {
+    "rank": 6,
     "name": "Skeletal Shenanigans",
     "slug": "skeletal-shenanigans",
     "publisher": "YoReid",
@@ -69,11 +84,12 @@
     "placementHistory": [
       { "rank": 3, "date": "2/14/2026", "note": "Placed at #3" },
       { "rank": 4, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 5, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 5, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 6, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 6,
+    "rank": 7,
     "name": "B",
     "slug": "b",
     "publisher": "motleyork",
@@ -87,11 +103,12 @@
       { "rank": 3, "date": "2/14/2026", "note": "Ultimate Phase AgaiN placed at #1" },
       { "rank": 4, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 5, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 6, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 6, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 7, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 7,
+    "rank": 8,
     "name": "bims level",
     "slug": "bims-level",
     "publisher": "Bimms",
@@ -103,11 +120,12 @@
     "placementHistory": [
       { "rank": 5, "date": "3/21/2026", "note": "Placed at #5" },
       { "rank": 6, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 7, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 7, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 8, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 8,
+    "rank": 9,
     "name": "DeCode",
     "slug": "decode",
     "publisher": "Rek3dge",
@@ -122,11 +140,12 @@
       { "rank": 5, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 6, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 7, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 8, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 8, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 9, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 9,
+    "rank": 10,
     "name": "Tabasco",
     "slug": "tabasco",
     "publisher": "talia",
@@ -144,11 +163,12 @@
       { "rank": 6, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 7, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 8, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 9, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 9, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 10, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 10,
+    "rank": 11,
     "name": "X",
     "slug": "x",
     "publisher": "TriAxis",
@@ -166,11 +186,12 @@
       { "rank": 7, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 8, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 9, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 10, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 10, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 11, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 11,
+    "rank": 12,
     "name": "TOUCH THE ORBS BUB",
     "slug": "touch-the-orbs-bub",
     "publisher": "AtomicRest",
@@ -182,11 +203,12 @@
     "placementHistory": [
       { "rank": 9, "date": "4/1/2026", "note": "Placed at #9" },
       { "rank": 10, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 11, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 11, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 12, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 12,
+    "rank": 13,
     "name": "Clubstep",
     "slug": "clubstep",
     "publisher": "RobTop",
@@ -201,11 +223,12 @@
       { "rank": 8, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 9, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 10, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 12, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 11, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 13, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 13,
+    "rank": 14,
     "name": "Wack",
     "slug": "wack",
     "publisher": "Yendis",
@@ -222,11 +245,12 @@
       { "rank": 9, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 10, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 11, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 13, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 12, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 14, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 14,
+    "rank": 15,
     "name": "PXTTXRN SXXKXR",
     "slug": "pxttxrn-sxxkxr",
     "publisher": "Viot",
@@ -245,11 +269,12 @@
       { "rank": 10, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 11, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 12, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 14, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 13, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 15, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 15,
+    "rank": 16,
     "name": "MAYMORY",
     "slug": "maymory",
     "publisher": "ItzKiba",
@@ -271,11 +296,12 @@
       { "rank": 11, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 12, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 13, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 15, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 14, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 16, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 16,
+    "rank": 17,
     "name": "Ultra Paracosm",
     "slug": "ultra-paracosm",
     "publisher": "iliRulasili",
@@ -288,11 +314,12 @@
       { "rank": 12, "date": "2/15/2026", "note": "Placed at #12" },
       { "rank": 13, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 14, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 16, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 15, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 17, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 17,
+    "rank": 18,
     "name": "weird",
     "slug": "weird",
     "publisher": "llertt",
@@ -309,11 +336,12 @@
       { "rank": 13, "date": "2/15/2026", "note": "Ultra Paracosm placed at #12" },
       { "rank": 14, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 15, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 17, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 16, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 18, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 18,
+    "rank": 19,
     "name": "iSpyWithMyLittleEye",
     "slug": "ispywithmylittleeye",
     "publisher": "Voxicat",
@@ -325,11 +353,12 @@
     "placementHistory": [
       { "rank": 15, "date": "3/25/2026", "note": "Placed at #15" },
       { "rank": 16, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 18, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 17, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 19, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 19,
+    "rank": 20,
     "name": "Speed Racer",
     "slug": "speed-racer",
     "publisher": "ZenthicAlpha",
@@ -357,11 +386,12 @@
       { "rank": 16, "date": "3/25/2026", "note": "iSpyWithMyLittleEye placed at #15" },
       { "rank": 17, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 18, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 19, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 19, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 20, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 20,
+    "rank": 21,
     "name": "Crescendo",
     "slug": "crescendo",
     "publisher": "MasK463",
@@ -376,11 +406,12 @@
       { "rank": 17, "date": "3/25/2026", "note": "iSpyWithMyLittleEye placed at #15" },
       { "rank": 18, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 19, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 20, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 20, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 21, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 21,
+    "rank": 22,
     "name": "STARPUNK",
     "slug": "starpunk",
     "publisher": "Ferdefunky",
@@ -408,11 +439,12 @@
       { "rank": 18, "date": "3/25/2026", "note": "iSpyWithMyLittleEye placed at #15" },
       { "rank": 19, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 20, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 21, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 21, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 22, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 22,
+    "rank": 23,
     "name": "iS",
     "slug": "is",
     "publisher": "Grenate",
@@ -440,11 +472,12 @@
       { "rank": 18, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 19, "date": "3/25/2026", "note": "iSpyWithMyLittleEye placed at #15" },
       { "rank": 20, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 22, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 21, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 23, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 23,
+    "rank": 24,
     "name": "phjork",
     "slug": "phjork",
     "publisher": "cerufiffy",
@@ -475,11 +508,12 @@
       { "rank": 20, "date": "3/25/2026", "note": "iSpyWithMyLittleEye placed at #15" },
       { "rank": 21, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 22, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
-      { "rank": 23, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 23, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 24, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 24,
+    "rank": 25,
     "name": "red alert",
     "slug": "red-alert",
     "publisher": "ratliffigd",
@@ -490,11 +524,12 @@
     "initialPlacement": 23,
     "placementHistory": [
       { "rank": 23, "date": "4/7/2026", "note": "Placed at #23" },
-      { "rank": 24, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 24, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 25, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 25,
+    "rank": 26,
     "name": "Lonely Path",
     "slug": "lonely-path",
     "publisher": "SulphurXIV",
@@ -507,11 +542,12 @@
       { "rank": 21, "date": "3/26/2026", "note": "Placed at #21" },
       { "rank": 22, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 23, "date": "4/7/2026", "note": "red alert placed at #23" },
-      { "rank": 25, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 24, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 26, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 26,
+    "rank": 27,
     "name": "Shiver",
     "slug": "shiver",
     "publisher": "SpKale",
@@ -531,11 +567,12 @@
       { "rank": 22, "date": "3/26/2026", "note": "Lonely Path placed at #21" },
       { "rank": 23, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 24, "date": "4/7/2026", "note": "red alert placed at #23" },
-      { "rank": 26, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 25, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 27, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 27,
+    "rank": 28,
     "name": "Platinum Adventure",
     "slug": "platinum-adventure",
     "publisher": "Jerry4",
@@ -554,11 +591,12 @@
       { "rank": 24, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 25, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 26, "date": "4/7/2026", "note": "red alert placed at #23" },
-      { "rank": 27, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 27, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 28, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 28,
+    "rank": 29,
     "name": "demon mixed",
     "slug": "demon-mixed",
     "publisher": "RealOggY",
@@ -574,11 +612,12 @@
       { "rank": 24, "date": "3/26/2026", "note": "Lonely Path placed at #21" },
       { "rank": 25, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 26, "date": "4/7/2026", "note": "red alert placed at #23" },
-      { "rank": 28, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 27, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 29, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 29,
+    "rank": 30,
     "name": "THE LIGHTNING ROAD",
     "slug": "the-lightning-road",
     "publisher": "timeless real",
@@ -601,11 +640,12 @@
       { "rank": 24, "date": "3/26/2026", "note": "Lonely Path placed at #21" },
       { "rank": 25, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 26, "date": "4/7/2026", "note": "red alert placed at #23" },
-      { "rank": 29, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 28, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 30, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   },
   {
-    "rank": 30,
+    "rank": 31,
     "name": "The Nightmare",
     "slug": "the-nightmare",
     "publisher": "Jax",
@@ -629,7 +669,8 @@
       { "rank": 25, "date": "3/26/2026", "note": "Lonely Path placed at #21" },
       { "rank": 26, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 27, "date": "4/7/2026", "note": "red alert placed at #23" },
-      { "rank": 30, "date": "4/12/2026", "note": "VeritY placed at #4" }
+      { "rank": 29, "date": "4/12/2026", "note": "VeritY placed at #4" },
+      { "rank": 31, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
     ]
   }
 ]
