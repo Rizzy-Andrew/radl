@@ -9,7 +9,13 @@
    - CSS variables (--var-name)
    - Better flexbox layouts
    ============================================ */
+.container h1 {
+  margin-bottom: 16px;
+}
 
+.container h2 {
+  margin-bottom: 24px;
+}
 /* GOOGLE FONTS
    Instead of <link> in HTML, you can also import fonts directly in CSS.
    @import must always be at the very top of your CSS file. */
