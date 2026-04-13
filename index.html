@@ -41,7 +41,7 @@
 
       levels.forEach(level => {
         const li = document.createElement('li');
-        li.innerHTML = `<span class="rank">#${level.rank}</span><a href="levels/${level.slug}.html">${level.name}</a>`;
+li.innerHTML = `<span class="rank">#${level.rank}</span><a href="levels/level.html?slug=${level.slug}">${level.name}</a>`;
         list.appendChild(li);
       });
 
