@@ -437,6 +437,9 @@ h3 {
 }
 .container h1 {
   margin-bottom: 16px;
+  font-size: clamp(36px, 6vw, 80px);
+  word-break: break-word;
+  text-align: center;
 }
 
 .container h2 {
