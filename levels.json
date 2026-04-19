@@ -52,6 +52,7 @@
     "victors": ["rizzyandrew", "Tylerv08"],
     "datePlaced": "4/12/2026",
     "initialPlacement": 4,
+    "sortOrder": 2,
     "placementHistory": [
       { "rank": 4, "date": "4/12/2026", "note": "Placed at #4" }
     ]
@@ -66,6 +67,7 @@
     "victors": ["rizzyandrew", "Tylerv08"],
     "datePlaced": "4/12/2026",
     "initialPlacement": 4,
+    "sortOrder": 1,
     "placementHistory": [
       { "rank": 4, "date": "4/12/2026", "note": "Placed at #4" },
       { "rank": 5, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
@@ -177,6 +179,7 @@
     "victors": ["rizzyandrew", "Tylerv08"],
     "datePlaced": "12/26/2025",
     "initialPlacement": 2,
+    "sortOrder": 2,
     "placementHistory": [
       { "rank": 2, "date": "12/26/2025", "note": "Placed at #2" },
       { "rank": 3, "date": "12/31/2025", "note": "Artificial Powder placed at #1" },
@@ -222,7 +225,7 @@
       { "rank": 7, "date": "2/14/2026", "note": "Ultimate Phase AgaiN placed at #1" },
       { "rank": 8, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 9, "date": "3/21/2026", "note": "bims level placed at #5" },
-      { "rank": 10, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9"}
+      { "rank": 10, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 11, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 12, "date": "4/12/2026", "note": "VeritY placed at #4" },
       { "rank": 13, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
@@ -245,7 +248,7 @@
       { "rank": 8, "date": "2/14/2026", "note": "Ultimate Phase AgaiN placed at #1" },
       { "rank": 9, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 10, "date": "3/21/2026", "note": "bims level placed at #5" },
-      { "rank": 11, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9"}
+      { "rank": 11, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 12, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 13, "date": "4/12/2026", "note": "VeritY placed at #4" },
       { "rank": 14, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
@@ -253,7 +256,7 @@
   },
   {
     "rank": 15,
-    "name": "Quartz Winds
+    "name": "Quartz Winds",
     "slug": "quartz-winds",
     "publisher": "FlaRedMiDash",
     "points": 23,
@@ -284,11 +287,11 @@
       { "rank": 9, "date": "2/14/2026", "note": "Ultimate Phase AgaiN placed at #1" },
       { "rank": 10, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 11, "date": "3/21/2026", "note": "bims level placed at #5" },
-      { "rank": 12, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9"}
+      { "rank": 12, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 13, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 14, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 15, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 16, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 15, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 16, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -301,6 +304,7 @@
     "victors": ["rizzyandrew", "Tylerv08"],
     "datePlaced": "12/26/2025",
     "initialPlacement": 2,
+    "sortOrder": 1,
     "placementHistory": [
       { "rank": 2, "date": "12/26/2025", "note": "Placed at #2" },
       { "rank": 3, "date": "12/26/2025", "note": "X placed at #2" },
@@ -313,11 +317,11 @@
       { "rank": 10, "date": "2/14/2026", "note": "Ultimate Phase AgaiN placed at #1" },
       { "rank": 11, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 12, "date": "3/21/2026", "note": "bims level placed at #5" },
-      { "rank": 13, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9"}
+      { "rank": 13, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 14, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 15, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 16, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 17, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 16, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 17, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -333,11 +337,11 @@
     "placementHistory": [
       { "rank": 12, "date": "2/15/2026", "note": "Placed at #12" },
       { "rank": 13, "date": "3/21/2026", "note": "bims level placed at #5" },
-      { "rank": 14, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9"}
+      { "rank": 14, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 15, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 16, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 17, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 18, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 17, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 18, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -357,11 +361,11 @@
       { "rank": 12, "date": "2/14/2026", "note": "Skeletal Shenanigans placed at #3" },
       { "rank": 13, "date": "2/15/2026", "note": "Ultra Paracosm placed at #12" },
       { "rank": 14, "date": "3/21/2026", "note": "bims level placed at #5" },
-      { "rank": 15, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9"}
+      { "rank": 15, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 16, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 17, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 18, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 19, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 18, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 19, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -376,11 +380,11 @@
     "initialPlacement": 15,
     "placementHistory": [
       { "rank": 15, "date": "3/25/2026", "note": "Placed at #15" },
-      { "rank": 16, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9"}
+      { "rank": 16, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 17, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 18, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 19, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 20, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 19, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 20, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -413,8 +417,8 @@
       { "rank": 17, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 18, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 19, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 20, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 21, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 20, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 21, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -434,8 +438,8 @@
       { "rank": 18, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 19, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 20, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 21, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 22, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 21, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 22, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -468,8 +472,8 @@
       { "rank": 19, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 20, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 21, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 22, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 23, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 22, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 23, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -502,8 +506,8 @@
       { "rank": 19, "date": "3/25/2026", "note": "iSpyWithMyLittleEye placed at #15" },
       { "rank": 20, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 21, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 23, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 24, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 22, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 24, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -539,8 +543,8 @@
       { "rank": 21, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 22, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 23, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 24, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 25, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 24, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 25, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -556,8 +560,8 @@
     "placementHistory": [
       { "rank": 23, "date": "4/7/2026", "note": "Placed at #23" },
       { "rank": 24, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 25, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 26, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 25, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 26, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -572,12 +576,12 @@
     "initialPlacement": 21,
     "placementHistory": [
       { "rank": 21, "date": "3/26/2026", "note": "Placed at #21" },
-      { "rank": 22, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9"}
+      { "rank": 22, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 23, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 24, "date": "4/7/2026", "note": "red alert placed at #23" },
       { "rank": 25, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 26, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 27, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 26, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 27, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -599,12 +603,12 @@
       { "rank": 20, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 21, "date": "3/25/2026", "note": "iSpyWithMyLittleEye placed at #15" },
       { "rank": 22, "date": "3/26/2026", "note": "Lonely Path placed at #21" },
-      { "rank": 23, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9"}
+      { "rank": 23, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 24, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 25, "date": "4/7/2026", "note": "red alert placed at #23" },
       { "rank": 26, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 27, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 28, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 27, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 28, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -628,8 +632,8 @@
       { "rank": 25, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 26, "date": "4/7/2026", "note": "red alert placed at #23" },
       { "rank": 27, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 28, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 29, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 28, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 29, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -647,12 +651,12 @@
       { "rank": 22, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 23, "date": "3/25/2026", "note": "iSpyWithMyLittleEye placed at #15" },
       { "rank": 24, "date": "3/26/2026", "note": "Lonely Path placed at #21" },
-      { "rank": 25, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9"}
+      { "rank": 25, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 26, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 27, "date": "4/7/2026", "note": "red alert placed at #23" },
       { "rank": 28, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 29, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 30, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 29, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 30, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -674,16 +678,16 @@
       { "rank": 19, "date": "2/15/2026", "note": "Platinum Adventure placed at #18" },
       { "rank": 20, "date": "2/15/2026", "note": "Ultra Paracosm placed at #12" },
       { "rank": 21, "date": "2/26/2026", "note": "Crescendo placed at #15" },
-      { "rank": 22, "date": "3/1/2026", "note": "demon mixed placed at #21"},
+      { "rank": 22, "date": "3/1/2026", "note": "demon mixed placed at #21" },
       { "rank": 23, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 24, "date": "3/25/2026", "note": "iSpyWithMyLittleEye placed at #15" },
       { "rank": 25, "date": "3/26/2026", "note": "Lonely Path placed at #21" },
-      { "rank": 26, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9"}
+      { "rank": 26, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 27, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 28, "date": "4/7/2026", "note": "red alert placed at #23" },
       { "rank": 29, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 30, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 31, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 30, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 31, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   },
   {
@@ -706,16 +710,16 @@
       { "rank": 20, "date": "2/15/2026", "note": "Platinum Adventure placed at #18" },
       { "rank": 21, "date": "2/15/2026", "note": "Ultra Paracosm placed at #12" },
       { "rank": 22, "date": "2/26/2026", "note": "Crescendo placed at #15" },
-      { "rank": 23, "date": "3/1/2026", "note": "demon mixed placed at #21"},
+      { "rank": 23, "date": "3/1/2026", "note": "demon mixed placed at #21" },
       { "rank": 24, "date": "3/21/2026", "note": "bims level placed at #5" },
       { "rank": 25, "date": "3/25/2026", "note": "iSpyWithMyLittleEye placed at #15" },
       { "rank": 26, "date": "3/26/2026", "note": "Lonely Path placed at #21" },
-      { "rank": 27, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9"}
+      { "rank": 27, "date": "4/1/2026", "note": "TOUCH THE ORBS BUB placed at #9" },
       { "rank": 28, "date": "4/6/2026", "note": "CALYPSO BLITZ placed at #3" },
       { "rank": 29, "date": "4/7/2026", "note": "red alert placed at #23" },
       { "rank": 30, "date": "4/12/2026", "note": "VeritY placed at #4" },
-      { "rank": 31, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" }
-      { "rank": 32, "date": "4/18/2026", "note": "Quartz Winds placed at 15" }
+      { "rank": 31, "date": "4/12/2026", "note": "Sakupen Egg placed at #4" },
+      { "rank": 32, "date": "4/18/2026", "note": "Quartz Winds placed at #15" }
     ]
   }
 ]
