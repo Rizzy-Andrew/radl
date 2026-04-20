@@ -3,8 +3,7 @@
   const VICTORS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=1496346185&single=true&output=csv';
   const HISTORY_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=1766700324&single=true&output=csv';
 
-  const parts = window.location.pathname.split('/');
-  const slug = parts[parts.length - 1];
+const slug = window.location.pathname.split('/').filter(Boolean).pop();
 
   function parseCSV(csv) {
     const rows = csv.trim().split('\n').slice(1);
