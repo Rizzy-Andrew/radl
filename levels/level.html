@@ -1,50 +1,32 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <link rel="stylesheet" href="../style.css">
-    <title>Loading...</title>
-  </head>
-  <body>
-    <nav>
-      <a href="../index.html#classic">Classic Levels</a>
-      <a href="../index.html#platformer">Platformer Levels</a>
-      <a href="../placement-history.html">Placement History</a>
-    </nav>
-
-    <div class="container">
-      <a class="back-button" href="../index.html">← Back</a>
-      <div id="content"></div>
-    </div>
-
 <script>
-  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv';
+  const LEVELS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv';
+  const VICTORS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=1496346185&single=true&output=csv';
+  const HISTORY_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=1766700324&single=true&output=csv';
 
   const parts = window.location.pathname.split('/');
   const slug = parts[parts.length - 1];
 
-  // Fetch both at the same time
-  Promise.all([
-    fetch(SHEET_URL).then(r => r.text()),
-    fetch('/levels.json').then(r => r.json())
-  ])
-  .then(([csv, jsonLevels]) => {
-    // Get basic info from sheet
+  function parseCSV(csv) {
     const rows = csv.trim().split('\n').slice(1);
-    const levels = rows.map(row => {
-      const cols = row.split(',');
-      return {
-        rank: cols[0],
-        name: cols[1],
-        slug: cols[2],
-        publisher: cols[3],
-        points: cols[4],
-        video: cols[5],
-        datePlaced: cols[6]
-      };
-    });
+    return rows.map(row => row.split(','));
+  }
 
-    const level = levels.find(l => l.slug === slug);
-    const jsonLevel = jsonLevels.find(l => l.slug === slug);
+  Promise.all([
+    fetch(LEVELS_URL).then(r => r.text()),
+    fetch(VICTORS_URL).then(r => r.text()),
+    fetch(HISTORY_URL).then(r => r.text())
+  ])
+  .then(([levelsCSV, victorsCSV, historyCSV]) => {
+    const levelsRows = parseCSV(levelsCSV);
+    const level = levelsRows.map(cols => ({
+      rank: cols[0],
+      name: cols[1],
+      slug: cols[2],
+      publisher: cols[3],
+      points: cols[4],
+      video: cols[5],
+      datePlaced: cols[6]
+    })).find(l => l.slug === slug);
 
     if (!level) {
       document.getElementById('content').textContent = 'Level not found.';
@@ -53,6 +35,17 @@
 
     document.title = level.name + ' - RADL';
 
+    // Victors for this level
+    const victors = parseCSV(victorsCSV)
+      .filter(cols => cols[0] === slug)
+      .map(cols => cols[1]);
+
+    // History for this level, sorted by rank
+    const history = parseCSV(historyCSV)
+      .filter(cols => cols[0] === slug)
+      .sort((a, b) => parseInt(a[1]) - parseInt(b[1]))
+      .map(cols => ({ rank: cols[1], date: cols[2], note: cols[3] }));
+
     const videoHTML = level.video
       ? `<div class="info-box">
           <h2>Video</h2>
@@ -60,15 +53,13 @@
          </div>`
       : '';
 
-    // Placement history from JSON
-    const historyHTML = jsonLevel && jsonLevel.placementHistory
-      ? jsonLevel.placementHistory.map(h => `<p>#${h.rank} - ${h.date} - ${h.note}</p>`).join('')
-      : '<p>No history yet</p>';
-
-    // Victors from JSON
-    const victorsHTML = jsonLevel && jsonLevel.victors && jsonLevel.victors.length > 0
-      ? jsonLevel.victors.map(v => `<p>${v}</p>`).join('')
+    const victorsHTML = victors.length > 0
+      ? victors.map(v => `<p>${v}</p>`).join('')
       : '<p>None yet</p>';
+
+    const historyHTML = history.length > 0
+      ? history.map(h => `<p>#${h.rank} - ${h.date} - ${h.note}</p>`).join('')
+      : '<p>No history yet</p>';
 
     document.getElementById('content').innerHTML = `
       <h1>${level.name}</h1>
@@ -96,5 +87,3 @@
     document.getElementById('content').textContent = 'Error: ' + error;
   });
 </script>
-  </body>
-</html>
