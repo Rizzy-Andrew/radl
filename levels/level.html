@@ -6,46 +6,99 @@
   <title>RADL – Level</title>
   <link rel="stylesheet" href="/style.css" />
   <style>
-    .level-hero {
-      background: var(--bg-secondary, #1a1a2e);
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+    /* Only styles that aren't already in style.css */
+    .level-video {
+      display: block;
+      width: 100%;
+      max-width: 680px;
+      aspect-ratio: 16/9;
+      border-radius: 10px;
+      border: none;
+      margin: 0 auto 40px auto;
     }
-    .level-hero h1 { margin: 0; font-size: 2rem; }
-    .level-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; opacity: 0.8; }
-    .level-video { width: 100%; aspect-ratio: 16/9; border-radius: 10px; border: none; margin-bottom: 2rem; }
-    .section-title { font-size: 1.2rem; font-weight: 700; margin: 1.5rem 0 0.75rem; border-bottom: 2px solid var(--accent, #7c3aed); padding-bottom: 0.4rem; }
-    .history-table, .victors-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
-    .history-table th, .history-table td,
-    .victors-table th, .victors-table td {
-      padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08);
+
+    table {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto 40px auto;
+      border-collapse: collapse;
     }
-    .history-table th, .victors-table th { opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; }
-    .error-msg { color: #f87171; padding: 2rem; text-align: center; }
-    .loading { opacity: 0.5; padding: 2rem; text-align: center; }
-    .back-link { display: inline-block; margin-bottom: 1.5rem; opacity: 0.7; }
-    .back-link:hover { opacity: 1; }
+
+    table th {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      font-family: 'Shantell Sans', cursive;
+      font-weight: 800;
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    table tr:hover td {
+      background: var(--surface);
+    }
+
+    table a {
+      color: var(--accent3);
+      text-decoration: none;
+    }
+
+    table a:hover {
+      text-decoration: underline;
+    }
+
+    .empty-note {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      max-width: 680px;
+      margin: 0 auto 40px auto;
+    }
+
+    .loading {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 80px 0;
+      font-size: 18px;
+    }
+
+    .error-msg {
+      text-align: center;
+      color: #f87171;
+      padding: 80px 0;
+    }
   </style>
 </head>
 <body>
-  <div class="container" style="max-width:860px;margin:0 auto;padding:2rem 1rem;">
-    <a class="back-link" href="/">← Back to List</a>
+
+  <nav>
+    <a href="/#classic">Classic Levels</a>
+    <a href="/#platformer">Platformer Levels</a>
+    <a href="/placement-history.html">Placement History</a>
+  </nav>
+
+  <div class="container">
+    <a class="back-button" href="/">← Back to List</a>
+
     <div id="level-content">
       <p class="loading">Loading level…</p>
     </div>
   </div>
 
   <script>
-    // ── CSV URLs ─────────────────────────────────────────────────────────────
     const CSV_MAIN    = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
     const CSV_VICTORS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=1496346185&single=true&output=csv";
     const CSV_HISTORY = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=1766700324&single=true&output=csv";
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
     function parseCSVLine(line) {
       const result = [];
       let current = '';
@@ -70,17 +123,14 @@
       });
     }
 
-    function getYouTubeEmbedURL(url) {
+    function getEmbedURL(url) {
       if (!url) return null;
-      // Handle youtu.be/ID and youtube.com/watch?v=ID
       const match = url.match(/(?:youtu\.be\/|v=)([\w-]{11})/);
       return match ? `https://www.youtube.com/embed/${match[1]}` : null;
     }
 
-    // ── Get slug from URL path (/level/some-slug) ────────────────────────────
     const slug = window.location.pathname.replace(/^\/level\//, '').replace(/\/$/, '');
 
-    // ── Main ─────────────────────────────────────────────────────────────────
     async function loadLevel() {
       const content = document.getElementById('level-content');
 
@@ -90,7 +140,6 @@
       }
 
       try {
-        // Fetch all three sheets in parallel
         const [mainText, victorsText, historyText] = await Promise.all([
           fetch(CSV_MAIN).then(r => r.text()),
           fetch(CSV_VICTORS).then(r => r.text()),
@@ -101,47 +150,50 @@
         const allVictors = parseCSV(victorsText);
         const allHistory = parseCSV(historyText);
 
-        // Find this level by slug
         const level = allLevels.find(l => l.slug === slug);
 
         if (!level) {
-          content.innerHTML = `<p class="error-msg">Level "<strong>${slug}</strong>" not found. Check that the slug in the URL matches the slug column in your sheet.</p>`;
+          content.innerHTML = `<p class="error-msg">Level not found: <strong>${slug}</strong></p>`;
           return;
         }
 
-        // Filter victors and history rows for this level
-        // Adjust the column name (e.g. 'slug' or 'level') to match your actual sheet headers
-        const victors = allVictors.filter(v => v.slug === slug || v.level === slug);
-        const history = allHistory.filter(h => h.slug === slug || h.level === slug);
+        const victors = allVictors.filter(v => (v.slug || v.level) === slug);
+        const history = allHistory.filter(h => (h.slug || h.level) === slug);
 
-        // Set page title
         document.title = `RADL – ${level.name}`;
 
-        // Build embed URL
-        const embedURL = getYouTubeEmbedURL(level.video);
+        const embedURL = getEmbedURL(level.video);
 
-        // ── Render ───────────────────────────────────────────────────────────
         content.innerHTML = `
           <div class="level-hero">
+            <span class="level-rank">Rank #${level.rank} — ${level.points} pts</span>
             <h1>${level.name}</h1>
-            <div class="level-meta">
-              <span>🏆 Rank #${level.rank}</span>
-              <span>👤 ${level.publisher}</span>
-              <span>⭐ ${level.points} pts</span>
-              ${level.datePlaced ? `<span>📅 ${level.datePlaced}</span>` : ''}
-            </div>
+            <p style="color: var(--text-muted); font-size: 14px; margin-top: 12px;">
+              by <strong style="color: var(--text)">${level.publisher}</strong>
+              ${level.datePlaced ? `&nbsp;·&nbsp; beaten ${level.datePlaced}` : ''}
+            </p>
           </div>
 
           ${embedURL
-            ? `<iframe class="level-video" src="${embedURL}" allowfullscreen title="${level.name} video"></iframe>`
-            : level.video ? `<p><a href="${level.video}" target="_blank" rel="noopener">▶ Watch Video</a></p>` : ''}
+            ? `<iframe class="level-video" src="${embedURL}" allowfullscreen title="${level.name}"></iframe>`
+            : level.video
+              ? `<p style="text-align:center;margin-bottom:40px"><a href="${level.video}" target="_blank" rel="noopener" style="color:var(--accent3)">▶ Watch Video</a></p>`
+              : ''}
 
-          <div class="section-title">Placement History</div>
+          <div class="section-header" style="max-width:680px;margin:0 auto 16px auto">
+            <h2>Placement History</h2>
+            <div class="section-line"></div>
+          </div>
           ${renderHistoryTable(history)}
 
-          <div class="section-title">Victors (${victors.length})</div>
+          <div class="section-header" style="max-width:680px;margin:0 auto 16px auto">
+            <h2>Victors</h2>
+            <span class="section-count">${victors.length}</span>
+            <div class="section-line"></div>
+          </div>
           ${renderVictorsTable(victors)}
         `;
+
       } catch (err) {
         console.error(err);
         content.innerHTML = `<p class="error-msg">Failed to load level data.<br><small>${err.message}</small></p>`;
@@ -149,35 +201,31 @@
     }
 
     function renderHistoryTable(rows) {
-      if (!rows.length) return '<p style="opacity:0.5">No history recorded yet.</p>';
-      // Grab all keys from the first row as headers, excluding 'slug'/'level'
+      if (!rows.length) return '<p class="empty-note">No history recorded yet.</p>';
       const keys = Object.keys(rows[0]).filter(k => k !== 'slug' && k !== 'level');
-      return `
-        <table class="history-table">
-          <thead><tr>${keys.map(k => `<th>${k}</th>`).join('')}</tr></thead>
-          <tbody>
-            ${rows.map(r => `<tr>${keys.map(k => `<td>${r[k] || ''}</td>`).join('')}</tr>`).join('')}
-          </tbody>
-        </table>`;
+      return `<table>
+        <thead><tr>${keys.map(k => `<th>${k}</th>`).join('')}</tr></thead>
+        <tbody>${rows.map(r =>
+          `<tr>${keys.map(k => `<td>${r[k] || ''}</td>`).join('')}</tr>`
+        ).join('')}</tbody>
+      </table>`;
     }
 
     function renderVictorsTable(rows) {
-      if (!rows.length) return '<p style="opacity:0.5">No victors yet — be the first!</p>';
+      if (!rows.length) return '<p class="empty-note">No victors yet — be the first!</p>';
       const keys = Object.keys(rows[0]).filter(k => k !== 'slug' && k !== 'level');
-      return `
-        <table class="victors-table">
-          <thead><tr>${keys.map(k => `<th>${k}</th>`).join('')}</tr></thead>
-          <tbody>
-            ${rows.map(r => `<tr>${keys.map(k => {
-              // If there's a video link column, make it clickable
-              const val = r[k] || '';
-              if ((k === 'video' || k === 'link') && val.startsWith('http')) {
-                return `<td><a href="${val}" target="_blank" rel="noopener">▶ Watch</a></td>`;
-              }
-              return `<td>${val}</td>`;
-            }).join('')}</tr>`).join('')}
-          </tbody>
-        </table>`;
+      return `<table>
+        <thead><tr>${keys.map(k => `<th>${k}</th>`).join('')}</tr></thead>
+        <tbody>${rows.map(r =>
+          `<tr>${keys.map(k => {
+            const val = r[k] || '';
+            if ((k === 'video' || k === 'link') && val.startsWith('http')) {
+              return `<td><a href="${val}" target="_blank" rel="noopener">▶ Watch</a></td>`;
+            }
+            return `<td>${val}</td>`;
+          }).join('')}</tr>`
+        ).join('')}</tbody>
+      </table>`;
     }
 
     loadLevel();
