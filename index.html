@@ -32,63 +32,69 @@
     </ol>
 <p id="no-results" style="display: none;">No levels found.</p>
 <script>
-  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv';
+  const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
 
-  fetch(SHEET_URL)
-    .then(response => response.text())
-    .then(csv => {
-      // Split into rows, skip the header
-      const rows = csv.trim().split('\n').slice(1);
-
-      const levels = rows.map(row => {
-        const cols = row.split(',');
-        return {
-          rank: cols[0],
-          name: cols[1],
-          slug: cols[2],
-          publisher: cols[3],
-          points: cols[4],
-          video: cols[5],
-          datePlaced: cols[6],
-          initialPlacement: cols[7]
-        };
-      });
-
-      levels.sort((a, b) => a.rank - b.rank);
-
-      const list = document.getElementById('classic-list');
-
-      levels.forEach(level => {
-        const li = document.createElement('li');
-        li.innerHTML = `<span class="rank">#${level.rank}</span><a href="/level/${level.slug}">${level.name}</a>`;
-        list.appendChild(li);
-      });
-
-      // Search
-      const searchInput = document.getElementById('searchInput');
-      const noResults = document.getElementById('no-results');
-
-      searchInput.addEventListener('input', function() {
-        const query = searchInput.value.toLowerCase();
-        const items = document.querySelectorAll('#classic-list li');
-        let visibleCount = 0;
-
-        items.forEach(function(item) {
-          const name = item.textContent.toLowerCase();
-          if (name.includes(query)) {
-            item.style.display = '';
-            visibleCount++;
-          } else {
-            item.style.display = 'none';
-          }
-        });
-
-        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
-      });
-    })
-    .catch(error => {
-      document.getElementById('classic-list').textContent = 'Error loading levels: ' + error;
+  function parseCSV(text) {
+    const lines = text.trim().split('\n');
+    const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
+    return lines.slice(1).map(line => {
+      const values = parseCSVLine(line);
+      const obj = {};
+      headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/"/g, '').trim(); });
+      return obj;
     });
-</script>
+  }
+
+  function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"') { inQuotes = !inQuotes; }
+      else if (line[i] === ',' && !inQuotes) { result.push(current); current = ''; }
+      else { current += line[i]; }
+    }
+    result.push(current);
+    return result;
+  }
+
+  async function buildList() {
+    try {
+      const res = await fetch(SHEET_URL);
+      const text = await res.text();
+      const levels = parseCSV(text);
+
+      // Classic levels (sortOrder or type field — adjust if your column is named differently)
+      const classic = levels.filter(l => l.type !== 'platformer').sort((a, b) => Number(a.rank) - Number(b.rank));
+
+      const container = document.getElementById('classic-list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (classic.length === 0) {
+        container.innerHTML = '<p>No levels found.</p>';
+        return;
+      }
+
+      classic.forEach(level => {
+        const li = document.createElement('li');
+        li.classList.add('level-item');
+        li.innerHTML = `
+          <span class="level-rank">#${level.rank}</span>
+          <a class="level-name" href="/level/${level.slug}">${level.name}</a>
+          <span class="level-publisher">${level.publisher}</span>
+          <span class="level-points">${level.points} pts</span>
+        `;
+        container.appendChild(li);
+      });
+    } catch (err) {
+      console.error('Failed to load levels:', err);
+      const container = document.getElementById('classic-list');
+      if (container) container.innerHTML = '<p>Failed to load levels. Check the console.</p>';
+    }
+  }
+
+  buildList();
+   </script>
   </body>
 </html>
