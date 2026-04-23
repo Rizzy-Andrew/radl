@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html>
-
   <head>
     <link rel="stylesheet" href="style.css">
   </head>
-
   <body>
-
 <nav>
   <a href="#classic">Classic Levels</a>
   <a href="#platformer">Platformer Levels</a>
@@ -15,35 +12,23 @@
     
 <h1>RADL</h1>
 <h2>Home of The Rizzy Andrew Demon List!</h2>
-    <h3>Welcome to the home of RADL! Here is a list of all the levels I have beaten! Submit your runs here to be on the Rizzy Stats viewer! Why did I make this? So you can follow my steps! List based on GDDL, AREDL, and Pointercrate (even though I haven't beaten extreme demons yet).
-</h3>
+<h3>Welcome to the home of RADL! Here is a list of all the levels I have beaten! Submit your runs here to be on the Rizzy Stats viewer! Why did I make this? So you can follow my steps! List based on GDDL, AREDL, and Pointercrate (even though I haven't beaten extreme demons yet).</h3>
     
-    <h2 id="classic">Classic Levels List</h2>
-        <input type="text" id="searchInput" placeholder="Search levels...">
+<h2 id="classic">Classic Levels List</h2>
+<input type="text" id="searchInput" placeholder="Search levels...">
     
 <ol id="classic-list"></ol>
 <p id="no-results" style="display: none;">No levels found.</p>
 
-   <h2 id="platformer">Platformer Levels List</h2> 
-    <ol>
-      <li><span class="rank">#1</span><a href="platformer/level-devil.html">Level Devil</a></li>
-      <li><span class="rank">#2</span><a href="platformer/forsaken-city.html">Forsaken City</a></li>
-      <li><span class="rank">#3</span><a href="platformer/would-you-rather.html">would you rather</a></li>
-    </ol>
-<p id="no-results" style="display: none;">No levels found.</p>
+<h2 id="platformer">Platformer Levels List</h2> 
+<ol>
+  <li><span class="rank">#1</span><a href="platformer/level-devil.html">Level Devil</a></li>
+  <li><span class="rank">#2</span><a href="platformer/forsaken-city.html">Forsaken City</a></li>
+  <li><span class="rank">#3</span><a href="platformer/would-you-rather.html">would you rather</a></li>
+</ol>
+
 <script>
   const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
-
-  function parseCSV(text) {
-    const lines = text.trim().split('\n');
-    const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
-    return lines.slice(1).map(line => {
-      const values = parseCSVLine(line);
-      const obj = {};
-      headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/"/g, '').trim(); });
-      return obj;
-    });
-  }
 
   function parseCSVLine(line) {
     const result = [];
@@ -58,13 +43,23 @@
     return result;
   }
 
+  function parseCSV(text) {
+    const lines = text.trim().split('\n');
+    const headers = parseCSVLine(lines[0]).map(h => h.replace(/"/g, '').trim());
+    return lines.slice(1).filter(l => l.trim()).map(line => {
+      const values = parseCSVLine(line);
+      const obj = {};
+      headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/"/g, '').trim(); });
+      return obj;
+    });
+  }
+
   async function buildList() {
     try {
       const res = await fetch(SHEET_URL);
       const text = await res.text();
       const levels = parseCSV(text);
 
-      // Classic levels (sortOrder or type field — adjust if your column is named differently)
       const classic = levels.filter(l => l.type !== 'platformer').sort((a, b) => Number(a.rank) - Number(b.rank));
 
       const container = document.getElementById('classic-list');
@@ -78,14 +73,13 @@
 
       classic.forEach(level => {
         const li = document.createElement('li');
-        classList.add('level-item');
-li.innerHTML = `
-  <span class="rank">${level.rank}</span>
-  <a href="/level/${level.slug}">${level.name}</a>
-`;
-      
+        li.innerHTML = `
+          <span class="rank">${level.rank}</span>
+          <a href="/level/${level.slug}">${level.name}</a>
+        `;
         container.appendChild(li);
       });
+
     } catch (err) {
       console.error('Failed to load levels:', err);
       const container = document.getElementById('classic-list');
@@ -94,6 +88,6 @@ li.innerHTML = `
   }
 
   buildList();
-   </script>
+</script>
   </body>
 </html>
