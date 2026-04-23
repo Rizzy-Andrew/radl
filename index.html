@@ -79,11 +79,10 @@
       classic.forEach(level => {
         const li = document.createElement('li');
         li.classList.add('level-item');
-        li.innerHTML = `
-          <span class="level-rank">#${level.rank}</span>
-          <a class="level-name" href="/level/${level.slug}">${level.name}</a>
-          <span class="level-publisher">${level.publisher}</span>
-          <span class="level-points">${level.points} pts</span>
+li.innerHTML = `
+  <span class="rank">${level.rank}</span>
+  <a href="/level/${level.slug}">${level.name}</a>
+`;
         `;
         container.appendChild(li);
       });
