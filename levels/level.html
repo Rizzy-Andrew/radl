@@ -123,11 +123,14 @@
       });
     }
 
-    function getEmbedURL(url) {
-      if (!url) return null;
-      const match = url.match(/(?:youtu\.be\/|v=)([\w-]{11})/);
-      return match ? `https://www.youtube.com/embed/${match[1]}` : null;
-    }
+   function getEmbedURL(url) {
+  if (!url) return null;
+  // Already an embed URL
+  if (url.includes('youtube.com/embed/')) return url;
+  // youtu.be/ID or watch?v=ID
+  const match = url.match(/(?:youtu\.be\/|v=)([\w-]{11})/);
+  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+}
 
     const slug = window.location.pathname.replace(/^\/level\//, '').replace(/\/$/, '');
 
