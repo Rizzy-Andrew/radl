@@ -1,89 +1,186 @@
-<script>
-const LEVELS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv';
-const VICTORS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=1496346185&single=true&output=csv';
-const HISTORY_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=1766700324&single=true&output=csv';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RADL – Level</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .level-hero {
+      background: var(--bg-secondary, #1a1a2e);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .level-hero h1 { margin: 0; font-size: 2rem; }
+    .level-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; opacity: 0.8; }
+    .level-video { width: 100%; aspect-ratio: 16/9; border-radius: 10px; border: none; margin-bottom: 2rem; }
+    .section-title { font-size: 1.2rem; font-weight: 700; margin: 1.5rem 0 0.75rem; border-bottom: 2px solid var(--accent, #7c3aed); padding-bottom: 0.4rem; }
+    .history-table, .victors-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+    .history-table th, .history-table td,
+    .victors-table th, .victors-table td {
+      padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .history-table th, .victors-table th { opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; }
+    .error-msg { color: #f87171; padding: 2rem; text-align: center; }
+    .loading { opacity: 0.5; padding: 2rem; text-align: center; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; opacity: 0.7; }
+    .back-link:hover { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="container" style="max-width:860px;margin:0 auto;padding:2rem 1rem;">
+    <a class="back-link" href="/">← Back to List</a>
+    <div id="level-content">
+      <p class="loading">Loading level…</p>
+    </div>
+  </div>
 
-const slug = window.location.pathname.split('/').filter(Boolean).pop();
-console.log('Slug:', slug);
+  <script>
+    // ── CSV URLs ─────────────────────────────────────────────────────────────
+    const CSV_MAIN    = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
+    const CSV_VICTORS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=1496346185&single=true&output=csv";
+    const CSV_HISTORY = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=1766700324&single=true&output=csv";
 
-  function parseCSV(csv) {
-    const rows = csv.trim().split('\n').slice(1);
-    return rows.map(row => row.split(','));
-  }
-
-  Promise.all([
-    fetch(LEVELS_URL).then(r => r.text()),
-    fetch(VICTORS_URL).then(r => r.text()),
-    fetch(HISTORY_URL).then(r => r.text())
-  ])
-  .then(([levelsCSV, victorsCSV, historyCSV]) => {
-    const levelsRows = parseCSV(levelsCSV);
-    const level = levelsRows.map(cols => ({
-      rank: cols[0],
-      name: cols[1],
-      slug: cols[2],
-      publisher: cols[3],
-      points: cols[4],
-      video: cols[5],
-      datePlaced: cols[6]
-    })).find(l => l.slug === slug);
-
-    if (!level) {
-      document.getElementById('content').textContent = 'Level not found.';
-      return;
+    // ── Helpers ──────────────────────────────────────────────────────────────
+    function parseCSVLine(line) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        if (line[i] === '"') { inQuotes = !inQuotes; }
+        else if (line[i] === ',' && !inQuotes) { result.push(current); current = ''; }
+        else { current += line[i]; }
+      }
+      result.push(current);
+      return result;
     }
 
-    document.title = level.name + ' - RADL';
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      const headers = parseCSVLine(lines[0]).map(h => h.replace(/"/g, '').trim());
+      return lines.slice(1).filter(l => l.trim()).map(line => {
+        const values = parseCSVLine(line);
+        const obj = {};
+        headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/"/g, '').trim(); });
+        return obj;
+      });
+    }
 
-    // Victors for this level
-    const victors = parseCSV(victorsCSV)
-      .filter(cols => cols[0] === slug)
-      .map(cols => cols[1]);
+    function getYouTubeEmbedURL(url) {
+      if (!url) return null;
+      // Handle youtu.be/ID and youtube.com/watch?v=ID
+      const match = url.match(/(?:youtu\.be\/|v=)([\w-]{11})/);
+      return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+    }
 
-    // History for this level, sorted by rank
-    const history = parseCSV(historyCSV)
-      .filter(cols => cols[0] === slug)
-      .sort((a, b) => parseInt(a[1]) - parseInt(b[1]))
-      .map(cols => ({ rank: cols[1], date: cols[2], note: cols[3] }));
+    // ── Get slug from URL path (/level/some-slug) ────────────────────────────
+    const slug = window.location.pathname.replace(/^\/level\//, '').replace(/\/$/, '');
 
-    const videoHTML = level.video
-      ? `<div class="info-box">
-          <h2>Video</h2>
-          <iframe width="100%" height="360" src="${level.video}" frameborder="0" allowfullscreen></iframe>
-         </div>`
-      : '';
+    // ── Main ─────────────────────────────────────────────────────────────────
+    async function loadLevel() {
+      const content = document.getElementById('level-content');
 
-    const victorsHTML = victors.length > 0
-      ? victors.map(v => `<p>${v}</p>`).join('')
-      : '<p>None yet</p>';
+      if (!slug) {
+        content.innerHTML = '<p class="error-msg">No level slug in URL.</p>';
+        return;
+      }
 
-    const historyHTML = history.length > 0
-      ? history.map(h => `<p>#${h.rank} - ${h.date} - ${h.note}</p>`).join('')
-      : '<p>No history yet</p>';
+      try {
+        // Fetch all three sheets in parallel
+        const [mainText, victorsText, historyText] = await Promise.all([
+          fetch(CSV_MAIN).then(r => r.text()),
+          fetch(CSV_VICTORS).then(r => r.text()),
+          fetch(CSV_HISTORY).then(r => r.text()),
+        ]);
 
-    document.getElementById('content').innerHTML = `
-      <h1>${level.name}</h1>
-      <h2>#${level.rank}</h2>
-      ${videoHTML}
-      <div class="info-box">
-        <h2>Publisher</h2>
-        <p>${level.publisher || 'Unknown'}</p>
-      </div>
-      <div class="info-box">
-        <h2>Points</h2>
-        <p>${level.points} points</p>
-      </div>
-      <div class="info-box">
-        <h2>Position History</h2>
-        ${historyHTML}
-      </div>
-      <div class="info-box">
-        <h2>Victors</h2>
-        ${victorsHTML}
-      </div>
-    `;
-  })
-  .catch(error => {
-    document.getElementById('content').textContent = 'Error: ' + error;
-  });
-</script>
+        const allLevels  = parseCSV(mainText);
+        const allVictors = parseCSV(victorsText);
+        const allHistory = parseCSV(historyText);
+
+        // Find this level by slug
+        const level = allLevels.find(l => l.slug === slug);
+
+        if (!level) {
+          content.innerHTML = `<p class="error-msg">Level "<strong>${slug}</strong>" not found. Check that the slug in the URL matches the slug column in your sheet.</p>`;
+          return;
+        }
+
+        // Filter victors and history rows for this level
+        // Adjust the column name (e.g. 'slug' or 'level') to match your actual sheet headers
+        const victors = allVictors.filter(v => v.slug === slug || v.level === slug);
+        const history = allHistory.filter(h => h.slug === slug || h.level === slug);
+
+        // Set page title
+        document.title = `RADL – ${level.name}`;
+
+        // Build embed URL
+        const embedURL = getYouTubeEmbedURL(level.video);
+
+        // ── Render ───────────────────────────────────────────────────────────
+        content.innerHTML = `
+          <div class="level-hero">
+            <h1>${level.name}</h1>
+            <div class="level-meta">
+              <span>🏆 Rank #${level.rank}</span>
+              <span>👤 ${level.publisher}</span>
+              <span>⭐ ${level.points} pts</span>
+              ${level.datePlaced ? `<span>📅 ${level.datePlaced}</span>` : ''}
+            </div>
+          </div>
+
+          ${embedURL
+            ? `<iframe class="level-video" src="${embedURL}" allowfullscreen title="${level.name} video"></iframe>`
+            : level.video ? `<p><a href="${level.video}" target="_blank" rel="noopener">▶ Watch Video</a></p>` : ''}
+
+          <div class="section-title">Placement History</div>
+          ${renderHistoryTable(history)}
+
+          <div class="section-title">Victors (${victors.length})</div>
+          ${renderVictorsTable(victors)}
+        `;
+      } catch (err) {
+        console.error(err);
+        content.innerHTML = `<p class="error-msg">Failed to load level data.<br><small>${err.message}</small></p>`;
+      }
+    }
+
+    function renderHistoryTable(rows) {
+      if (!rows.length) return '<p style="opacity:0.5">No history recorded yet.</p>';
+      // Grab all keys from the first row as headers, excluding 'slug'/'level'
+      const keys = Object.keys(rows[0]).filter(k => k !== 'slug' && k !== 'level');
+      return `
+        <table class="history-table">
+          <thead><tr>${keys.map(k => `<th>${k}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${rows.map(r => `<tr>${keys.map(k => `<td>${r[k] || ''}</td>`).join('')}</tr>`).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    function renderVictorsTable(rows) {
+      if (!rows.length) return '<p style="opacity:0.5">No victors yet — be the first!</p>';
+      const keys = Object.keys(rows[0]).filter(k => k !== 'slug' && k !== 'level');
+      return `
+        <table class="victors-table">
+          <thead><tr>${keys.map(k => `<th>${k}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${rows.map(r => `<tr>${keys.map(k => {
+              // If there's a video link column, make it clickable
+              const val = r[k] || '';
+              if ((k === 'video' || k === 'link') && val.startsWith('http')) {
+                return `<td><a href="${val}" target="_blank" rel="noopener">▶ Watch</a></td>`;
+              }
+              return `<td>${val}</td>`;
+            }).join('')}</tr>`).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    loadLevel();
+  </script>
+</body>
+</html>
