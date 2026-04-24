@@ -88,6 +88,16 @@
   }
 
   buildList();
+
+  document.getElementById('searchInput').addEventListener('input', function() {
+  const query = this.value.toLowerCase();
+  const items = document.querySelectorAll('#classic-list li');
+  items.forEach(li => {
+    const name = li.querySelector('a').textContent.toLowerCase();
+    li.style.display = name.includes(query) ? '' : 'none';
+  });
+});
+  
 </script>
   </body>
 </html>
