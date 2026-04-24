@@ -117,7 +117,8 @@
 
         <div class="form-group">
           <label>Level</label>
-          <select id="level">
+          <input type="text" id="level-search" placeholder="Search levels..." />
+          <select id="level" size="8">
             <option value="">Loading levels...</option>
           </select>
         </div>
@@ -136,6 +137,8 @@
     <script>
       const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
       const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbws6rQyAPVo7S0cA44b7W-L0RmyK6kD1DxNd4GG-iRr2zCIWqD9TtilpwQCzvvVqkuMow/exec";
+
+      let allLevels = [];
 
       function parseCSVLine(line) {
         const result = [];
@@ -161,20 +164,31 @@
         });
       }
 
-      // Load levels into dropdown
+      function populateDropdown(levels) {
+        const select = document.getElementById('level');
+        select.innerHTML = '<option value="">Select a level...</option>';
+        levels.forEach(l => {
+          const opt = document.createElement('option');
+          opt.value = l.slug;
+          opt.textContent = l.name;
+          select.appendChild(opt);
+        });
+      }
+
+      // Load levels
       fetch(SHEET_URL)
         .then(r => r.text())
         .then(text => {
-          const levels = parseCSV(text).sort((a, b) => Number(a.rank) - Number(b.rank));
-          const select = document.getElementById('level');
-          select.innerHTML = '<option value="">Select a level...</option>';
-          levels.forEach(l => {
-            const opt = document.createElement('option');
-            opt.value = l.slug;
-            opt.textContent = `#${l.rank} – ${l.name}`;
-            select.appendChild(opt);
-          });
+          allLevels = parseCSV(text).sort((a, b) => Number(a.rank) - Number(b.rank));
+          populateDropdown(allLevels);
         });
+
+      // Search filter
+      document.getElementById('level-search').addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+        const filtered = allLevels.filter(l => l.name.toLowerCase().includes(query));
+        populateDropdown(filtered);
+      });
 
       function isYouTube(url) {
         return !url || url.includes('youtube.com') || url.includes('youtu.be');
@@ -207,6 +221,8 @@
           document.getElementById('player').value = '';
           document.getElementById('level').value = '';
           document.getElementById('video').value = '';
+          document.getElementById('level-search').value = '';
+          populateDropdown(allLevels);
         } catch (err) {
           showStatus('❌ Something went wrong. Try again.', 'error');
         }
