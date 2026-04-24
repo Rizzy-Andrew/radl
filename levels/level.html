@@ -215,22 +215,28 @@
       </table>`;
     }
 
-    function renderVictorsTable(rows) {
-      if (!rows.length) return '<p class="empty-note">No victors yet — be the first!</p>';
-      const keys = Object.keys(rows[0]).filter(k => k !== 'slug' && k !== 'level');
-      return `<table>
-        <thead><tr>${keys.map(k => `<th>${k}</th>`).join('')}</tr></thead>
-        <tbody>${rows.map(r =>
-          `<tr>${keys.map(k => {
-            const val = r[k] || '';
-            if ((k === 'video' || k === 'link') && val.startsWith('http')) {
-              return `<td><a href="${val}" target="_blank" rel="noopener">▶ Watch</a></td>`;
-            }
-            return `<td>${val}</td>`;
-          }).join('')}</tr>`
-        ).join('')}</tbody>
-      </table>`;
-    }
+function renderVictorsTable(rows) {
+  if (!rows.length) return '<p class="empty-note">No victors yet — be the first!</p>';
+  const keys = Object.keys(rows[0]).filter(k => k !== 'slug' && k !== 'level');
+  return `<table>
+    <thead><tr>${keys.map(k => `<th>${k}</th>`).join('')}</tr></thead>
+    <tbody>${rows.map(r =>
+      `<tr>${keys.map(k => {
+        const val = r[k] || '';
+        if ((k === 'video' || k === 'link') && val.startsWith('http')) {
+          return `<td><a href="${val}" target="_blank" rel="noopener">▶ Watch</a></td>`;
+        }
+        if (k === 'victor' || k === 'player' || k === 'name') {
+          const video = r['video'] || r['link'] || '';
+          if (video.startsWith('http')) {
+            return `<td><a href="${video}" target="_blank" rel="noopener">${val}</a></td>`;
+          }
+        }
+        return `<td>${val}</td>`;
+      }).join('')}</tr>`
+    ).join('')}</tbody>
+  </table>`;
+}
 
     loadLevel();
   </script>
