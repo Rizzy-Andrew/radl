@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <title>RADL – Submit</title>
+    <style>
+      .submit-form {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 32px;
+        max-width: 580px;
+        margin: 0 auto;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        font-size: 11px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--accent2);
+        font-weight: 800;
+      }
+
+      .form-group input,
+      .form-group select {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 12px 16px;
+        color: var(--text);
+        font-family: 'Shantell Sans', cursive;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: var(--accent2);
+        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+      }
+
+      .form-group select option {
+        background: var(--surface);
+        color: var(--text);
+      }
+
+      .form-note {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-family: 'Shantell Sans', cursive;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.2s;
+        margin-top: 8px;
+      }
+
+      .submit-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .status-msg {
+        text-align: center;
+        margin-top: 16px;
+        font-size: 15px;
+        min-height: 24px;
+      }
+
+      .status-msg.success { color: #4ade80; }
+      .status-msg.error { color: #f87171; }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/#classic">Classic Levels</a>
+      <a href="/#platformer">Platformer Levels</a>
+      <a href="/placement-history.html">Placement History</a>
+      <a href="/submit.html">Submit</a>
+    </nav>
+
+    <div class="container">
+      <header>
+        <h1>Submit</h1>
+        <p class="subtitle">Completed a level? <span>Let us know!</span></p>
+      </header>
+
+      <div class="submit-form">
+        <div class="form-group">
+          <label>Player Name</label>
+          <input type="text" id="player" placeholder="Your name" />
+        </div>
+
+        <div class="form-group">
+          <label>Level</label>
+          <select id="level">
+            <option value="">Loading levels...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Video Link <span style="color:var(--text-muted);font-size:11px">(optional)</span></label>
+          <input type="url" id="video" placeholder="https://youtube.com/watch?v=..." />
+          <span class="form-note">Must be a YouTube link if provided.</span>
+        </div>
+
+        <button class="submit-btn" id="submit-btn" onclick="submitForm()">Submit Run</button>
+        <p class="status-msg" id="status"></p>
+      </div>
+    </div>
+
+    <script>
+      const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbws6rQyAPVo7S0cA44b7W-L0RmyK6kD1DxNd4GG-iRr2zCIWqD9TtilpwQCzvvVqkuMow/exec";
+
+      function parseCSVLine(line) {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          if (line[i] === '"') { inQuotes = !inQuotes; }
+          else if (line[i] === ',' && !inQuotes) { result.push(current); current = ''; }
+          else { current += line[i]; }
+        }
+        result.push(current);
+        return result;
+      }
+
+      function parseCSV(text) {
+        const lines = text.trim().split('\n');
+        const headers = parseCSVLine(lines[0]).map(h => h.replace(/"/g, '').trim());
+        return lines.slice(1).filter(l => l.trim()).map(line => {
+          const values = parseCSVLine(line);
+          const obj = {};
+          headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/"/g, '').trim(); });
+          return obj;
+        });
+      }
+
+      // Load levels into dropdown
+      fetch(SHEET_URL)
+        .then(r => r.text())
+        .then(text => {
+          const levels = parseCSV(text).sort((a, b) => Number(a.rank) - Number(b.rank));
+          const select = document.getElementById('level');
+          select.innerHTML = '<option value="">Select a level...</option>';
+          levels.forEach(l => {
+            const opt = document.createElement('option');
+            opt.value = l.slug;
+            opt.textContent = `#${l.rank} – ${l.name}`;
+            select.appendChild(opt);
+          });
+        });
+
+      function isYouTube(url) {
+        return !url || url.includes('youtube.com') || url.includes('youtu.be');
+      }
+
+      async function submitForm() {
+        const player = document.getElementById('player').value.trim();
+        const level  = document.getElementById('level').value;
+        const video  = document.getElementById('video').value.trim();
+        const status = document.getElementById('status');
+        const btn    = document.getElementById('submit-btn');
+
+        // Validation
+        if (!player) { showStatus('Please enter your name.', 'error'); return; }
+        if (!level)  { showStatus('Please select a level.', 'error'); return; }
+        if (video && !isYouTube(video)) { showStatus('Video must be a YouTube link.', 'error'); return; }
+
+        btn.disabled = true;
+        showStatus('Submitting...', '');
+
+        try {
+          await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ player, level, video })
+          });
+
+          showStatus('✅ Submitted! We\'ll review it shortly.', 'success');
+          document.getElementById('player').value = '';
+          document.getElementById('level').value = '';
+          document.getElementById('video').value = '';
+        } catch (err) {
+          showStatus('❌ Something went wrong. Try again.', 'error');
+        }
+
+        btn.disabled = false;
+      }
+
+      function showStatus(msg, type) {
+        const el = document.getElementById('status');
+        el.textContent = msg;
+        el.className = 'status-msg ' + type;
+      }
+    </script>
+  </body>
+</html>
