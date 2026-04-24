@@ -68,29 +68,54 @@
       <ul class="history-list" id="history-list"></ul>
     </div>
 
-    <script>
-      fetch('levels.json')
-        .then(response => response.json())
-        .then(levels => {
-          levels.sort((a, b) => new Date(a.datePlaced) - new Date(b.datePlaced));
+   <script>
+  const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
 
-          const list = document.getElementById('history-list');
+  function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"') { inQuotes = !inQuotes; }
+      else if (line[i] === ',' && !inQuotes) { result.push(current); current = ''; }
+      else { current += line[i]; }
+    }
+    result.push(current);
+    return result;
+  }
 
-          levels.forEach(level => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-              <div class="history-entry">
-                <span class="history-date">${level.datePlaced}</span>
-                <span class="history-name">${level.name}</span>
-                <span class="history-placement">#${level.initialPlacement}</span>
-              </div>
-            `;
-            list.appendChild(li);
-          });
-        })
-        .catch(error => {
-          document.getElementById('history-list').textContent = 'Error: ' + error;
-        });
-    </script>
+  function parseCSV(text) {
+    const lines = text.trim().split('\n');
+    const headers = parseCSVLine(lines[0]).map(h => h.replace(/"/g, '').trim());
+    return lines.slice(1).filter(l => l.trim()).map(line => {
+      const values = parseCSVLine(line);
+      const obj = {};
+      headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/"/g, '').trim(); });
+      return obj;
+    });
+  }
+
+  fetch(SHEET_URL)
+    .then(r => r.text())
+    .then(text => {
+      const levels = parseCSV(text);
+      levels.sort((a, b) => new Date(a.datePlaced) - new Date(b.datePlaced));
+      const list = document.getElementById('history-list');
+      levels.forEach(level => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <div class="history-entry">
+            <span class="history-date">${level.datePlaced}</span>
+            <span class="history-name">${level.name}</span>
+            <span class="history-placement">#${level.initialPlacement}</span>
+          </div>
+        `;
+        list.appendChild(li);
+      });
+    })
+    .catch(err => {
+      document.getElementById('history-list').textContent = 'Error: ' + err;
+    });
+   </script>
   </body>
 </html>
