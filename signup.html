@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <title>RADL – Sign Up</title>
+    <style>
+      .auth-container {
+        max-width: 420px;
+        margin: 80px auto;
+        padding: 0 20px;
+      }
+
+      .auth-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .auth-card h1 {
+        font-size: 32px;
+        margin-bottom: 8px;
+        text-align: center;
+      }
+
+      .auth-subtitle {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 14px;
+        margin-bottom: 32px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--accent2);
+        font-weight: 800;
+        margin-bottom: 8px;
+      }
+
+      .form-group input {
+        width: 100%;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 12px 16px;
+        color: var(--text);
+        font-family: 'Shantell Sans', cursive;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .form-group input:focus {
+        border-color: var(--accent2);
+      }
+
+      .auth-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-family: 'Shantell Sans', cursive;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        margin-top: 8px;
+      }
+
+      .auth-btn:hover {
+        opacity: 0.9;
+      }
+
+      .auth-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .google-btn {
+        background: white;
+        color: #333;
+        border: 1px solid var(--border);
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .google-btn:hover {
+        opacity: 1;
+        background: #f5f5f5;
+      }
+
+      .divider {
+        text-align: center;
+        margin: 24px 0;
+        color: var(--text-muted);
+        font-size: 13px;
+        position: relative;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 40%;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .divider::before { left: 0; }
+      .divider::after { right: 0; }
+
+      .error-msg {
+        background: rgba(248, 113, 113, 0.1);
+        border: 1px solid #f87171;
+        border-radius: 6px;
+        padding: 12px;
+        color: #f87171;
+        font-size: 14px;
+        margin-bottom: 20px;
+        display: none;
+      }
+
+      .error-msg.show {
+        display: block;
+      }
+
+      .success-msg {
+        background: rgba(74, 222, 128, 0.1);
+        border: 1px solid #4ade80;
+        border-radius: 6px;
+        padding: 12px;
+        color: #4ade80;
+        font-size: 14px;
+        margin-bottom: 20px;
+        display: none;
+      }
+
+      .success-msg.show {
+        display: block;
+      }
+
+      .auth-footer {
+        text-align: center;
+        margin-top: 24px;
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+
+      .auth-footer a {
+        color: var(--accent2);
+        text-decoration: none;
+      }
+
+      .auth-footer a:hover {
+        text-decoration: underline;
+      }
+
+      .password-hint {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/#classic">Classic Levels</a>
+      <a href="/#platformer">Platformer Levels</a>
+      <a href="/placement-history.html">Placement History</a>
+      <a href="/submit.html">Submit</a>
+      <a href="/leaderboard.html">Leaderboard</a>
+    </nav>
+
+    <div class="auth-container">
+      <div class="auth-card">
+        <h1>Sign Up</h1>
+        <p class="auth-subtitle">Join RADL today</p>
+
+        <div class="error-msg" id="error-msg"></div>
+        <div class="success-msg" id="success-msg"></div>
+
+        <form id="signup-form">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" required />
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" minlength="6" required />
+            <p class="password-hint">At least 6 characters</p>
+          </div>
+
+          <button type="submit" class="auth-btn" id="signup-btn">Create Account</button>
+        </form>
+
+        <div class="divider">OR</div>
+
+        <button class="auth-btn google-btn" id="google-btn">
+          <svg width="18" height="18" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+            <path fill="none" d="M0 0h48v48H0z"></path>
+          </svg>
+          Continue with Google
+        </button>
+
+        <div class="auth-footer">
+          Already have an account? <a href="/login.html">Log in</a>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+      import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAyNCyGdahYYsLbG1sP8GGKc7AAogyI7V4",
+        authDomain: "radl-652e8.firebaseapp.com",
+        projectId: "radl-652e8",
+        storageBucket: "radl-652e8.firebasestorage.app",
+        messagingSenderId: "453756233220",
+        appId: "1:453756233220:web:a43c80ffe66ab17c4f7751"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const googleProvider = new GoogleAuthProvider();
+
+      function showError(msg) {
+        const errorEl = document.getElementById('error-msg');
+        errorEl.textContent = msg;
+        errorEl.classList.add('show');
+        document.getElementById('success-msg').classList.remove('show');
+      }
+
+      function showSuccess(msg) {
+        const successEl = document.getElementById('success-msg');
+        successEl.textContent = msg;
+        successEl.classList.add('show');
+        document.getElementById('error-msg').classList.remove('show');
+      }
+
+      function hideMessages() {
+        document.getElementById('error-msg').classList.remove('show');
+        document.getElementById('success-msg').classList.remove('show');
+      }
+
+      // Email/Password Signup
+      document.getElementById('signup-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideMessages();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const btn = document.getElementById('signup-btn');
+
+        btn.disabled = true;
+        btn.textContent = 'Creating account...';
+
+        try {
+          await createUserWithEmailAndPassword(auth, email, password);
+          showSuccess('Account created! Redirecting...');
+          setTimeout(() => window.location.href = '/', 1500);
+        } catch (error) {
+          let msg = 'Signup failed. Please try again.';
+          if (error.code === 'auth/email-already-in-use') msg = 'An account with this email already exists.';
+          if (error.code === 'auth/invalid-email') msg = 'Invalid email address.';
+          if (error.code === 'auth/weak-password') msg = 'Password is too weak. Use at least 6 characters.';
+          showError(msg);
+          btn.disabled = false;
+          btn.textContent = 'Create Account';
+        }
+      });
+
+      // Google Sign-In
+      document.getElementById('google-btn').addEventListener('click', async () => {
+        hideMessages();
+        try {
+          await signInWithPopup(auth, googleProvider);
+          showSuccess('Account created! Redirecting...');
+          setTimeout(() => window.location.href = '/', 1500);
+        } catch (error) {
+          showError('Google sign-in failed. Please try again.');
+        }
+      });
+    </script>
+  </body>
+</html>
