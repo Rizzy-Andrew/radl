@@ -4,10 +4,17 @@
     <link rel="stylesheet" href="style.css">
     <title>RADL – Submit</title>
     <style>
-.submit-form {
-  position: relative;
-  z-index: 10;
-}
+      .submit-form {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 32px;
+        max-width: 580px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+      }
+
       .form-group {
         display: flex;
         flex-direction: column;
@@ -88,6 +95,28 @@
 
       .status-msg.success { color: #4ade80; }
       .status-msg.error { color: #f87171; }
+
+      .login-required {
+        text-align: center;
+        padding: 80px 20px;
+        color: var(--text-muted);
+      }
+
+      .login-required h3 {
+        font-size: 24px;
+        margin-bottom: 16px;
+        color: var(--text);
+      }
+
+      .login-required a {
+        color: var(--accent2);
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .login-required a:hover {
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
@@ -105,35 +134,34 @@
         <p class="subtitle">Completed a level? <span>Let us know!</span></p>
       </header>
 
-      <div class="submit-form">
-        <div class="form-group">
-          <label>Player Name</label>
-          <input type="text" id="player" placeholder="Your name" />
-        </div>
-
-        <div class="form-group">
-          <label>Level</label>
-          <input type="text" id="level-search" placeholder="Search levels..." />
-          <select id="level" size="8">
-            <option value="">Loading levels...</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Video Link <span style="color:var(--text-muted);font-size:11px">(optional)</span></label>
-          <input type="url" id="video" placeholder="https://youtube.com/watch?v=..." />
-          <span class="form-note">Must be a YouTube link if provided.</span>
-        </div>
-
-        <button class="submit-btn" id="submit-btn" onclick="submitForm()">Submit Run</button>
-        <p class="status-msg" id="status"></p>
+      <div id="submit-content">
+        <p style="text-align:center;color:var(--text-muted);padding:80px 0">Loading...</p>
       </div>
     </div>
 
-    <script>
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+      import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+      import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAyNCyGdahYYsLbG1sP8GGKc7AAogyI7V4",
+        authDomain: "radl-652e8.firebaseapp.com",
+        projectId: "radl-652e8",
+        storageBucket: "radl-652e8.firebasestorage.app",
+        messagingSenderId: "453756233220",
+        appId: "1:453756233220:web:a43c80ffe66ab17c4f7751"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
       const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
       const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbDv_ccp48CWIosthU4_qRx6Zged0wBvSgvR_w4uUL4LTrihCzRBuCqov3MduLwbMemg/exec";
+
       let allLevels = [];
+      let currentUser = null;
 
       function parseCSVLine(line) {
         const result = [];
@@ -159,71 +187,156 @@
         });
       }
 
-      function populateDropdown(levels) {
-        const select = document.getElementById('level');
-        select.innerHTML = '<option value="">Select a level...</option>';
-        levels.forEach(l => {
-          const opt = document.createElement('option');
-          opt.value = l.slug;
-          opt.textContent = l.name;
-          select.appendChild(opt);
-        });
-      }
+      // Check auth state
+      onAuthStateChanged(auth, async (user) => {
+        const nav = document.querySelector('nav');
+        const existingAuthLinks = nav.querySelectorAll('.auth-link');
+        existingAuthLinks.forEach(link => link.remove());
 
-      // Load levels
-      fetch(SHEET_URL)
-        .then(r => r.text())
-        .then(text => {
-          allLevels = parseCSV(text).sort((a, b) => Number(a.rank) - Number(b.rank));
-          populateDropdown(allLevels);
-        });
+        if (user) {
+          currentUser = user;
+          
+          const username = user.email.split('@')[0];
+          
+          const profileLink = document.createElement('a');
+          profileLink.href = '/profile.html';
+          profileLink.className = 'auth-link';
+          profileLink.textContent = username;
+          nav.appendChild(profileLink);
 
-      // Search filter
-      document.getElementById('level-search').addEventListener('input', function() {
-        const query = this.value.toLowerCase();
-        const filtered = allLevels.filter(l => l.name.toLowerCase().includes(query));
-        populateDropdown(filtered);
+          const logoutLink = document.createElement('a');
+          logoutLink.href = '#';
+          logoutLink.className = 'auth-link';
+          logoutLink.textContent = 'Logout';
+          logoutLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = '/';
+          });
+          nav.appendChild(logoutLink);
+
+          await loadForm();
+        } else {
+          const loginLink = document.createElement('a');
+          loginLink.href = '/login.html';
+          loginLink.className = 'auth-link';
+          loginLink.textContent = 'Login';
+          nav.appendChild(loginLink);
+
+          document.getElementById('submit-content').innerHTML = `
+            <div class="login-required">
+              <h3>Login Required</h3>
+              <p>You need to <a href="/login.html">log in</a> to submit levels.</p>
+            </div>
+          `;
+        }
       });
+
+      async function loadForm() {
+        const content = document.getElementById('submit-content');
+
+        // Load levels
+        const text = await fetch(SHEET_URL).then(r => r.text());
+        allLevels = parseCSV(text).sort((a, b) => Number(a.rank) - Number(b.rank));
+
+        // Get user's existing completions
+        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+        const userData = userDoc.data();
+        const completions = userData?.completions || [];
+
+        content.innerHTML = `
+          <div class="submit-form">
+            <div class="form-group">
+              <label>Level</label>
+              <select id="level">
+                <option value="">Select a level...</option>
+                ${allLevels.map(l => {
+                  const alreadyCompleted = completions.includes(l.slug);
+                  return `<option value="${l.slug}" ${alreadyCompleted ? 'disabled' : ''}>
+                    #${l.rank} – ${l.name} ${alreadyCompleted ? '(already completed)' : ''}
+                  </option>`;
+                }).join('')}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Video Link <span style="color:var(--text-muted);font-size:11px">(optional)</span></label>
+              <input type="url" id="video" placeholder="https://youtube.com/watch?v=..." />
+              <span class="form-note">Must be a YouTube link if provided. Required for Insane/Extreme demons.</span>
+            </div>
+
+            <button class="submit-btn" id="submit-btn" onclick="window.submitCompletion()">Submit Run</button>
+            <p class="status-msg" id="status"></p>
+          </div>
+        `;
+      }
 
       function isYouTube(url) {
         return !url || url.includes('youtube.com') || url.includes('youtu.be');
       }
 
-      async function submitForm() {
-        const player = document.getElementById('player').value.trim();
-        const level  = document.getElementById('level').value;
-        const video  = document.getElementById('video').value.trim();
+      window.submitCompletion = async function() {
+        const levelSlug = document.getElementById('level').value;
+        const video = document.getElementById('video').value.trim();
         const status = document.getElementById('status');
-        const btn    = document.getElementById('submit-btn');
+        const btn = document.getElementById('submit-btn');
 
-        // Validation
-        if (!player) { showStatus('Please enter your name.', 'error'); return; }
-        if (!level)  { showStatus('Please select a level.', 'error'); return; }
-        if (video && !isYouTube(video)) { showStatus('Video must be a YouTube link.', 'error'); return; }
+        if (!levelSlug) {
+          showStatus('Please select a level.', 'error');
+          return;
+        }
+
+        if (video && !isYouTube(video)) {
+          showStatus('Video must be a YouTube link.', 'error');
+          return;
+        }
+
+        const level = allLevels.find(l => l.slug === levelSlug);
+        const difficulty = level?.inGameRating || '';
+        const isHardcore = difficulty === 'Insane Demon' || difficulty === 'Extreme Demon';
+
+        if (isHardcore && !video) {
+          showStatus('Video required for Insane/Extreme demons.', 'error');
+          return;
+        }
 
         btn.disabled = true;
         showStatus('Submitting...', '');
 
         try {
-          await fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ player, level, video })
-          });
+          if (isHardcore) {
+            // Send to Google Sheets for manual review
+            await fetch(SCRIPT_URL, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                player: currentUser.email.split('@')[0],
+                level: levelSlug,
+                video: video
+              })
+            });
+            showStatus('✅ Submitted for review! We\'ll approve it shortly.', 'success');
+          } else {
+            // Auto-approve: add to user's completions
+            await updateDoc(doc(db, 'users', currentUser.uid), {
+              completions: arrayUnion(levelSlug)
+            });
+            showStatus('✅ Level added to your profile!', 'success');
+            
+            // Reload form to update disabled levels
+            setTimeout(() => loadForm(), 1500);
+          }
 
-          showStatus('✅ Submitted! We\'ll review it shortly.', 'success');
-          document.getElementById('player').value = '';
           document.getElementById('level').value = '';
           document.getElementById('video').value = '';
-          document.getElementById('level-search').value = '';
-          populateDropdown(allLevels);
         } catch (err) {
+          console.error(err);
           showStatus('❌ Something went wrong. Try again.', 'error');
         }
 
         btn.disabled = false;
-      }
+      };
 
       function showStatus(msg, type) {
         const el = document.getElementById('status');
@@ -231,59 +344,5 @@
         el.className = 'status-msg ' + type;
       }
     </script>
-    <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAyNCyGdahYYsLbG1sP8GGKc7AAogyI7V4",
-    authDomain: "radl-652e8.firebaseapp.com",
-    projectId: "radl-652e8",
-    storageBucket: "radl-652e8.firebasestorage.app",
-    messagingSenderId: "453756233220",
-    appId: "1:453756233220:web:a43c80ffe66ab17c4f7751"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  // Check auth state and update nav
-  onAuthStateChanged(auth, (user) => {
-    const nav = document.querySelector('nav');
-    
-    // Remove existing auth links
-    const existingAuthLinks = nav.querySelectorAll('.auth-link');
-    existingAuthLinks.forEach(link => link.remove());
-
-    if (user) {
-      // User is logged in - show profile and logout
-      const username = user.email.split('@')[0]; // Use email prefix as username
-      
-      const profileLink = document.createElement('a');
-      profileLink.href = '/profile.html';
-      profileLink.className = 'auth-link';
-      profileLink.textContent = username;
-      nav.appendChild(profileLink);
-
-      const logoutLink = document.createElement('a');
-      logoutLink.href = '#';
-      logoutLink.className = 'auth-link';
-      logoutLink.textContent = 'Logout';
-      logoutLink.addEventListener('click', async (e) => {
-        e.preventDefault();
-        await signOut(auth);
-        window.location.href = '/';
-      });
-      nav.appendChild(logoutLink);
-    } else {
-      // User is logged out - show login
-      const loginLink = document.createElement('a');
-      loginLink.href = '/login.html';
-      loginLink.className = 'auth-link';
-      loginLink.textContent = 'Login';
-      nav.appendChild(loginLink);
-    }
-  });
-</script>
   </body>
 </html>
