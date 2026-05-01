@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <title>RADL – Profile</title>
+    <style>
+      .profile-header {
+        text-align: center;
+        padding: 40px 0;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 40px;
+      }
+
+      .profile-username {
+        font-size: clamp(40px, 8vw, 60px);
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--accent3) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .profile-email {
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 48px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 24px;
+        text-align: center;
+        transition: border-color 0.2s;
+      }
+
+      .stat-card:hover {
+        border-color: var(--accent2);
+      }
+
+      .stat-value {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 36px;
+        color: var(--accent);
+        margin-bottom: 8px;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .completions-section {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .section-title {
+        font-size: 24px;
+        font-family: 'Bebas Neue', cursive;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+        color: var(--text);
+      }
+
+      .completions-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        list-style: none;
+        padding: 0;
+      }
+
+      .completion-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0;
+        transition: border-color 0.2s, transform 0.2s;
+      }
+
+      .completion-item:hover {
+        border-color: var(--accent2);
+        transform: translateX(4px);
+      }
+
+      .completion-item a {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 18px;
+        text-decoration: none;
+        color: var(--text);
+      }
+
+      .completion-rank {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 20px;
+        color: var(--text-muted);
+        min-width: 40px;
+      }
+
+      .completion-name {
+        flex: 1;
+        font-weight: 600;
+      }
+
+      .completion-points {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 18px;
+        color: var(--accent);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-muted);
+      }
+
+      .empty-state h3 {
+        font-size: 20px;
+        margin-bottom: 12px;
+      }
+
+      .empty-state a {
+        color: var(--accent2);
+        text-decoration: none;
+      }
+
+      .empty-state a:hover {
+        text-decoration: underline;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 80px 0;
+        color: var(--text-muted);
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/#classic">Classic Levels</a>
+      <a href="/#platformer">Platformer Levels</a>
+      <a href="/placement-history.html">Placement History</a>
+      <a href="/submit.html">Submit</a>
+      <a href="/leaderboard.html">Leaderboard</a>
+    </nav>
+
+    <div class="container">
+      <div id="profile-content">
+        <p class="loading">Loading profile...</p>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+      import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+      import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAyNCyGdahYYsLbG1sP8GGKc7AAogyI7V4",
+        authDomain: "radl-652e8.firebaseapp.com",
+        projectId: "radl-652e8",
+        storageBucket: "radl-652e8.firebasestorage.app",
+        messagingSenderId: "453756233220",
+        appId: "1:453756233220:web:a43c80ffe66ab17c4f7751"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      const CSV_MAIN = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
+
+      function parseCSVLine(line) {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          if (line[i] === '"') { inQuotes = !inQuotes; }
+          else if (line[i] === ',' && !inQuotes) { result.push(current); current = ''; }
+          else { current += line[i]; }
+        }
+        result.push(current);
+        return result;
+      }
+
+      function parseCSV(text) {
+        const lines = text.trim().split('\n');
+        const headers = parseCSVLine(lines[0]).map(h => h.replace(/"/g, '').trim());
+        return lines.slice(1).filter(l => l.trim()).map(line => {
+          const values = parseCSVLine(line);
+          const obj = {};
+          headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/"/g, '').trim(); });
+          return obj;
+        });
+      }
+
+      // Check auth state
+      onAuthStateChanged(auth, async (user) => {
+        const nav = document.querySelector('nav');
+        const existingAuthLinks = nav.querySelectorAll('.auth-link');
+        existingAuthLinks.forEach(link => link.remove());
+
+        if (user) {
+          // Add nav links
+          const username = user.email.split('@')[0];
+          
+          const profileLink = document.createElement('a');
+          profileLink.href = '/profile.html';
+          profileLink.className = 'auth-link';
+          profileLink.textContent = username;
+          nav.appendChild(profileLink);
+
+          const logoutLink = document.createElement('a');
+          logoutLink.href = '#';
+          logoutLink.className = 'auth-link';
+          logoutLink.textContent = 'Logout';
+          logoutLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = '/';
+          });
+          nav.appendChild(logoutLink);
+
+          // Load profile
+          await loadProfile(user);
+        } else {
+          // Not logged in - redirect to login
+          window.location.href = '/login.html';
+        }
+      });
+
+      async function loadProfile(user) {
+        const content = document.getElementById('profile-content');
+
+        try {
+          // Fetch user profile from Firestore
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          
+          if (!userDoc.exists()) {
+            content.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:80px 0">Profile not found</p>';
+            return;
+          }
+
+          const userData = userDoc.data();
+          const completions = userData.completions || [];
+
+          // Fetch levels data
+          const levelsText = await fetch(CSV_MAIN).then(r => r.text());
+          const allLevels = parseCSV(levelsText);
+
+          // Match completions to level data
+          const userLevels = completions.map(slug => {
+            return allLevels.find(l => l.slug === slug);
+          }).filter(Boolean); // Remove any not found
+
+          // Calculate stats
+          const totalCompletions = userLevels.length;
+          const totalPoints = userLevels.reduce((sum, l) => sum + (parseInt(l.points) || 0), 0);
+          const hardestLevel = userLevels.sort((a, b) => parseInt(a.rank) - parseInt(b.rank))[0];
+
+          // Render profile
+          content.innerHTML = `
+            <div class="profile-header">
+              <h1 class="profile-username">${userData.username}</h1>
+              <p class="profile-email">${userData.email}</p>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-value">${totalCompletions}</div>
+                <div class="stat-label">Completions</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">${totalPoints}</div>
+                <div class="stat-label">Total Points</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">${hardestLevel ? `#${hardestLevel.rank}` : 'N/A'}</div>
+                <div class="stat-label">Hardest Level</div>
+              </div>
+            </div>
+
+            <div class="completions-section">
+              <h2 class="section-title">Completions (${totalCompletions})</h2>
+              ${totalCompletions === 0 
+                ? `<div class="empty-state">
+                     <h3>No completions yet</h3>
+                     <p>Start by <a href="/submit.html">submitting your first level</a>!</p>
+                   </div>`
+                : `<ul class="completions-list">
+                     ${userLevels.map(level => `
+                       <li class="completion-item">
+                         <a href="/level/${level.slug}">
+                           <span class="completion-rank">#${level.rank}</span>
+                           <span class="completion-name">${level.name}</span>
+                           <span class="completion-points">${level.points} pts</span>
+                         </a>
+                       </li>
+                     `).join('')}
+                   </ul>`
+              }
+            </div>
+          `;
+
+        } catch (err) {
+          console.error(err);
+          content.innerHTML = '<p style="text-align:center;color:#f87171;padding:80px 0">Failed to load profile</p>';
+        }
+      }
+    </script>
+  </body>
+</html>
