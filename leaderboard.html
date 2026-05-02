@@ -134,14 +134,32 @@
       </div>
     </div>
 
-    <script>
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+      import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+      import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAyNCyGdahYYsLbG1sP8GGKc7AAogyI7V4",
+        authDomain: "radl-652e8.firebaseapp.com",
+        projectId: "radl-652e8",
+        storageBucket: "radl-652e8.firebasestorage.app",
+        messagingSenderId: "453756233220",
+        appId: "1:453756233220:web:a43c80ffe66ab17c4f7751"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // CSV URL for level data (still needed for points and ranks)
       const CSV_MAIN = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
-      const CSV_VICTORS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=1496346185&single=true&output=csv";
 
       let levelsData = [];
-      let victorsData = [];
+      let usersData = [];
       let currentTab = 'completions';
 
+      // CSV parsing helper
       function parseCSVLine(line) {
         const result = [];
         let current = '';
@@ -166,29 +184,81 @@
         });
       }
 
+      // Load data from both Firestore (users) and Google Sheets (levels)
       async function loadData() {
         try {
-          const [mainText, victorsText] = await Promise.all([
-            fetch(CSV_MAIN).then(r => r.text()),
-            fetch(CSV_VICTORS).then(r => r.text()),
-          ]);
-
+          // Fetch level data from Google Sheets
+          const mainText = await fetch(CSV_MAIN).then(r => r.text());
           levelsData = parseCSV(mainText);
-          victorsData = parseCSV(victorsText);
 
+          // Create lookup map for level data
+          const levelMap = {};
+          levelsData.forEach(level => {
+            levelMap[level.slug] = {
+              name: level.name,
+              rank: parseInt(level.rank) || 999,
+              points: parseInt(level.points) || 0
+            };
+          });
+
+          // Fetch all user profiles from Firestore
+          const usersSnapshot = await getDocs(collection(db, 'users'));
+          usersData = [];
+
+          usersSnapshot.forEach(doc => {
+            const user = doc.data();
+            const completions = user.completions || [];
+            
+            // Calculate user stats
+            let totalPoints = 0;
+            let hardestRank = 999;
+            let hardestLevelName = 'None';
+            let hardestLevelSlug = '';
+            
+            completions.forEach(slug => {
+              if (levelMap[slug]) {
+                totalPoints += levelMap[slug].points;
+                if (levelMap[slug].rank < hardestRank) {
+                  hardestRank = levelMap[slug].rank;
+                  hardestLevelName = levelMap[slug].name;
+                  hardestLevelSlug = slug;
+                }
+              }
+            });
+
+            usersData.push({
+              username: user.username || user.email.split('@')[0],
+              completionsCount: completions.length,
+              totalPoints: totalPoints,
+              hardestLevel: {
+                name: hardestLevelName,
+                rank: hardestRank,
+                slug: hardestLevelSlug
+              }
+            });
+          });
+
+          // Show the default tab
           showTab(currentTab);
+
         } catch (err) {
+          console.error('Error loading leaderboard:', err);
           document.getElementById('leaderboard-content').innerHTML = 
             '<p style="color:#f87171;text-align:center;padding:80px 0">Failed to load leaderboard</p>';
         }
       }
 
-      function showTab(tab) {
+      // Tab switching function (called by onclick in HTML)
+      window.showTab = function(tab) {
         currentTab = tab;
         
         // Update tab buttons
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        event?.target?.classList.add('active');
+        document.querySelectorAll('.tab').forEach(t => {
+          if (t.textContent.toLowerCase().includes(tab)) {
+            t.classList.add('active');
+          }
+        });
 
         const content = document.getElementById('leaderboard-content');
 
@@ -202,13 +272,14 @@
       }
 
       function buildCompletionsTable() {
-        const playerCounts = {};
-        victorsData.forEach(v => {
-          const name = v.victor || v.player || 'Unknown';
-          playerCounts[name] = (playerCounts[name] || 0) + 1;
-        });
+        // Filter out users with 0 completions and sort by count
+        const sorted = usersData
+          .filter(u => u.completionsCount > 0)
+          .sort((a, b) => b.completionsCount - a.completionsCount);
 
-        const sorted = Object.entries(playerCounts).sort((a, b) => b[1] - a[1]);
+        if (sorted.length === 0) {
+          return '<p class="loading">No completions yet!</p>';
+        }
 
         return `
           <table class="leaderboard-table">
@@ -220,11 +291,11 @@
               </tr>
             </thead>
             <tbody>
-              ${sorted.map((p, i) => `
+              ${sorted.map((u, i) => `
                 <tr>
                   <td class="rank-cell">${i + 1}</td>
-                  <td class="player-cell">${p[0]}</td>
-                  <td class="stat-cell">${p[1]}</td>
+                  <td class="player-cell">${u.username}</td>
+                  <td class="stat-cell">${u.completionsCount}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -233,17 +304,14 @@
       }
 
       function buildPointsTable() {
-        const playerPoints = {};
-        
-        victorsData.forEach(v => {
-          const name = v.victor || v.player || 'Unknown';
-          const slug = v.slug || v.level;
-          const level = levelsData.find(l => l.slug === slug);
-          const points = level ? parseInt(level.points) || 0 : 0;
-          playerPoints[name] = (playerPoints[name] || 0) + points;
-        });
+        // Filter out users with 0 points and sort by total points
+        const sorted = usersData
+          .filter(u => u.totalPoints > 0)
+          .sort((a, b) => b.totalPoints - a.totalPoints);
 
-        const sorted = Object.entries(playerPoints).sort((a, b) => b[1] - a[1]);
+        if (sorted.length === 0) {
+          return '<p class="loading">No points earned yet!</p>';
+        }
 
         return `
           <table class="leaderboard-table">
@@ -255,11 +323,11 @@
               </tr>
             </thead>
             <tbody>
-              ${sorted.map((p, i) => `
+              ${sorted.map((u, i) => `
                 <tr>
                   <td class="rank-cell">${i + 1}</td>
-                  <td class="player-cell">${p[0]}</td>
-                  <td class="stat-cell">${p[1]}</td>
+                  <td class="player-cell">${u.username}</td>
+                  <td class="stat-cell">${u.totalPoints}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -268,26 +336,14 @@
       }
 
       function buildHardestTable() {
-        const playerHardest = {};
-        
-        victorsData.forEach(v => {
-          const name = v.victor || v.player || 'Unknown';
-          const slug = v.slug || v.level;
-          const level = levelsData.find(l => l.slug === slug);
-          
-          if (level) {
-            const rank = parseInt(level.rank) || 999;
-            if (!playerHardest[name] || rank < playerHardest[name].rank) {
-              playerHardest[name] = {
-                rank: rank,
-                name: level.name,
-                slug: slug
-              };
-            }
-          }
-        });
+        // Filter out users with no completions and sort by hardest rank
+        const sorted = usersData
+          .filter(u => u.hardestLevel.rank < 999)
+          .sort((a, b) => a.hardestLevel.rank - b.hardestLevel.rank);
 
-        const sorted = Object.entries(playerHardest).sort((a, b) => a[1].rank - b[1].rank);
+        if (sorted.length === 0) {
+          return '<p class="loading">No levels completed yet!</p>';
+        }
 
         return `
           <table class="leaderboard-table">
@@ -299,13 +355,13 @@
               </tr>
             </thead>
             <tbody>
-              ${sorted.map((p, i) => `
+              ${sorted.map((u, i) => `
                 <tr>
                   <td class="rank-cell">${i + 1}</td>
-                  <td class="player-cell">${p[0]}</td>
+                  <td class="player-cell">${u.username}</td>
                   <td>
-                    <a class="level-link" href="/level/${p[1].slug}">
-                      #${p[1].rank} ${p[1].name}
+                    <a class="level-link" href="/level/${u.hardestLevel.slug}">
+                      #${u.hardestLevel.rank} ${u.hardestLevel.name}
                     </a>
                   </td>
                 </tr>
@@ -315,61 +371,46 @@
         `;
       }
 
+      // Check auth state and update nav
+      onAuthStateChanged(auth, (user) => {
+        const nav = document.querySelector('nav');
+        
+        // Remove existing auth links
+        const existingAuthLinks = nav.querySelectorAll('.auth-link');
+        existingAuthLinks.forEach(link => link.remove());
+
+        if (user) {
+          // User is logged in - show profile and logout
+          const username = user.email.split('@')[0];
+          
+          const profileLink = document.createElement('a');
+          profileLink.href = '/profile.html';
+          profileLink.className = 'auth-link';
+          profileLink.textContent = username;
+          nav.appendChild(profileLink);
+
+          const logoutLink = document.createElement('a');
+          logoutLink.href = '#';
+          logoutLink.className = 'auth-link';
+          logoutLink.textContent = 'Logout';
+          logoutLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = '/';
+          });
+          nav.appendChild(logoutLink);
+        } else {
+          // User is logged out - show login
+          const loginLink = document.createElement('a');
+          loginLink.href = '/login.html';
+          loginLink.className = 'auth-link';
+          loginLink.textContent = 'Login';
+          nav.appendChild(loginLink);
+        }
+      });
+
+      // Load leaderboard data on page load
       loadData();
     </script>
-    <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAyNCyGdahYYsLbG1sP8GGKc7AAogyI7V4",
-    authDomain: "radl-652e8.firebaseapp.com",
-    projectId: "radl-652e8",
-    storageBucket: "radl-652e8.firebasestorage.app",
-    messagingSenderId: "453756233220",
-    appId: "1:453756233220:web:a43c80ffe66ab17c4f7751"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  // Check auth state and update nav
-  onAuthStateChanged(auth, (user) => {
-    const nav = document.querySelector('nav');
-    
-    // Remove existing auth links
-    const existingAuthLinks = nav.querySelectorAll('.auth-link');
-    existingAuthLinks.forEach(link => link.remove());
-
-    if (user) {
-      // User is logged in - show profile and logout
-      const username = user.email.split('@')[0]; // Use email prefix as username
-      
-      const profileLink = document.createElement('a');
-      profileLink.href = '/profile.html';
-      profileLink.className = 'auth-link';
-      profileLink.textContent = username;
-      nav.appendChild(profileLink);
-
-      const logoutLink = document.createElement('a');
-      logoutLink.href = '#';
-      logoutLink.className = 'auth-link';
-      logoutLink.textContent = 'Logout';
-      logoutLink.addEventListener('click', async (e) => {
-        e.preventDefault();
-        await signOut(auth);
-        window.location.href = '/';
-      });
-      nav.appendChild(logoutLink);
-    } else {
-      // User is logged out - show login
-      const loginLink = document.createElement('a');
-      loginLink.href = '/login.html';
-      loginLink.className = 'auth-link';
-      loginLink.textContent = 'Login';
-      nav.appendChild(loginLink);
-    }
-  });
-</script>
   </body>
 </html>
