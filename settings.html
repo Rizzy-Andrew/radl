@@ -5,7 +5,7 @@
     <title>RADL – Settings</title>
     <style>
       .settings-container {
-        max-width: 600px;
+        max-width: 700px;
         margin: 60px auto;
         padding: 0 20px;
       }
@@ -15,13 +15,105 @@
         padding: 32px;
         border-radius: 8px;
         border: 1px solid var(--border);
+        margin-bottom: 24px;
       }
 
       .settings-card h2 {
         font-family: 'Bebas Neue', cursive;
-        font-size: 32px;
+        font-size: 28px;
         margin-bottom: 24px;
         color: var(--accent2);
+      }
+
+      .avatar-section {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .avatar-preview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 3px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .avatar-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .avatar-placeholder {
+        font-size: 48px;
+        color: var(--text-muted);
+      }
+
+      .avatar-controls {
+        flex: 1;
+      }
+
+      .file-input-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+
+      .file-input-label {
+        display: inline-block;
+        padding: 10px 20px;
+        background: var(--accent2);
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.2s;
+      }
+
+      .file-input-label:hover {
+        background: var(--accent);
+      }
+
+      .file-input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .remove-avatar-btn {
+        display: inline-block;
+        margin-left: 12px;
+        padding: 10px 20px;
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.2s;
+      }
+
+      .remove-avatar-btn:hover {
+        background: #dc2626;
+      }
+
+      .upload-hint {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 8px;
       }
 
       .form-group {
@@ -38,7 +130,8 @@
         letter-spacing: 1px;
       }
 
-      .form-group input {
+      .form-group input,
+      .form-group textarea {
         width: 100%;
         padding: 12px 16px;
         background: var(--bg);
@@ -49,7 +142,13 @@
         font-family: inherit;
       }
 
-      .form-group input:focus {
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
         outline: none;
         border-color: var(--accent2);
       }
@@ -109,18 +208,21 @@
         border: 1px solid rgba(239, 68, 68, 0.3);
       }
 
-      .current-username {
+      .progress-bar {
+        width: 100%;
+        height: 8px;
         background: var(--bg);
-        padding: 12px 16px;
-        border-radius: 6px;
-        border: 1px solid var(--border);
-        margin-bottom: 24px;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 12px;
+        display: none;
       }
 
-      .current-username strong {
-        color: var(--accent);
-        font-family: 'Bebas Neue', cursive;
-        font-size: 18px;
+      .progress-fill {
+        height: 100%;
+        background: var(--accent2);
+        transition: width 0.3s;
+        width: 0%;
       }
     </style>
   </head>
@@ -134,14 +236,55 @@
     </nav>
 
     <div class="settings-container">
+      <h1 style="font-family: 'Bebas Neue', cursive; font-size: 40px; margin-bottom: 32px;">Settings</h1>
+
+      <!-- Profile Picture Section -->
       <div class="settings-card">
-        <h2>Account Settings</h2>
+        <h2>Profile Picture</h2>
+        <div id="avatarMessage"></div>
 
-        <div id="message"></div>
+        <div class="avatar-section">
+          <div class="avatar-preview" id="avatarPreview">
+            <span class="avatar-placeholder">👤</span>
+          </div>
 
-        <div class="current-username">
+          <div class="avatar-controls">
+            <div class="file-input-wrapper">
+              <label for="avatarUpload" class="file-input-label">Upload Photo</label>
+              <input type="file" id="avatarUpload" class="file-input" accept="image/*">
+            </div>
+            <button class="remove-avatar-btn" id="removeAvatarBtn" style="display: none;">Remove</button>
+            <div class="upload-hint">JPG, PNG, or GIF. Max 5MB.</div>
+            <div class="progress-bar" id="uploadProgress">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bio Section -->
+      <div class="settings-card">
+        <h2>Bio</h2>
+        <div id="bioMessage"></div>
+
+        <form id="bioForm">
+          <div class="form-group">
+            <label for="bio">About You</label>
+            <textarea id="bio" placeholder="Tell us about yourself..." maxlength="500"></textarea>
+            <div class="help-text">Max 500 characters</div>
+          </div>
+          <button type="submit" class="btn" id="bioBtn">Update Bio</button>
+        </form>
+      </div>
+
+      <!-- Username Section -->
+      <div class="settings-card">
+        <h2>Username</h2>
+        <div id="usernameMessage"></div>
+
+        <div style="background: var(--bg); padding: 12px 16px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 24px;">
           <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">Current Username</div>
-          <strong id="currentUsername">Loading...</strong>
+          <strong id="currentUsername" style="color: var(--accent); font-family: 'Bebas Neue', cursive; font-size: 18px;">Loading...</strong>
         </div>
 
         <form id="usernameForm">
@@ -158,8 +301,7 @@
             >
             <div class="help-text">3-20 characters. Letters, numbers, hyphens, and underscores only.</div>
           </div>
-
-          <button type="submit" class="btn" id="submitBtn">Update Username</button>
+          <button type="submit" class="btn" id="usernameBtn">Update Username</button>
         </form>
       </div>
     </div>
@@ -168,6 +310,7 @@
       import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
       import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
       import { getFirestore, doc, getDoc, updateDoc, query, collection, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+      import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
 
       const firebaseConfig = {
         apiKey: "AIzaSyAyNCyGdahYYsLbG1sP8GGKc7AAogyI7V4",
@@ -181,12 +324,14 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
+      const storage = getStorage(app);
 
       let currentUser = null;
+      let userData = null;
 
       // Show message helper
-      function showMessage(text, type) {
-        const messageDiv = document.getElementById('message');
+      function showMessage(elementId, text, type) {
+        const messageDiv = document.getElementById(elementId);
         messageDiv.className = `message ${type}`;
         messageDiv.textContent = text;
         messageDiv.style.display = 'block';
@@ -196,7 +341,125 @@
         }, 5000);
       }
 
-      // Check if username is already taken
+      // Load avatar
+      function loadAvatar(avatarURL) {
+        const preview = document.getElementById('avatarPreview');
+        const removeBtn = document.getElementById('removeAvatarBtn');
+
+        if (avatarURL) {
+          preview.innerHTML = `<img src="${avatarURL}" alt="Avatar">`;
+          removeBtn.style.display = 'inline-block';
+        } else {
+          preview.innerHTML = '<span class="avatar-placeholder">👤</span>';
+          removeBtn.style.display = 'none';
+        }
+      }
+
+      // Upload avatar
+      document.getElementById('avatarUpload').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file || !currentUser) return;
+
+        // Validate file
+        if (file.size > 5 * 1024 * 1024) {
+          showMessage('avatarMessage', 'File size must be less than 5MB', 'error');
+          return;
+        }
+
+        if (!file.type.startsWith('image/')) {
+          showMessage('avatarMessage', 'Please upload an image file', 'error');
+          return;
+        }
+
+        // Show progress bar
+        const progressBar = document.getElementById('uploadProgress');
+        const progressFill = document.getElementById('progressFill');
+        progressBar.style.display = 'block';
+
+        try {
+          // Upload to Firebase Storage
+          const storageRef = ref(storage, `avatars/${currentUser.uid}/${Date.now()}_${file.name}`);
+          const uploadTask = uploadBytesResumable(storageRef, file);
+
+          uploadTask.on('state_changed', 
+            (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              progressFill.style.width = progress + '%';
+            },
+            (error) => {
+              console.error('Upload error:', error);
+              showMessage('avatarMessage', 'Failed to upload image', 'error');
+              progressBar.style.display = 'none';
+            },
+            async () => {
+              // Upload complete - get download URL
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+              // Update Firestore
+              await updateDoc(doc(db, 'users', currentUser.uid), {
+                avatarURL: downloadURL
+              });
+
+              // Update UI
+              loadAvatar(downloadURL);
+              userData.avatarURL = downloadURL;
+              showMessage('avatarMessage', 'Profile picture updated!', 'success');
+              progressBar.style.display = 'none';
+              progressFill.style.width = '0%';
+            }
+          );
+        } catch (error) {
+          console.error('Error uploading avatar:', error);
+          showMessage('avatarMessage', 'Failed to upload image', 'error');
+          progressBar.style.display = 'none';
+        }
+      });
+
+      // Remove avatar
+      document.getElementById('removeAvatarBtn').addEventListener('click', async () => {
+        if (!currentUser || !confirm('Remove your profile picture?')) return;
+
+        try {
+          // Update Firestore
+          await updateDoc(doc(db, 'users', currentUser.uid), {
+            avatarURL: null
+          });
+
+          // Update UI
+          loadAvatar(null);
+          userData.avatarURL = null;
+          showMessage('avatarMessage', 'Profile picture removed', 'success');
+        } catch (error) {
+          console.error('Error removing avatar:', error);
+          showMessage('avatarMessage', 'Failed to remove picture', 'error');
+        }
+      });
+
+      // Update bio
+      document.getElementById('bioForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!currentUser) return;
+
+        const bio = document.getElementById('bio').value.trim();
+        const bioBtn = document.getElementById('bioBtn');
+
+        bioBtn.disabled = true;
+        bioBtn.textContent = 'Updating...';
+
+        try {
+          await updateDoc(doc(db, 'users', currentUser.uid), { bio });
+          userData.bio = bio;
+          showMessage('bioMessage', 'Bio updated!', 'success');
+        } catch (error) {
+          console.error('Error updating bio:', error);
+          showMessage('bioMessage', 'Failed to update bio', 'error');
+        } finally {
+          bioBtn.disabled = false;
+          bioBtn.textContent = 'Update Bio';
+        }
+      });
+
+      // Check if username is taken
       async function isUsernameTaken(username) {
         const usersRef = collection(db, 'users');
         const q = query(usersRef, where('username', '==', username));
@@ -204,7 +467,52 @@
         return !querySnapshot.empty;
       }
 
-      // Load current user data
+      // Update username
+      document.getElementById('usernameForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!currentUser) return;
+
+        const newUsername = document.getElementById('newUsername').value.trim();
+        const usernameBtn = document.getElementById('usernameBtn');
+
+        const usernameRegex = /^[a-zA-Z0-9_-]{3,20}$/;
+        if (!usernameRegex.test(newUsername)) {
+          showMessage('usernameMessage', 'Invalid username format', 'error');
+          return;
+        }
+
+        usernameBtn.disabled = true;
+        usernameBtn.textContent = 'Checking...';
+
+        try {
+          const taken = await isUsernameTaken(newUsername);
+          
+          if (taken) {
+            showMessage('usernameMessage', 'Username already taken', 'error');
+            usernameBtn.disabled = false;
+            usernameBtn.textContent = 'Update Username';
+            return;
+          }
+
+          usernameBtn.textContent = 'Updating...';
+          await updateDoc(doc(db, 'users', currentUser.uid), { username: newUsername });
+
+          document.getElementById('currentUsername').textContent = newUsername;
+          document.getElementById('newUsername').value = '';
+          userData.username = newUsername;
+          
+          showMessage('usernameMessage', 'Username updated!', 'success');
+
+        } catch (error) {
+          console.error('Error updating username:', error);
+          showMessage('usernameMessage', 'Failed to update username', 'error');
+        } finally {
+          usernameBtn.disabled = false;
+          usernameBtn.textContent = 'Update Username';
+        }
+      });
+
+      // Auth state
       onAuthStateChanged(auth, async (user) => {
         const nav = document.querySelector('nav');
         const existingAuthLinks = nav.querySelectorAll('.auth-link');
@@ -213,20 +521,27 @@
         if (user) {
           currentUser = user;
 
-          // Load user profile to show current username
+          // Load user data
           try {
             const userDoc = await getDoc(doc(db, 'users', user.uid));
             if (userDoc.exists()) {
-              const userData = userDoc.data();
-              const displayUsername = userData.username || user.email.split('@')[0];
-              document.getElementById('currentUsername').textContent = displayUsername;
+              userData = userDoc.data();
+              
+              // Load avatar
+              loadAvatar(userData.avatarURL);
+              
+              // Load username
+              document.getElementById('currentUsername').textContent = userData.username || user.email.split('@')[0];
+              
+              // Load bio
+              document.getElementById('bio').value = userData.bio || '';
             }
           } catch (error) {
             console.error('Error loading profile:', error);
           }
 
           // Update nav
-          const username = user.email.split('@')[0];
+          const username = userData?.username || user.email.split('@')[0];
           
           const profileLink = document.createElement('a');
           profileLink.href = '/profile.html';
@@ -251,70 +566,7 @@
           });
           nav.appendChild(logoutLink);
         } else {
-          // Redirect to login if not authenticated
           window.location.href = '/login.html';
-        }
-      });
-
-      // Handle username update form submission
-      document.getElementById('usernameForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        if (!currentUser) {
-          showMessage('You must be logged in to update your username.', 'error');
-          return;
-        }
-
-        const newUsername = document.getElementById('newUsername').value.trim();
-        const submitBtn = document.getElementById('submitBtn');
-
-        // Validate username format
-        const usernameRegex = /^[a-zA-Z0-9_-]{3,20}$/;
-        if (!usernameRegex.test(newUsername)) {
-          showMessage('Invalid username format. Use 3-20 characters (letters, numbers, hyphens, underscores only).', 'error');
-          return;
-        }
-
-        // Disable button during processing
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Checking...';
-
-        try {
-          // Check if username is already taken
-          const taken = await isUsernameTaken(newUsername);
-          
-          if (taken) {
-            showMessage('Username is already taken. Please choose another.', 'error');
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Update Username';
-            return;
-          }
-
-          // Update username in Firestore
-          submitBtn.textContent = 'Updating...';
-          const userRef = doc(db, 'users', currentUser.uid);
-          await updateDoc(userRef, {
-            username: newUsername
-          });
-
-          // Update display
-          document.getElementById('currentUsername').textContent = newUsername;
-          document.getElementById('newUsername').value = '';
-          
-          showMessage('Username updated successfully!', 'success');
-          
-          // Update nav to reflect new username
-          const profileLink = document.querySelector('nav .auth-link[href="/profile.html"]');
-          if (profileLink) {
-            profileLink.textContent = newUsername;
-          }
-
-        } catch (error) {
-          console.error('Error updating username:', error);
-          showMessage('Failed to update username. Please try again.', 'error');
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Update Username';
         }
       });
     </script>
