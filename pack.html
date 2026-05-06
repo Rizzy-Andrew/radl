@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <title>RADL – Pack</title>
+    <style>
+      .container {
+        max-width: 900px;
+        margin: 60px auto;
+        padding: 0 20px;
+      }
+
+      .pack-header {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 32px;
+      }
+
+      .pack-banner {
+        height: 12px;
+      }
+
+      .pack-header-body {
+        padding: 32px;
+      }
+
+      .pack-title {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 48px;
+        margin-bottom: 8px;
+      }
+
+      .pack-description {
+        font-size: 16px;
+        color: var(--text-muted);
+        margin-bottom: 24px;
+        line-height: 1.6;
+      }
+
+      .pack-stats {
+        display: flex;
+        gap: 32px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+      }
+
+      .pack-stat {
+        text-align: center;
+      }
+
+      .pack-stat-value {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 36px;
+        color: var(--accent);
+      }
+
+      .pack-stat-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+      }
+
+      .progress-section {
+        margin-top: 24px;
+      }
+
+      .progress-bar-container {
+        background: var(--bg);
+        border-radius: 6px;
+        height: 12px;
+        overflow: hidden;
+        margin-bottom: 8px;
+      }
+
+      .progress-bar-fill {
+        height: 100%;
+        border-radius: 6px;
+        transition: width 0.8s ease;
+      }
+
+      .progress-text {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+
+      .completed-banner {
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        border-radius: 8px;
+        padding: 16px 24px;
+        color: #22c55e;
+        font-weight: 700;
+        font-size: 16px;
+        margin-top: 16px;
+        text-align: center;
+        font-family: 'Bebas Neue', cursive;
+        letter-spacing: 2px;
+        font-size: 22px;
+      }
+
+      .levels-section h2 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: var(--accent2);
+      }
+
+      .level-row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 16px 20px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 10px;
+        text-decoration: none;
+        color: var(--text);
+        transition: all 0.2s;
+      }
+
+      .level-row:hover {
+        border-color: var(--accent2);
+        transform: translateX(4px);
+      }
+
+      .level-row.completed {
+        border-color: rgba(34, 197, 94, 0.4);
+        background: rgba(34, 197, 94, 0.05);
+      }
+
+      .level-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+
+      .level-check.done {
+        background: #22c55e;
+        border-color: #22c55e;
+        color: white;
+      }
+
+      .level-rank {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 24px;
+        color: var(--accent);
+        min-width: 50px;
+      }
+
+      .level-info {
+        flex: 1;
+      }
+
+      .level-name {
+        font-weight: 700;
+        font-size: 17px;
+        margin-bottom: 4px;
+      }
+
+      .level-publisher {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      .level-points {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 20px;
+        color: var(--accent2);
+      }
+
+      .loading {
+        text-align: center;
+        padding: 80px 20px;
+        color: var(--text-muted);
+        font-family: 'Bebas Neue', cursive;
+        font-size: 28px;
+      }
+
+      .not-found {
+        text-align: center;
+        padding: 80px 20px;
+        color: var(--text-muted);
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 24px;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.2s;
+      }
+
+      .back-link:hover {
+        color: var(--text);
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/#classic">Classic Levels</a>
+      <a href="/#platformer">Platformer Levels</a>
+      <a href="/placement-history.html">Placement History</a>
+      <a href="/submit.html">Submit</a>
+      <a href="/leaderboard.html">Leaderboard</a>
+      <a href="/packs.html">Packs</a>
+    </nav>
+
+    <div class="container">
+      <a href="/packs.html" class="back-link">← Back to Packs</a>
+
+      <div id="loadingMessage" class="loading">Loading pack...</div>
+      <div id="notFound" class="not-found" style="display: none;">
+        <h2>Pack not found</h2>
+        <a href="/packs.html" style="color: var(--accent2);">Browse all packs →</a>
+      </div>
+
+      <div id="packContent" style="display: none;">
+        <!-- Pack Header -->
+        <div class="pack-header">
+          <div class="pack-banner" id="packBanner"></div>
+          <div class="pack-header-body">
+            <h1 class="pack-title" id="packTitle"></h1>
+            <p class="pack-description" id="packDescription"></p>
+
+            <div class="pack-stats">
+              <div class="pack-stat">
+                <div class="pack-stat-value" id="totalLevels">0</div>
+                <div class="pack-stat-label">Levels</div>
+              </div>
+              <div class="pack-stat">
+                <div class="pack-stat-value" id="totalPoints">0</div>
+                <div class="pack-stat-label">Total Points</div>
+              </div>
+              <div class="pack-stat">
+                <div class="pack-stat-value" id="bonusPoints">0</div>
+                <div class="pack-stat-label">Bonus Points</div>
+              </div>
+            </div>
+
+            <div id="progressSection" class="progress-section" style="display: none;">
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressFill"></div>
+              </div>
+              <div class="progress-text">
+                <span id="progressLabel">0/0 completed</span>
+                <span id="progressPercent">0%</span>
+              </div>
+              <div id="completedBanner" class="completed-banner" style="display: none;">
+                ✓ Pack Complete! +<span id="bonusDisplay">0</span> Bonus Points Earned!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Levels List -->
+        <div class="levels-section">
+          <h2>Levels</h2>
+          <div id="levelsList"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+      import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+      import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAyNCyGdahYYsLbG1sP8GGKc7AAogyI7V4",
+        authDomain: "radl-652e8.firebaseapp.com",
+        projectId: "radl-652e8",
+        storageBucket: "radl-652e8.firebasestorage.app",
+        messagingSenderId: "453756233220",
+        appId: "1:453756233220:web:a43c80ffe66ab17c4f7751"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePJra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv';
+
+      function parseCSV(text) {
+        const lines = text.trim().split('\n');
+        const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
+        return lines.slice(1).filter(l => l.trim()).map(line => {
+          const values = line.split(',');
+          const obj = {};
+          headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/"/g, '').trim(); });
+          return obj;
+        });
+      }
+
+      // Get pack ID from URL
+      const params = new URLSearchParams(window.location.search);
+      const packId = params.get('id');
+
+      async function loadPack(user) {
+        if (!packId) {
+          document.getElementById('loadingMessage').style.display = 'none';
+          document.getElementById('notFound').style.display = 'block';
+          return;
+        }
+
+        try {
+          // Load pack data
+          const packDoc = await getDoc(doc(db, 'packs', packId));
+          if (!packDoc.exists()) {
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('notFound').style.display = 'block';
+            return;
+          }
+
+          const pack = { id: packDoc.id, ...packDoc.data() };
+          const color = pack.color || '#a855f7';
+
+          // Load user completions
+          let userCompletions = [];
+          if (user) {
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            if (userDoc.exists()) {
+              userCompletions = userDoc.data().completions || [];
+            }
+          }
+
+          // Load level data from Google Sheets
+          const response = await fetch(CSV_URL);
+          const csvText = await response.text();
+          const allLevels = parseCSV(csvText);
+
+          const levelMap = {};
+          allLevels.forEach(level => { levelMap[level.slug] = level; });
+
+          // Get pack levels
+          const packLevels = (pack.levels || [])
+            .map(slug => levelMap[slug])
+            .filter(Boolean)
+            .sort((a, b) => parseInt(a.rank) - parseInt(b.rank));
+
+          // Calculate stats
+          const totalPoints = packLevels.reduce((sum, l) => sum + (parseInt(l.points) || 0), 0);
+          const completed = packLevels.filter(l => userCompletions.includes(l.slug)).length;
+          const total = packLevels.length;
+          const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+          const isCompleted = completed === total && total > 0;
+
+          // Update page title
+          document.title = `${pack.name} – RADL`;
+
+          // Populate header
+          document.getElementById('packBanner').style.background = color;
+          document.getElementById('packTitle').textContent = pack.name;
+          document.getElementById('packTitle').style.color = color;
+          document.getElementById('packDescription').textContent = pack.description || '';
+          document.getElementById('totalLevels').textContent = total;
+          document.getElementById('totalPoints').textContent = totalPoints;
+          document.getElementById('bonusPoints').textContent = pack.bonusPoints || 0;
+
+          // Progress bar (only if logged in)
+          if (user) {
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressFill').style.background = color;
+            document.getElementById('progressLabel').textContent = `${completed}/${total} completed`;
+            document.getElementById('progressPercent').textContent = percent + '%';
+
+            if (isCompleted) {
+              document.getElementById('completedBanner').style.display = 'block';
+              document.getElementById('bonusDisplay').textContent = pack.bonusPoints || 0;
+            }
+          }
+
+          // Render levels
+          const levelsList = document.getElementById('levelsList');
+          levelsList.innerHTML = packLevels.map(level => {
+            const isDone = userCompletions.includes(level.slug);
+            return `
+              <a class="level-row ${isDone ? 'completed' : ''}" href="/level/${level.slug}">
+                <div class="level-check ${isDone ? 'done' : ''}">
+                  ${isDone ? '✓' : ''}
+                </div>
+                <div class="level-rank">#${level.rank}</div>
+                <div class="level-info">
+                  <div class="level-name">${level.name}</div>
+                  <div class="level-publisher">by ${level.publisher}</div>
+                </div>
+                <div class="level-points">${level.points} pts</div>
+              </a>
+            `;
+          }).join('');
+
+          // Show content
+          document.getElementById('loadingMessage').style.display = 'none';
+          document.getElementById('packContent').style.display = 'block';
+
+        } catch (error) {
+          console.error('Error loading pack:', error);
+          document.getElementById('loadingMessage').textContent = 'Failed to load pack.';
+        }
+      }
+
+      onAuthStateChanged(auth, async (user) => {
+        const nav = document.querySelector('nav');
+        nav.querySelectorAll('.auth-link').forEach(l => l.remove());
+
+        if (user) {
+          let username = user.email.split('@')[0];
+          try {
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            if (userDoc.exists()) username = userDoc.data().username || username;
+          } catch (e) {}
+
+          const profileLink = document.createElement('a');
+          profileLink.href = '/profile.html';
+          profileLink.className = 'auth-link';
+          profileLink.textContent = username;
+          nav.appendChild(profileLink);
+
+          const settingsLink = document.createElement('a');
+          settingsLink.href = '/settings.html';
+          settingsLink.className = 'auth-link';
+          settingsLink.textContent = 'Settings';
+          nav.appendChild(settingsLink);
+
+          const logoutLink = document.createElement('a');
+          logoutLink.href = '#';
+          logoutLink.className = 'auth-link';
+          logoutLink.textContent = 'Logout';
+          logoutLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = '/';
+          });
+          nav.appendChild(logoutLink);
+        } else {
+          const loginLink = document.createElement('a');
+          loginLink.href = '/login.html';
+          loginLink.className = 'auth-link';
+          loginLink.textContent = 'Login';
+          nav.appendChild(loginLink);
+        }
+
+        await loadPack(user);
+      });
+    </script>
+  </body>
+</html>
