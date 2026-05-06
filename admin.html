@@ -67,17 +67,13 @@
         cursor: pointer;
         border-bottom: 3px solid transparent;
         transition: all 0.2s;
+        margin-bottom: -2px;
       }
 
-      .tab:hover {
-        color: var(--text);
-      }
+      .tab:hover { color: var(--text); }
+      .tab.active { color: var(--accent2); border-bottom-color: var(--accent2); }
 
-      .tab.active {
-        color: var(--accent2);
-        border-bottom-color: var(--accent2);
-      }
-
+      /* Submissions styles */
       .submissions-list {
         display: flex;
         flex-direction: column;
@@ -94,9 +90,7 @@
         align-items: flex-start;
       }
 
-      .submission-info {
-        flex: 1;
-      }
+      .submission-info { flex: 1; }
 
       .submission-header {
         display: flex;
@@ -120,30 +114,15 @@
         letter-spacing: 1px;
       }
 
-      .status-pending {
-        background: rgba(251, 191, 36, 0.2);
-        color: #fbbf24;
-      }
-
-      .status-approved {
-        background: rgba(34, 197, 94, 0.2);
-        color: #22c55e;
-      }
-
-      .status-rejected {
-        background: rgba(239, 68, 68, 0.2);
-        color: #ef4444;
-      }
+      .status-pending { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+      .status-approved { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+      .status-rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
 
       .submission-details {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 12px;
         margin-bottom: 16px;
-      }
-
-      .detail-item {
-        font-size: 13px;
       }
 
       .detail-label {
@@ -154,20 +133,10 @@
         margin-bottom: 4px;
       }
 
-      .detail-value {
-        color: var(--text);
-        font-weight: 600;
-      }
+      .detail-value { color: var(--text); font-weight: 600; }
 
-      .video-link {
-        color: var(--accent3);
-        text-decoration: none;
-        font-size: 14px;
-      }
-
-      .video-link:hover {
-        text-decoration: underline;
-      }
+      .video-link { color: var(--accent3); text-decoration: none; font-size: 14px; }
+      .video-link:hover { text-decoration: underline; }
 
       .submission-actions {
         display: flex;
@@ -188,28 +157,11 @@
         white-space: nowrap;
       }
 
-      .approve-btn {
-        background: #22c55e;
-        color: white;
-      }
-
-      .approve-btn:hover {
-        background: #16a34a;
-      }
-
-      .reject-btn {
-        background: #ef4444;
-        color: white;
-      }
-
-      .reject-btn:hover {
-        background: #dc2626;
-      }
-
-      .action-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
+      .approve-btn { background: #22c55e; color: white; }
+      .approve-btn:hover { background: #16a34a; }
+      .reject-btn { background: #ef4444; color: white; }
+      .reject-btn:hover { background: #dc2626; }
+      .action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
       .notes-input {
         width: 100%;
@@ -222,11 +174,209 @@
         margin-bottom: 8px;
         resize: vertical;
         min-height: 60px;
+        font-family: inherit;
       }
+
+      /* Packs styles */
+      .packs-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+
+      @media (max-width: 768px) {
+        .packs-section { grid-template-columns: 1fr; }
+      }
+
+      .create-pack-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 24px;
+      }
+
+      .create-pack-card h2 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 28px;
+        margin-bottom: 24px;
+        color: var(--accent2);
+      }
+
+      .form-group {
+        margin-bottom: 16px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+        font-weight: 700;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 10px 14px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 14px;
+        font-family: inherit;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: var(--accent2);
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .help-text {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+
+      .color-preview {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .color-preview input[type="color"] {
+        width: 50px;
+        height: 40px;
+        padding: 2px;
+        border-radius: 6px;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .color-hex {
+        flex: 1;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background: var(--accent2);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 8px;
+      }
+
+      .submit-btn:hover { background: var(--accent); }
+      .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+      .packs-list-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 24px;
+      }
+
+      .packs-list-card h2 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 28px;
+        margin-bottom: 24px;
+        color: var(--accent2);
+      }
+
+      .pack-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 12px;
+      }
+
+      .pack-color-dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .pack-item-info { flex: 1; }
+
+      .pack-item-name {
+        font-weight: 700;
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+
+      .pack-item-meta {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .pack-item-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .delete-btn {
+        padding: 6px 14px;
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .delete-btn:hover { background: #dc2626; }
+
+      .edit-btn {
+        padding: 6px 14px;
+        background: var(--accent2);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .edit-btn:hover { background: var(--accent); }
+
+      .message {
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        font-size: 14px;
+        display: none;
+      }
+
+      .message.success { background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); }
+      .message.error { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
 
       .empty-state {
         text-align: center;
-        padding: 60px 20px;
+        padding: 40px 20px;
         color: var(--text-muted);
       }
 
@@ -249,6 +399,9 @@
         color: #ef4444;
         margin-bottom: 12px;
       }
+
+      .tab-panel { display: none; }
+      .tab-panel.active { display: block; }
     </style>
   </head>
   <body>
@@ -278,15 +431,85 @@
           <div class="stat-number" id="rejectedCount">0</div>
           <div class="stat-label">Rejected</div>
         </div>
+        <div class="stat-card">
+          <div class="stat-number" id="packsCount">0</div>
+          <div class="stat-label">Packs</div>
+        </div>
       </div>
 
       <div class="tabs">
         <button class="tab active" onclick="showTab('pending')">Pending</button>
         <button class="tab" onclick="showTab('approved')">Approved</button>
         <button class="tab" onclick="showTab('rejected')">Rejected</button>
+        <button class="tab" onclick="showTab('packs')">Packs</button>
       </div>
 
-      <div id="submissionsList" class="submissions-list"></div>
+      <!-- Submissions tabs -->
+      <div id="pending-panel" class="tab-panel active">
+        <div id="pendingList" class="submissions-list"></div>
+      </div>
+
+      <div id="approved-panel" class="tab-panel">
+        <div id="approvedList" class="submissions-list"></div>
+      </div>
+
+      <div id="rejected-panel" class="tab-panel">
+        <div id="rejectedList" class="submissions-list"></div>
+      </div>
+
+      <!-- Packs tab -->
+      <div id="packs-panel" class="tab-panel">
+        <div class="packs-section">
+          <!-- Create Pack Form -->
+          <div class="create-pack-card">
+            <h2 id="packFormTitle">Create Pack</h2>
+            <div id="packMessage" class="message"></div>
+
+            <form id="packForm">
+              <input type="hidden" id="editingPackId">
+
+              <div class="form-group">
+                <label>Pack Name</label>
+                <input type="text" id="packName" placeholder="e.g. KrmaL Pack I" required maxlength="50">
+              </div>
+
+              <div class="form-group">
+                <label>Description</label>
+                <textarea id="packDescription" placeholder="e.g. All levels created by KrmaL" maxlength="200"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Color</label>
+                <div class="color-preview">
+                  <input type="color" id="packColorPicker" value="#a855f7">
+                  <input type="text" id="packColor" class="color-hex" value="#a855f7" placeholder="#a855f7" maxlength="7">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Bonus Points</label>
+                <input type="number" id="packBonus" placeholder="e.g. 50" min="0" max="9999" value="50">
+                <div class="help-text">Extra points awarded for completing the full pack</div>
+              </div>
+
+              <div class="form-group">
+                <label>Level Slugs</label>
+                <textarea id="packLevels" placeholder="One slug per line, e.g:&#10;silent-clubstep&#10;sonic-wave&#10;bloodbath" style="min-height: 120px;" required></textarea>
+                <div class="help-text">Enter each level slug on a new line. Slugs must match exactly from your Google Sheet.</div>
+              </div>
+
+              <button type="submit" class="submit-btn" id="packSubmitBtn">Create Pack</button>
+              <button type="button" class="submit-btn" id="cancelEditBtn" style="display:none; background: #6b7280; margin-top: 8px;" onclick="cancelEdit()">Cancel Edit</button>
+            </form>
+          </div>
+
+          <!-- Existing Packs List -->
+          <div class="packs-list-card">
+            <h2>Existing Packs</h2>
+            <div id="packsList"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div id="loadingMessage" class="loading">Loading admin panel...</div>
@@ -300,7 +523,7 @@
     <script type="module">
       import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
       import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-      import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, orderBy } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+      import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, addDoc, deleteDoc, orderBy } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
       const firebaseConfig = {
         apiKey: "AIzaSyAyNCyGdahYYsLbG1sP8GGKc7AAogyI7V4",
@@ -317,93 +540,59 @@
 
       let currentTab = 'pending';
       let allSubmissions = [];
+      let allPacks = [];
 
-      // Check if user is admin
-      async function checkAdminAccess(user) {
-        try {
-          const userDoc = await getDoc(doc(db, 'users', user.uid));
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            return userData.isAdmin === true;
-          }
-          return false;
-        } catch (error) {
-          console.error('Error checking admin access:', error);
-          return false;
-        }
+      // ─── Tab switching ────────────────────────────────────────────────────────
+      window.showTab = function(tab) {
+        currentTab = tab;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => {
+          if (t.textContent.toLowerCase() === tab) t.classList.add('active');
+        });
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(`${tab}-panel`).classList.add('active');
+
+        if (tab === 'packs') loadPacks();
       }
 
-      // Load all submissions
+      // ─── Submissions ──────────────────────────────────────────────────────────
       async function loadSubmissions() {
         try {
-          const submissionsRef = collection(db, 'submissions');
-          const q = query(submissionsRef, orderBy('submittedAt', 'desc'));
-          const querySnapshot = await getDocs(q);
-          
+          const q = query(collection(db, 'submissions'), orderBy('submittedAt', 'desc'));
+          const snap = await getDocs(q);
           allSubmissions = [];
-          querySnapshot.forEach(doc => {
-            allSubmissions.push({
-              id: doc.id,
-              ...doc.data()
-            });
-          });
-
+          snap.forEach(doc => allSubmissions.push({ id: doc.id, ...doc.data() }));
           updateStats();
-          showTab(currentTab);
+          renderSubmissions('pending');
+          renderSubmissions('approved');
+          renderSubmissions('rejected');
         } catch (error) {
           console.error('Error loading submissions:', error);
         }
       }
 
-      // Update stats counters
       function updateStats() {
-        const pending = allSubmissions.filter(s => s.status === 'pending').length;
-        const approved = allSubmissions.filter(s => s.status === 'approved').length;
-        const rejected = allSubmissions.filter(s => s.status === 'rejected').length;
-
-        document.getElementById('pendingCount').textContent = pending;
-        document.getElementById('approvedCount').textContent = approved;
-        document.getElementById('rejectedCount').textContent = rejected;
+        document.getElementById('pendingCount').textContent = allSubmissions.filter(s => s.status === 'pending').length;
+        document.getElementById('approvedCount').textContent = allSubmissions.filter(s => s.status === 'approved').length;
+        document.getElementById('rejectedCount').textContent = allSubmissions.filter(s => s.status === 'rejected').length;
       }
 
-      // Show tab
-      window.showTab = function(tab) {
-        currentTab = tab;
+      function renderSubmissions(status) {
+        const container = document.getElementById(`${status}List`);
+        const filtered = allSubmissions.filter(s => s.status === status);
 
-        // Update tab buttons
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => {
-          if (t.textContent.toLowerCase() === tab) {
-            t.classList.add('active');
-          }
-        });
-
-        // Filter submissions
-        const filtered = allSubmissions.filter(s => s.status === tab);
-        renderSubmissions(filtered);
-      }
-
-      // Render submissions
-      function renderSubmissions(submissions) {
-        const container = document.getElementById('submissionsList');
-
-        if (submissions.length === 0) {
-          container.innerHTML = `
-            <div class="empty-state">
-              <p>No ${currentTab} submissions</p>
-            </div>
-          `;
+        if (filtered.length === 0) {
+          container.innerHTML = `<div class="empty-state">No ${status} submissions</div>`;
           return;
         }
 
-        container.innerHTML = submissions.map(sub => `
+        container.innerHTML = filtered.map(sub => `
           <div class="submission-card">
             <div class="submission-info">
               <div class="submission-header">
                 <div class="level-name">${sub.levelName}</div>
                 <span class="status-badge status-${sub.status}">${sub.status}</span>
               </div>
-
               <div class="submission-details">
                 <div class="detail-item">
                   <div class="detail-label">Submitted By</div>
@@ -411,53 +600,31 @@
                 </div>
                 <div class="detail-item">
                   <div class="detail-label">Submitted At</div>
-                  <div class="detail-value">${new Date(sub.submittedAt.toDate()).toLocaleDateString()}</div>
+                  <div class="detail-value">${sub.submittedAt?.toDate ? sub.submittedAt.toDate().toLocaleDateString() : 'Unknown'}</div>
                 </div>
                 <div class="detail-item">
                   <div class="detail-label">Video Proof</div>
                   <a href="${sub.videoURL}" target="_blank" class="video-link">Watch Video →</a>
                 </div>
               </div>
-
-              ${sub.notes ? `
-                <div style="margin-top: 12px; padding: 12px; background: var(--bg); border-radius: 6px; font-size: 13px;">
-                  <strong style="color: var(--text-muted);">Admin Notes:</strong> ${sub.notes}
-                </div>
-              ` : ''}
-
-              ${sub.status === 'pending' ? `
-                <textarea 
-                  class="notes-input" 
-                  id="notes-${sub.id}" 
-                  placeholder="Add admin notes (optional)..."
-                ></textarea>
-              ` : ''}
+              ${sub.notes ? `<div style="margin-top: 12px; padding: 12px; background: var(--bg); border-radius: 6px; font-size: 13px;"><strong style="color: var(--text-muted);">Notes:</strong> ${sub.notes}</div>` : ''}
+              ${status === 'pending' ? `<textarea class="notes-input" id="notes-${sub.id}" placeholder="Add admin notes (optional)..."></textarea>` : ''}
             </div>
-
-            ${sub.status === 'pending' ? `
+            ${status === 'pending' ? `
               <div class="submission-actions">
-                <button class="action-btn approve-btn" onclick="approveSubmission('${sub.id}', '${sub.userId}', '${sub.levelSlug}')">
-                  Approve
-                </button>
-                <button class="action-btn reject-btn" onclick="rejectSubmission('${sub.id}')">
-                  Reject
-                </button>
+                <button class="action-btn approve-btn" onclick="approveSubmission('${sub.id}', '${sub.userId}', '${sub.levelSlug}')">Approve</button>
+                <button class="action-btn reject-btn" onclick="rejectSubmission('${sub.id}')">Reject</button>
               </div>
             ` : ''}
           </div>
         `).join('');
       }
 
-      // Approve submission
       window.approveSubmission = async function(submissionId, userId, levelSlug) {
         const notes = document.getElementById(`notes-${submissionId}`)?.value || '';
-        
-        if (!confirm('Approve this submission? This will add the level to the user\'s completions.')) {
-          return;
-        }
+        if (!confirm('Approve this submission? This will add the level to the user\'s completions.')) return;
 
         try {
-          // Update submission status
           await updateDoc(doc(db, 'submissions', submissionId), {
             status: 'approved',
             reviewedAt: new Date(),
@@ -465,14 +632,10 @@
             notes: notes
           });
 
-          // Add level to user's completions
           const userRef = doc(db, 'users', userId);
           const userDoc = await getDoc(userRef);
-          
           if (userDoc.exists()) {
-            const userData = userDoc.data();
-            const completions = userData.completions || [];
-            
+            const completions = userDoc.data().completions || [];
             if (!completions.includes(levelSlug)) {
               completions.push(levelSlug);
               await updateDoc(userRef, { completions });
@@ -482,18 +645,14 @@
           alert('Submission approved!');
           await loadSubmissions();
         } catch (error) {
-          console.error('Error approving submission:', error);
-          alert('Failed to approve submission. Please try again.');
+          console.error('Error approving:', error);
+          alert('Failed to approve. Please try again.');
         }
       }
 
-      // Reject submission
       window.rejectSubmission = async function(submissionId) {
         const notes = document.getElementById(`notes-${submissionId}`)?.value || '';
-        
-        if (!confirm('Reject this submission?')) {
-          return;
-        }
+        if (!confirm('Reject this submission?')) return;
 
         try {
           await updateDoc(doc(db, 'submissions', submissionId), {
@@ -502,39 +661,188 @@
             reviewedBy: auth.currentUser.uid,
             notes: notes
           });
-
           alert('Submission rejected.');
           await loadSubmissions();
         } catch (error) {
-          console.error('Error rejecting submission:', error);
-          alert('Failed to reject submission. Please try again.');
+          console.error('Error rejecting:', error);
+          alert('Failed to reject. Please try again.');
         }
       }
 
-      // Auth state check
+      // ─── Packs ────────────────────────────────────────────────────────────────
+      async function loadPacks() {
+        try {
+          const snap = await getDocs(collection(db, 'packs'));
+          allPacks = [];
+          snap.forEach(doc => allPacks.push({ id: doc.id, ...doc.data() }));
+          document.getElementById('packsCount').textContent = allPacks.length;
+          renderPacks();
+        } catch (error) {
+          console.error('Error loading packs:', error);
+        }
+      }
+
+      function renderPacks() {
+        const container = document.getElementById('packsList');
+
+        if (allPacks.length === 0) {
+          container.innerHTML = '<div class="empty-state">No packs yet. Create one!</div>';
+          return;
+        }
+
+        container.innerHTML = allPacks.map(pack => `
+          <div class="pack-item">
+            <div class="pack-color-dot" style="background: ${pack.color || '#a855f7'}"></div>
+            <div class="pack-item-info">
+              <div class="pack-item-name">${pack.name}</div>
+              <div class="pack-item-meta">${(pack.levels || []).length} levels · ${pack.bonusPoints || 0} bonus pts</div>
+            </div>
+            <div class="pack-item-actions">
+              <button class="edit-btn" onclick="editPack('${pack.id}')">Edit</button>
+              <button class="delete-btn" onclick="deletePack('${pack.id}')">Delete</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function showMessage(text, type) {
+        const msg = document.getElementById('packMessage');
+        msg.className = `message ${type}`;
+        msg.textContent = text;
+        msg.style.display = 'block';
+        setTimeout(() => msg.style.display = 'none', 4000);
+      }
+
+      // Color picker sync
+      document.getElementById('packColorPicker').addEventListener('input', (e) => {
+        document.getElementById('packColor').value = e.target.value;
+      });
+
+      document.getElementById('packColor').addEventListener('input', (e) => {
+        if (/^#[0-9a-fA-F]{6}$/.test(e.target.value)) {
+          document.getElementById('packColorPicker').value = e.target.value;
+        }
+      });
+
+      // Create / Edit pack form
+      document.getElementById('packForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const editingId = document.getElementById('editingPackId').value;
+        const name = document.getElementById('packName').value.trim();
+        const description = document.getElementById('packDescription').value.trim();
+        const color = document.getElementById('packColor').value.trim() || '#a855f7';
+        const bonusPoints = parseInt(document.getElementById('packBonus').value) || 0;
+        const levelsRaw = document.getElementById('packLevels').value.trim();
+        const levels = levelsRaw.split('\n').map(s => s.trim()).filter(Boolean);
+
+        if (levels.length === 0) {
+          showMessage('Please add at least one level slug.', 'error');
+          return;
+        }
+
+        const btn = document.getElementById('packSubmitBtn');
+        btn.disabled = true;
+        btn.textContent = editingId ? 'Saving...' : 'Creating...';
+
+        try {
+          const packData = {
+            name,
+            description,
+            color,
+            bonusPoints,
+            levels,
+            updatedAt: new Date()
+          };
+
+          if (editingId) {
+            await updateDoc(doc(db, 'packs', editingId), packData);
+            showMessage('Pack updated!', 'success');
+            cancelEdit();
+          } else {
+            packData.createdAt = new Date();
+            await addDoc(collection(db, 'packs'), packData);
+            showMessage('Pack created!', 'success');
+            document.getElementById('packForm').reset();
+            document.getElementById('packColor').value = '#a855f7';
+            document.getElementById('packColorPicker').value = '#a855f7';
+            document.getElementById('packBonus').value = '50';
+          }
+
+          await loadPacks();
+        } catch (error) {
+          console.error('Error saving pack:', error);
+          showMessage('Failed to save pack. Please try again.', 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = editingId ? 'Save Changes' : 'Create Pack';
+        }
+      });
+
+      window.editPack = function(packId) {
+        const pack = allPacks.find(p => p.id === packId);
+        if (!pack) return;
+
+        document.getElementById('editingPackId').value = packId;
+        document.getElementById('packFormTitle').textContent = 'Edit Pack';
+        document.getElementById('packSubmitBtn').textContent = 'Save Changes';
+        document.getElementById('cancelEditBtn').style.display = 'block';
+
+        document.getElementById('packName').value = pack.name || '';
+        document.getElementById('packDescription').value = pack.description || '';
+        document.getElementById('packColor').value = pack.color || '#a855f7';
+        document.getElementById('packColorPicker').value = pack.color || '#a855f7';
+        document.getElementById('packBonus').value = pack.bonusPoints || 50;
+        document.getElementById('packLevels').value = (pack.levels || []).join('\n');
+
+        document.getElementById('packForm').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      window.cancelEdit = function() {
+        document.getElementById('editingPackId').value = '';
+        document.getElementById('packFormTitle').textContent = 'Create Pack';
+        document.getElementById('packSubmitBtn').textContent = 'Create Pack';
+        document.getElementById('cancelEditBtn').style.display = 'none';
+        document.getElementById('packForm').reset();
+        document.getElementById('packColor').value = '#a855f7';
+        document.getElementById('packColorPicker').value = '#a855f7';
+        document.getElementById('packBonus').value = '50';
+      }
+
+      window.deletePack = async function(packId) {
+        if (!confirm('Delete this pack? This cannot be undone.')) return;
+        try {
+          await deleteDoc(doc(db, 'packs', packId));
+          await loadPacks();
+        } catch (error) {
+          console.error('Error deleting pack:', error);
+          alert('Failed to delete pack.');
+        }
+      }
+
+      // ─── Auth ────────────────────────────────────────────────────────────────
       onAuthStateChanged(auth, async (user) => {
         const nav = document.querySelector('nav');
-        const existingAuthLinks = nav.querySelectorAll('.auth-link');
-        existingAuthLinks.forEach(link => link.remove());
+        nav.querySelectorAll('.auth-link').forEach(l => l.remove());
 
         if (user) {
-          // Check if user is admin
-          const isAdmin = await checkAdminAccess(user);
+          const isAdmin = await (async () => {
+            try {
+              const userDoc = await getDoc(doc(db, 'users', user.uid));
+              return userDoc.exists() && userDoc.data().isAdmin === true;
+            } catch { return false; }
+          })();
 
           if (isAdmin) {
-            // Show admin panel
             document.getElementById('loadingMessage').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
             await loadSubmissions();
           } else {
-            // Access denied
             document.getElementById('loadingMessage').style.display = 'none';
             document.getElementById('accessDenied').style.display = 'block';
           }
 
-          // Update nav
           const username = user.email.split('@')[0];
-          
           const profileLink = document.createElement('a');
           profileLink.href = '/profile.html';
           profileLink.className = 'auth-link';
@@ -560,7 +868,6 @@
           });
           nav.appendChild(logoutLink);
         } else {
-          // Not logged in
           window.location.href = '/login.html';
         }
       });
