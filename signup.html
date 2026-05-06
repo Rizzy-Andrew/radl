@@ -210,7 +210,6 @@
               placeholder="Choose a username"
               minlength="3"
               maxlength="20"
-              pattern="[a-zA-Z0-9_-]+"
             >
             <div class="help-text">3-20 characters. Letters, numbers, hyphens, and underscores only. Leave blank to use email prefix.</div>
           </div>
@@ -264,10 +263,21 @@
 
       // Check if username is already taken
       async function isUsernameTaken(username) {
-        const usersRef = collection(db, 'users');
-        const q = query(usersRef, where('username', '==', username));
-        const querySnapshot = await getDocs(q);
-        return !querySnapshot.empty;
+        try {
+          const usersRef = collection(db, 'users');
+          const q = query(usersRef, where('username', '==', username));
+          const querySnapshot = await getDocs(q);
+          return !querySnapshot.empty;
+        } catch (error) {
+          console.error('Error checking username:', error);
+          return false;
+        }
+      }
+
+      // Validate username format
+      function isValidUsername(username) {
+        const usernameRegex = /^[a-zA-Z0-9_-]{3,20}$/;
+        return usernameRegex.test(username);
       }
 
       // Create user profile in Firestore
@@ -276,14 +286,12 @@
           // Check if profile already exists
           const userDoc = await getDoc(doc(db, 'users', user.uid));
           if (userDoc.exists()) {
-            // Profile already exists (from OAuth), just return
-            return;
+            return; // Profile already exists
           }
 
           // Determine username
           let username = customUsername;
           if (!username) {
-            // Use email prefix if no custom username provided
             username = user.email ? user.email.split('@')[0] : `user_${user.uid.substring(0, 8)}`;
           }
 
@@ -305,15 +313,14 @@
       document.getElementById('signupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const email = document.getElementById('email').value;
+        const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
         const usernameInput = document.getElementById('username').value.trim();
         const signupBtn = document.getElementById('signupBtn');
 
         // Validate username if provided
         if (usernameInput) {
-          const usernameRegex = /^[a-zA-Z0-9_-]{3,20}$/;
-          if (!usernameRegex.test(usernameInput)) {
+          if (!isValidUsername(usernameInput)) {
             showError('Invalid username format. Use 3-20 characters (letters, numbers, hyphens, underscores only).');
             return;
           }
@@ -339,6 +346,8 @@
             showError('This email is already registered. Try logging in instead.');
           } else if (error.code === 'auth/weak-password') {
             showError('Password should be at least 6 characters.');
+          } else if (error.code === 'auth/invalid-email') {
+            showError('Invalid email address.');
           } else {
             showError('Failed to create account. Please try again.');
           }
@@ -362,13 +371,10 @@
       });
 
       // Discord Sign-In (if enabled in Firebase)
-      // Note: Discord OAuth needs to be configured in Firebase Console first
       const discordBtn = document.getElementById('discordSignUpBtn');
       
-      // Check if Discord provider is configured by attempting to create the provider
       try {
-        const discordProvider = new OAuthProvider('1501075565204082728');
-        // If no error, Discord is configured - show the button
+        const discordProvider = new OAuthProvider('oidc.discord');
         discordBtn.style.display = 'flex';
         
         discordBtn.addEventListener('click', async () => {
@@ -382,7 +388,6 @@
           }
         });
       } catch (error) {
-        // Discord provider not configured, keep button hidden
         console.log('Discord OAuth not configured');
       }
     </script>
