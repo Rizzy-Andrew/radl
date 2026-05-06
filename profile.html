@@ -3,92 +3,168 @@
   <head>
     <link rel="stylesheet" href="style.css">
     <title>RADL – Profile</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
+      .profile-container {
+        max-width: 1200px;
+        margin: 60px auto;
+        padding: 0 20px;
+      }
+
       .profile-header {
-        text-align: center;
-        padding: 40px 0;
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        background: var(--surface);
+        padding: 40px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        margin-bottom: 32px;
+      }
+
+      .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 4px solid var(--accent2);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .profile-avatar-placeholder {
+        font-size: 60px;
+      }
+
+      .profile-info {
+        flex: 1;
       }
 
       .profile-username {
-        font-size: clamp(40px, 8vw, 60px);
-        margin-bottom: 12px;
-        background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--accent3) 100%);
+        font-family: 'Bebas Neue', cursive;
+        font-size: 48px;
+        margin-bottom: 8px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
       }
 
-      .profile-email {
+      .profile-bio {
         color: var(--text-muted);
-        font-size: 14px;
+        font-size: 15px;
+        margin-bottom: 16px;
+        line-height: 1.6;
+      }
+
+      .profile-meta {
+        display: flex;
+        gap: 24px;
+        font-size: 13px;
+        color: var(--text-muted);
       }
 
       .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-        margin-bottom: 48px;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
+        gap: 20px;
+        margin-bottom: 32px;
       }
 
       .stat-card {
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 10px;
+        border-radius: 12px;
         padding: 24px;
         text-align: center;
-        transition: border-color 0.2s;
+        transition: transform 0.2s;
       }
 
       .stat-card:hover {
-        border-color: var(--accent2);
+        transform: translateY(-4px);
       }
 
       .stat-value {
         font-family: 'Bebas Neue', cursive;
-        font-size: 36px;
-        color: var(--accent);
+        font-size: 42px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         margin-bottom: 8px;
       }
 
       .stat-label {
-        font-size: 11px;
-        letter-spacing: 2px;
+        font-size: 12px;
         text-transform: uppercase;
+        letter-spacing: 2px;
         color: var(--text-muted);
+        font-weight: 700;
+      }
+
+      .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .chart-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+      }
+
+      .chart-card h3 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: var(--accent2);
+      }
+
+      .chart-container {
+        position: relative;
+        height: 300px;
       }
 
       .completions-section {
-        max-width: 800px;
-        margin: 0 auto;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 32px;
       }
 
-      .section-title {
-        font-size: 24px;
+      .completions-section h2 {
         font-family: 'Bebas Neue', cursive;
-        letter-spacing: 2px;
-        margin-bottom: 16px;
-        color: var(--text);
+        font-size: 32px;
+        margin-bottom: 24px;
+        color: var(--accent2);
       }
 
-      .completions-list {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        list-style: none;
-        padding: 0;
+      .completions-grid {
+        display: grid;
+        gap: 12px;
       }
 
       .completion-item {
-        background: var(--surface);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: var(--bg);
         border: 1px solid var(--border);
         border-radius: 8px;
-        padding: 0;
-        transition: border-color 0.2s, transform 0.2s;
+        transition: all 0.2s;
       }
 
       .completion-item:hover {
@@ -96,31 +172,52 @@
         transform: translateX(4px);
       }
 
-      .completion-item a {
+      .completion-info {
         display: flex;
         align-items: center;
-        gap: 14px;
-        padding: 14px 18px;
-        text-decoration: none;
-        color: var(--text);
+        gap: 16px;
       }
 
       .completion-rank {
         font-family: 'Bebas Neue', cursive;
-        font-size: 20px;
-        color: var(--text-muted);
+        font-size: 24px;
+        color: var(--accent);
         min-width: 40px;
       }
 
       .completion-name {
-        flex: 1;
         font-weight: 600;
+        font-size: 16px;
       }
 
       .completion-points {
         font-family: 'Bebas Neue', cursive;
-        font-size: 18px;
-        color: var(--accent);
+        font-size: 20px;
+        color: var(--accent2);
+      }
+
+      .difficulty-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .diff-easy { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+      .diff-medium { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+      .diff-hard { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+      .diff-insane { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+      .diff-extreme { background: rgba(220, 38, 38, 0.2); color: #dc2626; }
+
+      .loading {
+        text-align: center;
+        padding: 100px 20px;
+        font-family: 'Bebas Neue', cursive;
+        font-size: 32px;
+        color: var(--text-muted);
       }
 
       .empty-state {
@@ -129,25 +226,9 @@
         color: var(--text-muted);
       }
 
-      .empty-state h3 {
-        font-size: 20px;
-        margin-bottom: 12px;
-      }
-
-      .empty-state a {
-        color: var(--accent2);
-        text-decoration: none;
-      }
-
-      .empty-state a:hover {
-        text-decoration: underline;
-      }
-
-      .loading {
-        text-align: center;
-        padding: 80px 0;
-        color: var(--text-muted);
-        font-size: 18px;
+      .empty-state-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
       }
     </style>
   </head>
@@ -160,9 +241,67 @@
       <a href="/leaderboard.html">Leaderboard</a>
     </nav>
 
-    <div class="container">
-      <div id="profile-content">
-        <p class="loading">Loading profile...</p>
+    <div class="profile-container">
+      <div id="loadingMessage" class="loading">Loading profile...</div>
+
+      <div id="profileContent" style="display: none;">
+        <!-- Profile Header -->
+        <div class="profile-header">
+          <div class="profile-avatar" id="profileAvatar">
+            <span class="profile-avatar-placeholder">👤</span>
+          </div>
+          <div class="profile-info">
+            <h1 class="profile-username" id="profileUsername">Loading...</h1>
+            <p class="profile-bio" id="profileBio"></p>
+            <div class="profile-meta">
+              <span>📧 <span id="profileEmail">-</span></span>
+              <span>📅 Joined <span id="joinDate">-</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="totalCompletions">0</div>
+            <div class="stat-label">Total Completions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="totalPoints">0</div>
+            <div class="stat-label">Total Points</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="hardestLevel">-</div>
+            <div class="stat-label">Hardest Level</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="averageRank">-</div>
+            <div class="stat-label">Average Rank</div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3>Difficulty Breakdown</h3>
+            <div class="chart-container">
+              <canvas id="difficultyChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <h3>Points Distribution</h3>
+            <div class="chart-container">
+              <canvas id="pointsChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completions List -->
+        <div class="completions-section">
+          <h2>Your Completions (<span id="completionCount">0</span>)</h2>
+          <div id="completionsList" class="completions-grid"></div>
+        </div>
       </div>
     </div>
 
@@ -184,47 +323,291 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-      const CSV_MAIN = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
+      const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv';
 
-      function parseCSVLine(line) {
-        const result = [];
-        let current = '';
-        let inQuotes = false;
-        for (let i = 0; i < line.length; i++) {
-          if (line[i] === '"') { inQuotes = !inQuotes; }
-          else if (line[i] === ',' && !inQuotes) { result.push(current); current = ''; }
-          else { current += line[i]; }
-        }
-        result.push(current);
-        return result;
-      }
+      let difficultyChart = null;
+      let pointsChart = null;
 
       function parseCSV(text) {
         const lines = text.trim().split('\n');
-        const headers = parseCSVLine(lines[0]).map(h => h.replace(/"/g, '').trim());
+        const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
         return lines.slice(1).filter(l => l.trim()).map(line => {
-          const values = parseCSVLine(line);
+          const values = line.split(',');
           const obj = {};
-          headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/"/g, '').trim(); });
+          headers.forEach((h, i) => { 
+            obj[h] = (values[i] || '').replace(/"/g, '').trim(); 
+          });
           return obj;
         });
       }
 
-      // Check auth state
+      function getDifficulty(inGameRating) {
+        const rating = inGameRating?.toLowerCase() || '';
+        if (rating.includes('easy')) return 'Easy Demon';
+        if (rating.includes('medium')) return 'Medium Demon';
+        if (rating.includes('hard')) return 'Hard Demon';
+        if (rating.includes('insane')) return 'Insane Demon';
+        if (rating.includes('extreme')) return 'Extreme Demon';
+        return 'Unknown';
+      }
+
+      function getDifficultyClass(difficulty) {
+        if (difficulty.includes('Easy')) return 'diff-easy';
+        if (difficulty.includes('Medium')) return 'diff-medium';
+        if (difficulty.includes('Hard')) return 'diff-hard';
+        if (difficulty.includes('Insane')) return 'diff-insane';
+        if (difficulty.includes('Extreme')) return 'diff-extreme';
+        return '';
+      }
+
+      async function loadProfile(user) {
+        try {
+          // Fetch user data from Firestore
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (!userDoc.exists()) {
+            console.error('User profile not found');
+            return;
+          }
+
+          const userData = userDoc.data();
+          const completions = userData.completions || [];
+
+          // Fetch levels data
+          const response = await fetch(CSV_URL);
+          const csvText = await response.text();
+          const allLevels = parseCSV(csvText);
+
+          // Create level map
+          const levelMap = {};
+          allLevels.forEach(level => {
+            levelMap[level.slug] = level;
+          });
+
+          // Get completed levels
+          const completedLevels = completions
+            .map(slug => levelMap[slug])
+            .filter(level => level)
+            .sort((a, b) => parseInt(a.rank) - parseInt(b.rank));
+
+          // Calculate stats
+          const totalCompletions = completedLevels.length;
+          const totalPoints = completedLevels.reduce((sum, level) => sum + (parseInt(level.points) || 0), 0);
+          const hardestLevel = completedLevels.length > 0 ? completedLevels[0] : null;
+          const averageRank = completedLevels.length > 0 
+            ? Math.round(completedLevels.reduce((sum, level) => sum + parseInt(level.rank), 0) / completedLevels.length)
+            : 0;
+
+          // Difficulty breakdown
+          const difficultyCount = {
+            'Easy Demon': 0,
+            'Medium Demon': 0,
+            'Hard Demon': 0,
+            'Insane Demon': 0,
+            'Extreme Demon': 0
+          };
+
+          completedLevels.forEach(level => {
+            const diff = getDifficulty(level.inGameRating);
+            if (difficultyCount[diff] !== undefined) {
+              difficultyCount[diff]++;
+            }
+          });
+
+          // Update UI
+          document.getElementById('profileUsername').textContent = userData.username || user.email.split('@')[0];
+          document.getElementById('profileEmail').textContent = userData.email || user.email;
+          document.getElementById('profileBio').textContent = userData.bio || 'No bio yet.';
+          
+          if (userData.avatarURL) {
+            document.getElementById('profileAvatar').innerHTML = `<img src="${userData.avatarURL}" alt="Avatar">`;
+          }
+
+          if (userData.createdAt) {
+            const joinDate = userData.createdAt.toDate ? userData.createdAt.toDate() : new Date(userData.createdAt);
+            document.getElementById('joinDate').textContent = joinDate.toLocaleDateString();
+          }
+
+          document.getElementById('totalCompletions').textContent = totalCompletions;
+          document.getElementById('totalPoints').textContent = totalPoints.toLocaleString();
+          document.getElementById('hardestLevel').textContent = hardestLevel ? `#${hardestLevel.rank}` : '-';
+          document.getElementById('averageRank').textContent = averageRank > 0 ? `#${averageRank}` : '-';
+          document.getElementById('completionCount').textContent = totalCompletions;
+
+          // Render charts
+          renderDifficultyChart(difficultyCount);
+          renderPointsChart(completedLevels);
+
+          // Render completions list
+          renderCompletions(completedLevels);
+
+          // Show content
+          document.getElementById('loadingMessage').style.display = 'none';
+          document.getElementById('profileContent').style.display = 'block';
+
+        } catch (error) {
+          console.error('Error loading profile:', error);
+        }
+      }
+
+      function renderDifficultyChart(difficultyCount) {
+        const ctx = document.getElementById('difficultyChart').getContext('2d');
+        
+        if (difficultyChart) {
+          difficultyChart.destroy();
+        }
+
+        difficultyChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(difficultyCount),
+            datasets: [{
+              data: Object.values(difficultyCount),
+              backgroundColor: [
+                'rgba(34, 197, 94, 0.8)',
+                'rgba(251, 191, 36, 0.8)',
+                'rgba(239, 68, 68, 0.8)',
+                'rgba(168, 85, 247, 0.8)',
+                'rgba(220, 38, 38, 0.8)'
+              ],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#fff',
+                  font: { size: 12 }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      function renderPointsChart(completedLevels) {
+        const ctx = document.getElementById('pointsChart').getContext('2d');
+        
+        if (pointsChart) {
+          pointsChart.destroy();
+        }
+
+        const sortedByRank = [...completedLevels].sort((a, b) => parseInt(a.rank) - parseInt(b.rank));
+        const labels = sortedByRank.map(level => `#${level.rank}`);
+        const points = sortedByRank.map(level => parseInt(level.points) || 0);
+
+        pointsChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Points',
+              data: points,
+              backgroundColor: 'rgba(139, 92, 246, 0.8)',
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#9ca3af' },
+                grid: { color: 'rgba(255, 255, 255, 0.1)' }
+              },
+              x: {
+                ticks: { color: '#9ca3af' },
+                grid: { display: false }
+              }
+            }
+          }
+        });
+      }
+
+      function renderCompletions(completedLevels) {
+        const container = document.getElementById('completionsList');
+
+        if (completedLevels.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">🎮</div>
+              <p>No completions yet! Start beating some demons!</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = completedLevels.map(level => {
+          const difficulty = getDifficulty(level.inGameRating);
+          const diffClass = getDifficultyClass(difficulty);
+          
+          return `
+            <div class="completion-item">
+              <div class="completion-info">
+                <div class="completion-rank">#${level.rank}</div>
+                <div>
+                  <div class="completion-name">${level.name}</div>
+                  <span class="difficulty-badge ${diffClass}">${difficulty}</span>
+                </div>
+              </div>
+              <div class="completion-points">${level.points} pts</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Auth state
       onAuthStateChanged(auth, async (user) => {
         const nav = document.querySelector('nav');
         const existingAuthLinks = nav.querySelectorAll('.auth-link');
         existingAuthLinks.forEach(link => link.remove());
 
         if (user) {
-          // Add nav links
-          const username = user.email.split('@')[0];
-          
+          await loadProfile(user);
+
+          // Get user data for nav
+          let username = user.email.split('@')[0];
+          let isAdmin = false;
+
+          try {
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              username = userData.username || username;
+              isAdmin = userData.isAdmin === true;
+            }
+          } catch (error) {
+            console.error('Error loading user data:', error);
+          }
+
           const profileLink = document.createElement('a');
           profileLink.href = '/profile.html';
           profileLink.className = 'auth-link';
           profileLink.textContent = username;
           nav.appendChild(profileLink);
+
+          const settingsLink = document.createElement('a');
+          settingsLink.href = '/settings.html';
+          settingsLink.className = 'auth-link';
+          settingsLink.textContent = 'Settings';
+          nav.appendChild(settingsLink);
+
+          if (isAdmin) {
+            const adminLink = document.createElement('a');
+            adminLink.href = '/admin.html';
+            adminLink.className = 'auth-link';
+            adminLink.textContent = 'Admin';
+            nav.appendChild(adminLink);
+          }
 
           const logoutLink = document.createElement('a');
           logoutLink.href = '#';
@@ -236,93 +619,10 @@
             window.location.href = '/';
           });
           nav.appendChild(logoutLink);
-
-          // Load profile
-          await loadProfile(user);
         } else {
-          // Not logged in - redirect to login
           window.location.href = '/login.html';
         }
       });
-
-      async function loadProfile(user) {
-        const content = document.getElementById('profile-content');
-
-        try {
-          // Fetch user profile from Firestore
-          const userDoc = await getDoc(doc(db, 'users', user.uid));
-          
-          if (!userDoc.exists()) {
-            content.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:80px 0">Profile not found</p>';
-            return;
-          }
-
-          const userData = userDoc.data();
-          const completions = userData.completions || [];
-
-          // Fetch levels data
-          const levelsText = await fetch(CSV_MAIN).then(r => r.text());
-          const allLevels = parseCSV(levelsText);
-
-          // Match completions to level data
-          const userLevels = completions.map(slug => {
-            return allLevels.find(l => l.slug === slug);
-          }).filter(Boolean); // Remove any not found
-
-          // Calculate stats
-          const totalCompletions = userLevels.length;
-          const totalPoints = userLevels.reduce((sum, l) => sum + (parseInt(l.points) || 0), 0);
-          const hardestLevel = userLevels.sort((a, b) => parseInt(a.rank) - parseInt(b.rank))[0];
-
-          // Render profile
-          content.innerHTML = `
-            <div class="profile-header">
-              <h1 class="profile-username">${userData.username}</h1>
-              <p class="profile-email">${userData.email}</p>
-            </div>
-
-            <div class="stats-grid">
-              <div class="stat-card">
-                <div class="stat-value">${totalCompletions}</div>
-                <div class="stat-label">Completions</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-value">${totalPoints}</div>
-                <div class="stat-label">Total Points</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-value">${hardestLevel ? `#${hardestLevel.rank}` : 'N/A'}</div>
-                <div class="stat-label">Hardest Level</div>
-              </div>
-            </div>
-
-            <div class="completions-section">
-              <h2 class="section-title">Completions (${totalCompletions})</h2>
-              ${totalCompletions === 0 
-                ? `<div class="empty-state">
-                     <h3>No completions yet</h3>
-                     <p>Start by <a href="/submit.html">submitting your first level</a>!</p>
-                   </div>`
-                : `<ul class="completions-list">
-                     ${userLevels.map(level => `
-                       <li class="completion-item">
-                         <a href="/level/${level.slug}">
-                           <span class="completion-rank">#${level.rank}</span>
-                           <span class="completion-name">${level.name}</span>
-                           <span class="completion-points">${level.points} pts</span>
-                         </a>
-                       </li>
-                     `).join('')}
-                   </ul>`
-              }
-            </div>
-          `;
-
-        } catch (err) {
-          console.error(err);
-          content.innerHTML = '<p style="text-align:center;color:#f87171;padding:80px 0">Failed to load profile</p>';
-        }
-      }
     </script>
   </body>
 </html>
