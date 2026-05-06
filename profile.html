@@ -289,12 +289,7 @@
             </div>
           </div>
 
-          <div class="chart-card">
-            <h3>Points Distribution</h3>
-            <div class="chart-container">
-              <canvas id="pointsChart"></canvas>
-            </div>
-          </div>
+
         </div>
 
         <!-- Completions List -->
@@ -326,7 +321,6 @@
       const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv';
 
       let difficultyChart = null;
-      let pointsChart = null;
 
       function parseCSV(text) {
         const lines = text.trim().split('\n');
@@ -435,7 +429,6 @@
 
           // Render charts
           renderDifficultyChart(difficultyCount);
-          renderPointsChart(completedLevels);
 
           // Render completions list
           renderCompletions(completedLevels);
@@ -488,51 +481,7 @@
         });
       }
 
-      function renderPointsChart(completedLevels) {
-        const ctx = document.getElementById('pointsChart').getContext('2d');
-        
-        if (pointsChart) {
-          pointsChart.destroy();
-        }
-
-        const sortedByRank = [...completedLevels].sort((a, b) => parseInt(a.rank) - parseInt(b.rank));
-        const labels = sortedByRank.map(level => `#${level.rank}`);
-        const points = sortedByRank.map(level => parseInt(level.points) || 0);
-
-        pointsChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Points',
-              data: points,
-              backgroundColor: 'rgba(139, 92, 246, 0.8)',
-              borderWidth: 0
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: false
-              }
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: { color: '#9ca3af' },
-                grid: { color: 'rgba(255, 255, 255, 0.1)' }
-              },
-              x: {
-                ticks: { color: '#9ca3af' },
-                grid: { display: false }
-              }
-            }
-          }
-        });
-      }
-
+     
       function renderCompletions(completedLevels) {
         const container = document.getElementById('completionsList');
 
