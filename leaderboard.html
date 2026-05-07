@@ -4,10 +4,47 @@
     <link rel="stylesheet" href="style.css">
     <title>RADL – Leaderboard</title>
     <style>
+      .container {
+        max-width: 900px;
+        margin: 60px auto;
+        padding: 0 20px;
+      }
+
+      .search-wrapper {
+        position: relative;
+        margin-bottom: 24px;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 14px 20px 14px 48px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        font-size: 16px;
+        font-family: inherit;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--accent2);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
       .leaderboard-table {
         width: 100%;
-        max-width: 800px;
-        margin: 0 auto 40px auto;
         border-collapse: collapse;
       }
 
@@ -22,6 +59,8 @@
         text-align: left;
         border-bottom: 2px solid var(--border);
       }
+
+      .leaderboard-table th.right { text-align: right; }
 
       .leaderboard-table td {
         padding: 14px 16px;
@@ -51,20 +90,43 @@
         font-size: 17px;
       }
 
-      .stat-cell {
-        text-align: center;
+      .player-cell a {
+        color: var(--text);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .player-cell a:hover {
+        color: var(--accent2);
+      }
+
+      .points-cell {
+        text-align: right;
         font-family: 'Bebas Neue', cursive;
-        font-size: 20px;
+        font-size: 22px;
         color: var(--accent);
       }
 
-      .level-link {
-        color: var(--accent3);
-        text-decoration: none;
-        font-size: 14px;
+      .completions-cell {
+        text-align: right;
+        font-family: 'Bebas Neue', cursive;
+        font-size: 18px;
+        color: var(--accent2);
       }
 
-      .level-link:hover {
+      .hardest-cell {
+        text-align: right;
+        font-size: 13px;
+        color: var(--text-muted);
+        max-width: 160px;
+      }
+
+      .hardest-cell a {
+        color: var(--accent3);
+        text-decoration: none;
+      }
+
+      .hardest-cell a:hover {
         text-decoration: underline;
       }
 
@@ -75,64 +137,66 @@
         font-size: 18px;
       }
 
-      .tabs {
-        display: flex;
-        gap: 12px;
-        justify-content: center;
-        margin-bottom: 32px;
-      }
-
-      .tab {
-        padding: 10px 20px;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 6px;
+      .no-results {
+        text-align: center;
+        padding: 60px;
         color: var(--text-muted);
+        font-family: 'Bebas Neue', cursive;
+        font-size: 24px;
+      }
+
+      .results-count {
         font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-
-      .tab:hover {
-        border-color: var(--accent2);
-        color: var(--text);
-      }
-
-      .tab.active {
-        background: var(--accent2);
-        color: white;
-        border-color: var(--accent2);
+        color: var(--text-muted);
+        margin-bottom: 12px;
       }
     </style>
   </head>
   <body>
-<nav></nav>
-
-
+    <nav></nav>
 
     <div class="container">
       <header>
         <h1>Leaderboard</h1>
-        <p class="subtitle">Top players <span>ranked</span></p>
+        <p class="subtitle">Top players <span>ranked by points</span></p>
       </header>
 
-      <div class="tabs">
-        <div class="tab active" onclick="showTab('completions')">Most Completions</div>
-        <div class="tab" onclick="showTab('points')">Total Points</div>
-        <div class="tab" onclick="showTab('hardest')">Hardest Level</div>
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="search-input"
+          id="searchInput"
+          placeholder="Search players..."
+          autocomplete="off"
+        >
       </div>
 
-      <div id="leaderboard-content">
-        <p class="loading">Loading leaderboard...</p>
-      </div>
+      <div class="results-count" id="resultsCount"></div>
+
+      <div id="loadingMessage" class="loading">Loading leaderboard...</div>
+
+      <table class="leaderboard-table" id="leaderboardTable" style="display:none;">
+        <thead>
+          <tr>
+            <th style="text-align:center;">Rank</th>
+            <th>Player</th>
+            <th class="right">Points</th>
+            <th class="right">Completions</th>
+            <th class="right">Hardest Level</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboardBody"></tbody>
+      </table>
+
+      <div id="noResults" class="no-results" style="display:none;">No players found</div>
     </div>
+
+    <script type="module" src="/nav.js"></script>
 
     <script type="module">
       import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-      import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+      import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
       import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
       const firebaseConfig = {
@@ -148,266 +212,139 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-      // CSV URL for level data (still needed for points and ranks)
-      const CSV_MAIN = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
+      const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv';
 
-      let levelsData = [];
-      let usersData = [];
-      let currentTab = 'completions';
-
-      // CSV parsing helper
-      function parseCSVLine(line) {
-        const result = [];
-        let current = '';
-        let inQuotes = false;
-        for (let i = 0; i < line.length; i++) {
-          if (line[i] === '"') { inQuotes = !inQuotes; }
-          else if (line[i] === ',' && !inQuotes) { result.push(current); current = ''; }
-          else { current += line[i]; }
-        }
-        result.push(current);
-        return result;
-      }
+      let allPlayers = [];
 
       function parseCSV(text) {
         const lines = text.trim().split('\n');
-        const headers = parseCSVLine(lines[0]).map(h => h.replace(/"/g, '').trim());
+        const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
         return lines.slice(1).filter(l => l.trim()).map(line => {
-          const values = parseCSVLine(line);
+          const values = line.split(',');
           const obj = {};
           headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/"/g, '').trim(); });
           return obj;
         });
       }
 
-      // Load data from both Firestore (users) and Google Sheets (levels)
-      async function loadData() {
+      function renderRows(players, query = '') {
+        const tbody = document.getElementById('leaderboardBody');
+        const noResults = document.getElementById('noResults');
+        const count = document.getElementById('resultsCount');
+
+        if (players.length === 0) {
+          tbody.innerHTML = '';
+          noResults.style.display = 'block';
+          count.textContent = '';
+          return;
+        }
+
+        noResults.style.display = 'none';
+        count.textContent = `${players.length} player${players.length !== 1 ? 's' : ''}`;
+
+        tbody.innerHTML = players.map((p, i) => {
+          // Highlight search match in username
+          let displayName = p.username;
+          if (query) {
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            displayName = p.username.replace(regex, '<mark style="background:rgba(168,85,247,0.3);border-radius:3px;padding:0 2px;">$1</mark>');
+          }
+
+          return `
+            <tr>
+              <td class="rank-cell">${i + 1}</td>
+              <td class="player-cell">
+                <a href="/user/${p.username}">${displayName}</a>
+              </td>
+              <td class="points-cell">${p.totalPoints.toLocaleString()}</td>
+              <td class="completions-cell">${p.completionsCount}</td>
+              <td class="hardest-cell">
+                ${p.hardestSlug
+                  ? `<a href="/level/${p.hardestSlug}">#${p.hardestRank} ${p.hardestName}</a>`
+                  : '<span style="color:var(--text-muted)">—</span>'
+                }
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      async function loadLeaderboard() {
         try {
-          // Fetch level data from Google Sheets
-          const mainText = await fetch(CSV_MAIN).then(r => r.text());
-          levelsData = parseCSV(mainText);
-
-          // Create lookup map for level data
+          // Load level data
+          const res = await fetch(CSV_URL);
+          const csvText = await res.text();
+          const allLevels = parseCSV(csvText);
           const levelMap = {};
-          levelsData.forEach(level => {
-            levelMap[level.slug] = {
-              name: level.name,
-              rank: parseInt(level.rank) || 999,
-              points: parseInt(level.points) || 0
-            };
-          });
+          allLevels.forEach(l => { levelMap[l.slug] = l; });
 
-          // Fetch all user profiles from Firestore
-          const usersSnapshot = await getDocs(collection(db, 'users'));
-          usersData = [];
+          // Load all users
+          const snap = await getDocs(collection(db, 'users'));
+          allPlayers = [];
 
-          usersSnapshot.forEach(doc => {
-            const user = doc.data();
-            const completions = user.completions || [];
-            
-            // Calculate user stats
+          snap.forEach(doc => {
+            const data = doc.data();
+            const completions = data.completions || [];
+
             let totalPoints = 0;
-            let hardestRank = 999;
-            let hardestLevelName = 'None';
-            let hardestLevelSlug = '';
-            
+            let hardestRank = 9999;
+            let hardestName = '';
+            let hardestSlug = '';
+
             completions.forEach(slug => {
               if (levelMap[slug]) {
-                totalPoints += levelMap[slug].points;
-                if (levelMap[slug].rank < hardestRank) {
-                  hardestRank = levelMap[slug].rank;
-                  hardestLevelName = levelMap[slug].name;
-                  hardestLevelSlug = slug;
+                totalPoints += parseInt(levelMap[slug].points) || 0;
+                const rank = parseInt(levelMap[slug].rank) || 9999;
+                if (rank < hardestRank) {
+                  hardestRank = rank;
+                  hardestName = levelMap[slug].name;
+                  hardestSlug = slug;
                 }
               }
             });
 
-            usersData.push({
-              username: user.username || user.email.split('@')[0],
+            // Only show players with at least 1 completion
+            if (completions.length === 0) return;
+
+            allPlayers.push({
+              username: data.username || data.email?.split('@')[0] || 'Unknown',
               completionsCount: completions.length,
-              totalPoints: totalPoints,
-              hardestLevel: {
-                name: hardestLevelName,
-                rank: hardestRank,
-                slug: hardestLevelSlug
-              }
+              totalPoints,
+              hardestRank,
+              hardestName,
+              hardestSlug
             });
           });
 
-          // Show the default tab
-          showTab(currentTab);
+          // Sort by total points
+          allPlayers.sort((a, b) => b.totalPoints - a.totalPoints);
+
+          document.getElementById('loadingMessage').style.display = 'none';
+          document.getElementById('leaderboardTable').style.display = 'table';
+          renderRows(allPlayers);
 
         } catch (err) {
           console.error('Error loading leaderboard:', err);
-          document.getElementById('leaderboard-content').innerHTML = 
-            '<p style="color:#f87171;text-align:center;padding:80px 0">Failed to load leaderboard</p>';
+          document.getElementById('loadingMessage').textContent = 'Failed to load leaderboard.';
         }
       }
 
-      // Tab switching function (called by onclick in HTML)
-      window.showTab = function(tab) {
-        currentTab = tab;
-        
-        // Update tab buttons
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => {
-          if (t.textContent.toLowerCase().includes(tab)) {
-            t.classList.add('active');
-          }
-        });
-
-        const content = document.getElementById('leaderboard-content');
-
-        if (tab === 'completions') {
-          content.innerHTML = buildCompletionsTable();
-        } else if (tab === 'points') {
-          content.innerHTML = buildPointsTable();
-        } else if (tab === 'hardest') {
-          content.innerHTML = buildHardestTable();
+      // Search
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        const query = e.target.value.trim().toLowerCase();
+        if (!query) {
+          renderRows(allPlayers);
+          return;
         }
-      }
-
-      function buildCompletionsTable() {
-        // Filter out users with 0 completions and sort by count
-        const sorted = usersData
-          .filter(u => u.completionsCount > 0)
-          .sort((a, b) => b.completionsCount - a.completionsCount);
-
-        if (sorted.length === 0) {
-          return '<p class="loading">No completions yet!</p>';
-        }
-
-        return `
-          <table class="leaderboard-table">
-            <thead>
-              <tr>
-                <th style="text-align:center">Rank</th>
-                <th>Player</th>
-                <th style="text-align:center">Completions</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${sorted.map((u, i) => `
-                <tr>
-                  <td class="rank-cell">${i + 1}</td>
-                  <td class="player-cell">${u.username}</td>
-                  <td class="stat-cell">${u.completionsCount}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        `;
-      }
-
-      function buildPointsTable() {
-        // Filter out users with 0 points and sort by total points
-        const sorted = usersData
-          .filter(u => u.totalPoints > 0)
-          .sort((a, b) => b.totalPoints - a.totalPoints);
-
-        if (sorted.length === 0) {
-          return '<p class="loading">No points earned yet!</p>';
-        }
-
-        return `
-          <table class="leaderboard-table">
-            <thead>
-              <tr>
-                <th style="text-align:center">Rank</th>
-                <th>Player</th>
-                <th style="text-align:center">Total Points</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${sorted.map((u, i) => `
-                <tr>
-                  <td class="rank-cell">${i + 1}</td>
-                  <td class="player-cell">${u.username}</td>
-                  <td class="stat-cell">${u.totalPoints}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        `;
-      }
-
-      function buildHardestTable() {
-        // Filter out users with no completions and sort by hardest rank
-        const sorted = usersData
-          .filter(u => u.hardestLevel.rank < 999)
-          .sort((a, b) => a.hardestLevel.rank - b.hardestLevel.rank);
-
-        if (sorted.length === 0) {
-          return '<p class="loading">No levels completed yet!</p>';
-        }
-
-        return `
-          <table class="leaderboard-table">
-            <thead>
-              <tr>
-                <th style="text-align:center">Rank</th>
-                <th>Player</th>
-                <th>Hardest Level</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${sorted.map((u, i) => `
-                <tr>
-                  <td class="rank-cell">${i + 1}</td>
-                  <td class="player-cell">${u.username}</td>
-                  <td>
-                    <a class="level-link" href="/level/${u.hardestLevel.slug}">
-                      #${u.hardestLevel.rank} ${u.hardestLevel.name}
-                    </a>
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        `;
-      }
-
-      // Check auth state and update nav
-      onAuthStateChanged(auth, (user) => {
-        const nav = document.querySelector('nav');
-        
-        // Remove existing auth links
-        const existingAuthLinks = nav.querySelectorAll('.auth-link');
-        existingAuthLinks.forEach(link => link.remove());
-
-        if (user) {
-          // User is logged in - show profile and logout
-          const username = user.email.split('@')[0];
-          
-          const profileLink = document.createElement('a');
-          profileLink.href = '/profile.html';
-          profileLink.className = 'auth-link';
-          profileLink.textContent = username;
-          nav.appendChild(profileLink);
-
-          const logoutLink = document.createElement('a');
-          logoutLink.href = '#';
-          logoutLink.className = 'auth-link';
-          logoutLink.textContent = 'Logout';
-          logoutLink.addEventListener('click', async (e) => {
-            e.preventDefault();
-            await signOut(auth);
-            window.location.href = '/';
-          });
-          nav.appendChild(logoutLink);
-        } else {
-          // User is logged out - show login
-          const loginLink = document.createElement('a');
-          loginLink.href = '/login.html';
-          loginLink.className = 'auth-link';
-          loginLink.textContent = 'Login';
-          nav.appendChild(loginLink);
-        }
+        const filtered = allPlayers.filter(p =>
+          p.username.toLowerCase().includes(query)
+        );
+        renderRows(filtered, query);
       });
 
-      // Load leaderboard data on page load
-      loadData();
+      onAuthStateChanged(auth, () => {
+        loadLeaderboard();
+      });
     </script>
-    <script type="module" src="/nav.js"></script>
   </body>
 </html>
