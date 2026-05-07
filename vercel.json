@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/level/:slug", "destination": "/levels/level.html" }
+    { "source": "/level/:slug", "destination": "/levels/level.html" },
+    { "source": "/user/:username", "destination": "/user.html" }
   ]
 }
