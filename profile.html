@@ -5,117 +5,154 @@
     <title>RADL – Profile</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-      .profile-container {
-        max-width: 1200px;
+      .profile-page {
+        max-width: 1100px;
         margin: 60px auto;
         padding: 0 20px;
-      }
-
-      .profile-header {
         display: flex;
-        align-items: center;
         gap: 32px;
-        background: var(--surface);
-        padding: 40px;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        margin-bottom: 32px;
+        align-items: flex-start;
       }
 
-      .profile-avatar {
-        width: 120px;
-        height: 120px;
+      /* ── Sidebar ── */
+      .profile-sidebar {
+        width: 220px;
+        flex-shrink: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        position: sticky;
+        top: 24px;
+      }
+
+      .sidebar-user {
+        padding: 24px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+      }
+
+      .sidebar-avatar {
+        width: 72px;
+        height: 72px;
         border-radius: 50%;
         background: var(--bg);
-        border: 4px solid var(--accent2);
+        border: 3px solid var(--accent2);
         overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-shrink: 0;
+        font-size: 36px;
       }
 
-      .profile-avatar img {
+      .sidebar-avatar img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
 
-      .profile-avatar-placeholder {
-        font-size: 60px;
-      }
-
-      .profile-info {
-        flex: 1;
-      }
-
-      .profile-username {
+      .sidebar-username {
         font-family: 'Bebas Neue', cursive;
-        font-size: 48px;
-        margin-bottom: 8px;
-        background: linear-gradient(135deg, var(--accent), var(--accent2));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        font-size: 22px;
+        color: var(--accent2);
+        word-break: break-all;
       }
 
-      .profile-bio {
+      .sidebar-nav {
+        padding: 8px 0;
+      }
+
+      .sidebar-tab {
+        display: block;
+        width: 100%;
+        padding: 12px 20px;
+        background: none;
+        border: none;
+        text-align: left;
         color: var(--text-muted);
         font-size: 15px;
-        margin-bottom: 16px;
-        line-height: 1.6;
+        font-family: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
       }
 
-      .profile-meta {
-        display: flex;
-        gap: 24px;
-        font-size: 13px;
-        color: var(--text-muted);
+      .sidebar-tab:hover {
+        background: var(--bg);
+        color: var(--text);
       }
 
+      .sidebar-tab.active {
+        background: var(--bg);
+        color: var(--accent2);
+        border-left-color: var(--accent2);
+      }
+
+      .sidebar-tab.admin-tab {
+        color: #fbbf24;
+      }
+
+      .sidebar-tab.logout-tab {
+        color: #ef4444;
+        border-top: 1px solid var(--border);
+        margin-top: 4px;
+      }
+
+      .sidebar-tab.logout-tab:hover {
+        background: rgba(239, 68, 68, 0.1);
+      }
+
+      /* ── Main content ── */
+      .profile-main {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .tab-panel {
+        display: none;
+      }
+
+      .tab-panel.active {
+        display: block;
+      }
+
+      /* ── Profile tab ── */
       .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        margin-bottom: 32px;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 16px;
+        margin-bottom: 28px;
       }
 
       .stat-card {
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 12px;
-        padding: 24px;
+        padding: 20px;
         text-align: center;
-        transition: transform 0.2s;
-      }
-
-      .stat-card:hover {
-        transform: translateY(-4px);
       }
 
       .stat-value {
         font-family: 'Bebas Neue', cursive;
-        font-size: 42px;
+        font-size: 38px;
         background: linear-gradient(135deg, var(--accent), var(--accent2));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        margin-bottom: 8px;
       }
 
       .stat-label {
-        font-size: 12px;
+        font-size: 11px;
         text-transform: uppercase;
         letter-spacing: 2px;
         color: var(--text-muted);
         font-weight: 700;
-      }
-
-      .charts-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-        gap: 24px;
-        margin-bottom: 32px;
+        margin-top: 4px;
       }
 
       .chart-card {
@@ -123,48 +160,47 @@
         border: 1px solid var(--border);
         border-radius: 12px;
         padding: 24px;
+        margin-bottom: 28px;
       }
 
       .chart-card h3 {
         font-family: 'Bebas Neue', cursive;
-        font-size: 24px;
-        margin-bottom: 20px;
+        font-size: 22px;
+        margin-bottom: 16px;
         color: var(--accent2);
       }
 
       .chart-container {
         position: relative;
-        height: 300px;
+        height: 260px;
       }
 
-      .completions-section {
+      .completions-card {
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 12px;
-        padding: 32px;
+        padding: 24px;
       }
 
-      .completions-section h2 {
+      .completions-card h2 {
         font-family: 'Bebas Neue', cursive;
-        font-size: 32px;
-        margin-bottom: 24px;
+        font-size: 26px;
+        margin-bottom: 20px;
         color: var(--accent2);
-      }
-
-      .completions-grid {
-        display: grid;
-        gap: 12px;
       }
 
       .completion-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 16px 20px;
+        padding: 14px 16px;
         background: var(--bg);
         border: 1px solid var(--border);
         border-radius: 8px;
+        margin-bottom: 10px;
         transition: all 0.2s;
+        text-decoration: none;
+        color: var(--text);
       }
 
       .completion-item:hover {
@@ -172,32 +208,188 @@
         transform: translateX(4px);
       }
 
-      .completion-info {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-      }
-
       .completion-rank {
         font-family: 'Bebas Neue', cursive;
-        font-size: 24px;
+        font-size: 22px;
         color: var(--accent);
-        min-width: 40px;
+        min-width: 44px;
       }
 
       .completion-name {
+        flex: 1;
         font-weight: 600;
-        font-size: 16px;
+        font-size: 15px;
+        margin-left: 12px;
       }
 
       .completion-points {
         font-family: 'Bebas Neue', cursive;
-        font-size: 20px;
+        font-size: 18px;
         color: var(--accent2);
       }
 
       .difficulty-badge {
         display: inline-block;
+        padding: 2px 10px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-left: 10px;
+      }
+
+      .diff-easy { background: rgba(34,197,94,0.15); color: #22c55e; }
+      .diff-medium { background: rgba(251,191,36,0.15); color: #fbbf24; }
+      .diff-hard { background: rgba(239,68,68,0.15); color: #ef4444; }
+      .diff-insane { background: rgba(168,85,247,0.15); color: #a855f7; }
+      .diff-extreme { background: rgba(220,38,38,0.15); color: #dc2626; }
+
+      /* ── Settings tab ── */
+      .settings-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 28px;
+        margin-bottom: 20px;
+      }
+
+      .settings-card h2 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 26px;
+        margin-bottom: 20px;
+        color: var(--accent2);
+      }
+
+      .avatar-section {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 20px;
+      }
+
+      .avatar-preview {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 3px solid var(--border);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        flex-shrink: 0;
+      }
+
+      .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+      .file-label {
+        display: inline-block;
+        padding: 10px 20px;
+        background: var(--accent2);
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.2s;
+        margin-right: 10px;
+      }
+
+      .file-label:hover { background: var(--accent); }
+
+      .remove-btn {
+        padding: 10px 20px;
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.2s;
+      }
+
+      .remove-btn:hover { background: #dc2626; }
+
+      .form-group { margin-bottom: 18px; }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 11px 14px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 15px;
+        font-family: inherit;
+        box-sizing: border-box;
+      }
+
+      .form-group textarea { resize: vertical; min-height: 80px; }
+      .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent2); }
+
+      .save-btn {
+        padding: 11px 28px;
+        background: var(--accent2);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .save-btn:hover { background: var(--accent); }
+      .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+      .help-text { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+      .progress-bar { width: 100%; height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; margin-top: 10px; display: none; }
+      .progress-fill { height: 100%; background: var(--accent2); transition: width 0.3s; width: 0%; }
+
+      /* ── Submissions tab ── */
+      .submission-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 14px;
+      }
+
+      .submission-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+
+      .submission-level {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 22px;
+        color: var(--accent);
+      }
+
+      .status-badge {
         padding: 4px 12px;
         border-radius: 12px;
         font-size: 11px;
@@ -206,78 +398,81 @@
         letter-spacing: 1px;
       }
 
-      .diff-easy { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
-      .diff-medium { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
-      .diff-hard { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-      .diff-insane { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
-      .diff-extreme { background: rgba(220, 38, 38, 0.2); color: #dc2626; }
+      .status-pending { background: rgba(251,191,36,0.2); color: #fbbf24; }
+      .status-approved { background: rgba(34,197,94,0.2); color: #22c55e; }
+      .status-rejected { background: rgba(239,68,68,0.2); color: #ef4444; }
 
-      .loading {
-        text-align: center;
-        padding: 100px 20px;
+      .submission-meta { font-size: 13px; color: var(--text-muted); }
+      .submission-notes { font-size: 13px; color: var(--text-muted); margin-top: 8px; font-style: italic; }
+
+      /* ── Shared ── */
+      .message {
+        padding: 11px 16px;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        font-size: 14px;
+        display: none;
+      }
+      .message.success { background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+      .message.error { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+
+      .loading { text-align: center; padding: 80px; color: var(--text-muted); font-family: 'Bebas Neue', cursive; font-size: 28px; }
+      .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
+
+      .section-title {
         font-family: 'Bebas Neue', cursive;
         font-size: 32px;
-        color: var(--text-muted);
-      }
-
-      .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: var(--text-muted);
-      }
-
-      .empty-state-icon {
-        font-size: 64px;
-        margin-bottom: 16px;
+        margin-bottom: 24px;
+        color: var(--text);
       }
     </style>
   </head>
   <body>
-<nav></nav>
+    <nav></nav>
 
-<script type="module" src="/nav.js"></script>
+    <div class="profile-page" id="profilePage" style="display:none;">
 
-    <div class="profile-container">
-      <div id="loadingMessage" class="loading">Loading profile...</div>
+      <!-- Sidebar -->
+      <div class="profile-sidebar">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" id="sidebarAvatar">👤</div>
+          <div class="sidebar-username" id="sidebarUsername">Loading...</div>
+        </div>
+        <div class="sidebar-nav">
+          <button class="sidebar-tab active" onclick="showTab('profile')">📊 Profile</button>
+          <button class="sidebar-tab" onclick="showTab('settings')">⚙️ Settings</button>
+          <button class="sidebar-tab" onclick="showTab('submissions')">📋 Submissions</button>
+          <button class="sidebar-tab admin-tab" id="adminTab" style="display:none;" onclick="showTab('admin')">⭐ Admin</button>
+          <button class="sidebar-tab logout-tab" onclick="handleLogout()">🚪 Logout</button>
+        </div>
+      </div>
 
-      <div id="profileContent" style="display: none;">
-        <!-- Profile Header -->
-        <div class="profile-header">
-          <div class="profile-avatar" id="profileAvatar">
-            <span class="profile-avatar-placeholder">👤</span>
-          </div>
-          <div class="profile-info">
-            <h1 class="profile-username" id="profileUsername">Loading...</h1>
-            <p class="profile-bio" id="profileBio"></p>
-            <div class="profile-meta">
-              <span>📧 <span id="profileEmail">-</span></span>
-              <span>📅 Joined <span id="joinDate">-</span></span>
+      <!-- Main Content -->
+      <div class="profile-main">
+
+        <!-- Profile Tab -->
+        <div id="tab-profile" class="tab-panel active">
+          <div class="section-title">Profile</div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value" id="totalCompletions">0</div>
+              <div class="stat-label">Completions</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="totalPoints">0</div>
+              <div class="stat-label">Total Points</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="hardestLevel">-</div>
+              <div class="stat-label">Hardest Level</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="averageRank">-</div>
+              <div class="stat-label">Average Rank</div>
             </div>
           </div>
-        </div>
 
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-value" id="totalCompletions">0</div>
-            <div class="stat-label">Total Completions</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="totalPoints">0</div>
-            <div class="stat-label">Total Points</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="hardestLevel">-</div>
-            <div class="stat-label">Hardest Level</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="averageRank">-</div>
-            <div class="stat-label">Average Rank</div>
-          </div>
-        </div>
-
-        <!-- Charts -->
-        <div class="charts-grid">
           <div class="chart-card">
             <h3>Difficulty Breakdown</h3>
             <div class="chart-container">
@@ -285,21 +480,91 @@
             </div>
           </div>
 
-
+          <div class="completions-card">
+            <h2>Completions (<span id="completionCount">0</span>)</h2>
+            <div id="completionsList"></div>
+          </div>
         </div>
 
-        <!-- Completions List -->
-        <div class="completions-section">
-          <h2>Your Completions (<span id="completionCount">0</span>)</h2>
-          <div id="completionsList" class="completions-grid"></div>
+        <!-- Settings Tab -->
+        <div id="tab-settings" class="tab-panel">
+          <div class="section-title">Settings</div>
+
+          <!-- Avatar -->
+          <div class="settings-card">
+            <h2>Profile Picture</h2>
+            <div id="avatarMsg" class="message"></div>
+            <div class="avatar-section">
+              <div class="avatar-preview" id="avatarPreview">👤</div>
+              <div>
+                <label for="avatarInput" class="file-label">Upload Photo</label>
+                <input type="file" id="avatarInput" accept="image/*" style="display:none;">
+                <button class="remove-btn" id="removeAvatarBtn" style="display:none;" onclick="removeAvatar()">Remove</button>
+                <div class="help-text" style="margin-top:8px;">JPG, PNG or GIF. Max 5MB.</div>
+                <div class="progress-bar" id="uploadProgress"><div class="progress-fill" id="progressFill"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bio -->
+          <div class="settings-card">
+            <h2>Bio</h2>
+            <div id="bioMsg" class="message"></div>
+            <form onsubmit="saveBio(event)">
+              <div class="form-group">
+                <label>About You</label>
+                <textarea id="bioInput" placeholder="Tell us about yourself..." maxlength="500"></textarea>
+                <div class="help-text">Max 500 characters</div>
+              </div>
+              <button type="submit" class="save-btn" id="bioBtn">Save Bio</button>
+            </form>
+          </div>
+
+          <!-- Username -->
+          <div class="settings-card">
+            <h2>Username</h2>
+            <div id="usernameMsg" class="message"></div>
+            <div style="background:var(--bg);padding:10px 14px;border-radius:6px;border:1px solid var(--border);margin-bottom:18px;">
+              <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Current</div>
+              <strong id="currentUsername" style="color:var(--accent);font-family:'Bebas Neue',cursive;font-size:20px;"></strong>
+            </div>
+            <form onsubmit="saveUsername(event)">
+              <div class="form-group">
+                <label>New Username</label>
+                <input type="text" id="usernameInput" placeholder="Enter new username" minlength="3" maxlength="20" required>
+                <div class="help-text">3-20 characters. Letters, numbers, hyphens, underscores only.</div>
+              </div>
+              <button type="submit" class="save-btn" id="usernameBtn">Update Username</button>
+            </form>
+          </div>
         </div>
+
+        <!-- Submissions Tab -->
+        <div id="tab-submissions" class="tab-panel">
+          <div class="section-title">My Submissions</div>
+          <div id="submissionsList"><div class="loading">Loading...</div></div>
+        </div>
+
+        <!-- Admin Tab -->
+        <div id="tab-admin" class="tab-panel">
+          <div class="section-title">Admin Panel</div>
+          <div style="text-align:center;padding:40px;">
+            <a href="/admin.html" style="display:inline-block;padding:16px 40px;background:var(--accent2);color:white;text-decoration:none;border-radius:8px;font-family:'Bebas Neue',cursive;font-size:24px;letter-spacing:2px;">Open Full Admin Panel →</a>
+          </div>
+        </div>
+
       </div>
     </div>
+
+    <div id="loadingPage" class="loading">Loading profile...</div>
+
+    <script type="module" src="/nav.js"></script>
 
     <script type="module">
       import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
       import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-      import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+      import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+      import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
 
       const firebaseConfig = {
         apiKey: "AIzaSyAyNCyGdahYYsLbG1sP8GGKc7AAogyI7V4",
@@ -313,257 +578,282 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
+      const storage = getStorage(app);
 
       const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv';
 
-      let difficultyChart = null;
+      let currentUser = null;
+      let userData = null;
+      let diffChart = null;
 
+      // ── Tab switching ──
+      window.showTab = function(tab) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(`tab-${tab}`).classList.add('active');
+        document.querySelectorAll('.sidebar-tab').forEach(t => {
+          if (t.getAttribute('onclick') === `showTab('${tab}')`) t.classList.add('active');
+        });
+        if (tab === 'submissions') loadSubmissions();
+      }
+
+      window.handleLogout = async function() {
+        await signOut(auth);
+        window.location.href = '/';
+      }
+
+      // ── Message helper ──
+      function showMsg(id, text, type) {
+        const el = document.getElementById(id);
+        el.className = `message ${type}`;
+        el.textContent = text;
+        el.style.display = 'block';
+        setTimeout(() => el.style.display = 'none', 4000);
+      }
+
+      // ── CSV parsing ──
       function parseCSV(text) {
         const lines = text.trim().split('\n');
         const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
         return lines.slice(1).filter(l => l.trim()).map(line => {
           const values = line.split(',');
           const obj = {};
-          headers.forEach((h, i) => { 
-            obj[h] = (values[i] || '').replace(/"/g, '').trim(); 
-          });
+          headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/"/g, '').trim(); });
           return obj;
         });
       }
 
-      function getDifficulty(inGameRating) {
-        const rating = inGameRating?.toLowerCase() || '';
-        if (rating.includes('easy')) return 'Easy Demon';
-        if (rating.includes('medium')) return 'Medium Demon';
-        if (rating.includes('hard')) return 'Hard Demon';
-        if (rating.includes('insane')) return 'Insane Demon';
-        if (rating.includes('extreme')) return 'Extreme Demon';
+      function getDifficulty(rating) {
+        const r = (rating || '').toLowerCase();
+        if (r.includes('easy')) return 'Easy Demon';
+        if (r.includes('medium')) return 'Medium Demon';
+        if (r.includes('hard')) return 'Hard Demon';
+        if (r.includes('insane')) return 'Insane Demon';
+        if (r.includes('extreme')) return 'Extreme Demon';
         return 'Unknown';
       }
 
-      function getDifficultyClass(difficulty) {
-        if (difficulty.includes('Easy')) return 'diff-easy';
-        if (difficulty.includes('Medium')) return 'diff-medium';
-        if (difficulty.includes('Hard')) return 'diff-hard';
-        if (difficulty.includes('Insane')) return 'diff-insane';
-        if (difficulty.includes('Extreme')) return 'diff-extreme';
+      function getDiffClass(diff) {
+        if (diff.includes('Easy')) return 'diff-easy';
+        if (diff.includes('Medium')) return 'diff-medium';
+        if (diff.includes('Hard')) return 'diff-hard';
+        if (diff.includes('Insane')) return 'diff-insane';
+        if (diff.includes('Extreme')) return 'diff-extreme';
         return '';
       }
 
+      // ── Load profile ──
       async function loadProfile(user) {
         try {
-          // Fetch user data from Firestore
           const userDoc = await getDoc(doc(db, 'users', user.uid));
-          if (!userDoc.exists()) {
-            console.error('User profile not found');
+          if (!userDoc.exists()) return;
+          userData = userDoc.data();
+
+          const completions = userData.completions || [];
+          const isAdmin = userData.isAdmin === true;
+
+          // Sidebar
+          document.getElementById('sidebarUsername').textContent = userData.username || user.email.split('@')[0];
+          if (userData.avatarURL) {
+            document.getElementById('sidebarAvatar').innerHTML = `<img src="${userData.avatarURL}" alt="avatar">`;
+          }
+
+          // Admin tab
+          if (isAdmin) document.getElementById('adminTab').style.display = 'block';
+
+          // Settings prefill
+          document.getElementById('currentUsername').textContent = userData.username || user.email.split('@')[0];
+          document.getElementById('bioInput').value = userData.bio || '';
+          if (userData.avatarURL) {
+            document.getElementById('avatarPreview').innerHTML = `<img src="${userData.avatarURL}" alt="avatar">`;
+            document.getElementById('removeAvatarBtn').style.display = 'inline-block';
+          }
+
+          // Load CSV
+          const res = await fetch(CSV_URL);
+          const csvText = await res.text();
+          const allLevels = parseCSV(csvText);
+          const levelMap = {};
+          allLevels.forEach(l => { levelMap[l.slug] = l; });
+
+          const completedLevels = completions.map(s => levelMap[s]).filter(Boolean)
+            .sort((a, b) => parseInt(a.rank) - parseInt(b.rank));
+
+          const totalPoints = completedLevels.reduce((sum, l) => sum + (parseInt(l.points) || 0), 0);
+          const hardest = completedLevels[0];
+          const avgRank = completedLevels.length
+            ? Math.round(completedLevels.reduce((s, l) => s + parseInt(l.rank), 0) / completedLevels.length)
+            : 0;
+
+          document.getElementById('totalCompletions').textContent = completedLevels.length;
+          document.getElementById('totalPoints').textContent = totalPoints.toLocaleString();
+          document.getElementById('hardestLevel').textContent = hardest ? `#${hardest.rank}` : '-';
+          document.getElementById('averageRank').textContent = avgRank > 0 ? `#${avgRank}` : '-';
+          document.getElementById('completionCount').textContent = completedLevels.length;
+
+          // Chart
+          const diffCount = { 'Easy Demon': 0, 'Medium Demon': 0, 'Hard Demon': 0, 'Insane Demon': 0, 'Extreme Demon': 0 };
+          completedLevels.forEach(l => { const d = getDifficulty(l.inGameRating); if (diffCount[d] !== undefined) diffCount[d]++; });
+
+          if (diffChart) diffChart.destroy();
+          diffChart = new Chart(document.getElementById('difficultyChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+              labels: Object.keys(diffCount),
+              datasets: [{ data: Object.values(diffCount), backgroundColor: ['rgba(34,197,94,0.8)','rgba(251,191,36,0.8)','rgba(239,68,68,0.8)','rgba(168,85,247,0.8)','rgba(220,38,38,0.8)'], borderWidth: 0 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#fff', font: { size: 12 } } } } }
+          });
+
+          // Completions list
+          const container = document.getElementById('completionsList');
+          if (completedLevels.length === 0) {
+            container.innerHTML = '<div class="empty-state">No completions yet! Start beating some demons!</div>';
+          } else {
+            container.innerHTML = completedLevels.map(l => {
+              const diff = getDifficulty(l.inGameRating);
+              return `
+                <a class="completion-item" href="/level/${l.slug}">
+                  <div class="completion-rank">#${l.rank}</div>
+                  <div class="completion-name">${l.name} <span class="difficulty-badge ${getDiffClass(diff)}">${diff}</span></div>
+                  <div class="completion-points">${l.points} pts</div>
+                </a>`;
+            }).join('');
+          }
+
+          document.getElementById('loadingPage').style.display = 'none';
+          document.getElementById('profilePage').style.display = 'flex';
+
+        } catch (err) {
+          console.error('Error loading profile:', err);
+        }
+      }
+
+      // ── Load submissions ──
+      async function loadSubmissions() {
+        if (!currentUser) return;
+        const container = document.getElementById('submissionsList');
+        container.innerHTML = '<div class="loading">Loading...</div>';
+
+        try {
+          const q = query(collection(db, 'submissions'), where('userId', '==', currentUser.uid));
+          const snap = await getDocs(q);
+          const subs = [];
+          snap.forEach(d => subs.push({ id: d.id, ...d.data() }));
+          subs.sort((a, b) => (b.submittedAt?.toDate?.() || 0) - (a.submittedAt?.toDate?.() || 0));
+
+          if (subs.length === 0) {
+            container.innerHTML = '<div class="empty-state">No submissions yet.</div>';
             return;
           }
 
-          const userData = userDoc.data();
-          const completions = userData.completions || [];
-
-          // Fetch levels data
-          const response = await fetch(CSV_URL);
-          const csvText = await response.text();
-          const allLevels = parseCSV(csvText);
-
-          // Create level map
-          const levelMap = {};
-          allLevels.forEach(level => {
-            levelMap[level.slug] = level;
-          });
-
-          // Get completed levels
-          const completedLevels = completions
-            .map(slug => levelMap[slug])
-            .filter(level => level)
-            .sort((a, b) => parseInt(a.rank) - parseInt(b.rank));
-
-          // Calculate stats
-          const totalCompletions = completedLevels.length;
-          const totalPoints = completedLevels.reduce((sum, level) => sum + (parseInt(level.points) || 0), 0);
-          const hardestLevel = completedLevels.length > 0 ? completedLevels[0] : null;
-          const averageRank = completedLevels.length > 0 
-            ? Math.round(completedLevels.reduce((sum, level) => sum + parseInt(level.rank), 0) / completedLevels.length)
-            : 0;
-
-          // Difficulty breakdown
-          const difficultyCount = {
-            'Easy Demon': 0,
-            'Medium Demon': 0,
-            'Hard Demon': 0,
-            'Insane Demon': 0,
-            'Extreme Demon': 0
-          };
-
-          completedLevels.forEach(level => {
-            const diff = getDifficulty(level.inGameRating);
-            if (difficultyCount[diff] !== undefined) {
-              difficultyCount[diff]++;
-            }
-          });
-
-          // Update UI
-          document.getElementById('profileUsername').textContent = userData.username || user.email.split('@')[0];
-          document.getElementById('profileEmail').textContent = userData.email || user.email;
-          document.getElementById('profileBio').textContent = userData.bio || 'No bio yet.';
-          
-          if (userData.avatarURL) {
-            document.getElementById('profileAvatar').innerHTML = `<img src="${userData.avatarURL}" alt="Avatar">`;
-          }
-
-          if (userData.createdAt) {
-            const joinDate = userData.createdAt.toDate ? userData.createdAt.toDate() : new Date(userData.createdAt);
-            document.getElementById('joinDate').textContent = joinDate.toLocaleDateString();
-          }
-
-          document.getElementById('totalCompletions').textContent = totalCompletions;
-          document.getElementById('totalPoints').textContent = totalPoints.toLocaleString();
-          document.getElementById('hardestLevel').textContent = hardestLevel ? `#${hardestLevel.rank}` : '-';
-          document.getElementById('averageRank').textContent = averageRank > 0 ? `#${averageRank}` : '-';
-          document.getElementById('completionCount').textContent = totalCompletions;
-
-          // Render charts
-          renderDifficultyChart(difficultyCount);
-
-          // Render completions list
-          renderCompletions(completedLevels);
-
-          // Show content
-          document.getElementById('loadingMessage').style.display = 'none';
-          document.getElementById('profileContent').style.display = 'block';
-
-        } catch (error) {
-          console.error('Error loading profile:', error);
-        }
-      }
-
-      function renderDifficultyChart(difficultyCount) {
-        const ctx = document.getElementById('difficultyChart').getContext('2d');
-        
-        if (difficultyChart) {
-          difficultyChart.destroy();
-        }
-
-        difficultyChart = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: Object.keys(difficultyCount),
-            datasets: [{
-              data: Object.values(difficultyCount),
-              backgroundColor: [
-                'rgba(34, 197, 94, 0.8)',
-                'rgba(251, 191, 36, 0.8)',
-                'rgba(239, 68, 68, 0.8)',
-                'rgba(168, 85, 247, 0.8)',
-                'rgba(220, 38, 38, 0.8)'
-              ],
-              borderWidth: 0
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                position: 'bottom',
-                labels: {
-                  color: '#fff',
-                  font: { size: 12 }
-                }
-              }
-            }
-          }
-        });
-      }
-
-     
-      function renderCompletions(completedLevels) {
-        const container = document.getElementById('completionsList');
-
-        if (completedLevels.length === 0) {
-          container.innerHTML = `
-            <div class="empty-state">
-              <div class="empty-state-icon">🎮</div>
-              <p>No completions yet! Start beating some demons!</p>
-            </div>
-          `;
-          return;
-        }
-
-        container.innerHTML = completedLevels.map(level => {
-          const difficulty = getDifficulty(level.inGameRating);
-          const diffClass = getDifficultyClass(difficulty);
-          
-          return `
-            <div class="completion-item">
-              <div class="completion-info">
-                <div class="completion-rank">#${level.rank}</div>
-                <div>
-                  <div class="completion-name">${level.name}</div>
-                  <span class="difficulty-badge ${diffClass}">${difficulty}</span>
-                </div>
+          container.innerHTML = subs.map(s => `
+            <div class="submission-item">
+              <div class="submission-top">
+                <div class="submission-level">${s.levelName}</div>
+                <span class="status-badge status-${s.status}">${s.status}</span>
               </div>
-              <div class="completion-points">${level.points} pts</div>
+              <div class="submission-meta">
+                Submitted ${s.submittedAt?.toDate ? s.submittedAt.toDate().toLocaleDateString() : 'Unknown'}
+                · <a href="${s.videoURL}" target="_blank" style="color:var(--accent3);">Watch Video →</a>
+              </div>
+              ${s.notes ? `<div class="submission-notes">Admin: "${s.notes}"</div>` : ''}
             </div>
-          `;
-        }).join('');
+          `).join('');
+        } catch (err) {
+          console.error('Error loading submissions:', err);
+          container.innerHTML = '<div class="empty-state">Failed to load submissions.</div>';
+        }
       }
 
-      // Auth state
-      onAuthStateChanged(auth, async (user) => {
-        const nav = document.querySelector('nav');
-        const existingAuthLinks = nav.querySelectorAll('.auth-link');
-        existingAuthLinks.forEach(link => link.remove());
+      // ── Avatar upload ──
+      document.getElementById('avatarInput').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file || !currentUser) return;
+        if (file.size > 5 * 1024 * 1024) { showMsg('avatarMsg', 'File must be under 5MB', 'error'); return; }
+        if (!file.type.startsWith('image/')) { showMsg('avatarMsg', 'Please upload an image', 'error'); return; }
 
-        if (user) {
-          await loadProfile(user);
+        const bar = document.getElementById('uploadProgress');
+        const fill = document.getElementById('progressFill');
+        bar.style.display = 'block';
 
-          // Get user data for nav
-          let username = user.email.split('@')[0];
-          let isAdmin = false;
+        try {
+          const storageRef = ref(storage, `avatars/${currentUser.uid}/${Date.now()}_${file.name}`);
+          const task = uploadBytesResumable(storageRef, file);
 
-          try {
-            const userDoc = await getDoc(doc(db, 'users', user.uid));
-            if (userDoc.exists()) {
-              const userData = userDoc.data();
-              username = userData.username || username;
-              isAdmin = userData.isAdmin === true;
+          task.on('state_changed',
+            snap => { fill.style.width = (snap.bytesTransferred / snap.totalBytes * 100) + '%'; },
+            err => { showMsg('avatarMsg', 'Upload failed', 'error'); bar.style.display = 'none'; },
+            async () => {
+              const url = await getDownloadURL(task.snapshot.ref);
+              await updateDoc(doc(db, 'users', currentUser.uid), { avatarURL: url });
+              const img = `<img src="${url}" alt="avatar">`;
+              document.getElementById('avatarPreview').innerHTML = img;
+              document.getElementById('sidebarAvatar').innerHTML = img;
+              document.getElementById('removeAvatarBtn').style.display = 'inline-block';
+              bar.style.display = 'none';
+              fill.style.width = '0%';
+              showMsg('avatarMsg', 'Profile picture updated!', 'success');
             }
-          } catch (error) {
-            console.error('Error loading user data:', error);
-          }
+          );
+        } catch (err) { showMsg('avatarMsg', 'Upload failed', 'error'); bar.style.display = 'none'; }
+      });
 
-          const profileLink = document.createElement('a');
-          profileLink.href = '/profile.html';
-          profileLink.className = 'auth-link';
-          profileLink.textContent = username;
-          nav.appendChild(profileLink);
+      window.removeAvatar = async function() {
+        if (!currentUser || !confirm('Remove profile picture?')) return;
+        await updateDoc(doc(db, 'users', currentUser.uid), { avatarURL: null });
+        document.getElementById('avatarPreview').innerHTML = '👤';
+        document.getElementById('sidebarAvatar').innerHTML = '👤';
+        document.getElementById('removeAvatarBtn').style.display = 'none';
+        showMsg('avatarMsg', 'Profile picture removed', 'success');
+      }
 
-          const settingsLink = document.createElement('a');
-          settingsLink.href = '/settings.html';
-          settingsLink.className = 'auth-link';
-          settingsLink.textContent = 'Settings';
-          nav.appendChild(settingsLink);
+      // ── Save bio ──
+      window.saveBio = async function(e) {
+        e.preventDefault();
+        if (!currentUser) return;
+        const bio = document.getElementById('bioInput').value.trim();
+        const btn = document.getElementById('bioBtn');
+        btn.disabled = true; btn.textContent = 'Saving...';
+        try {
+          await updateDoc(doc(db, 'users', currentUser.uid), { bio });
+          showMsg('bioMsg', 'Bio updated!', 'success');
+        } catch (err) { showMsg('bioMsg', 'Failed to save bio', 'error'); }
+        finally { btn.disabled = false; btn.textContent = 'Save Bio'; }
+      }
 
-          if (isAdmin) {
-            const adminLink = document.createElement('a');
-            adminLink.href = '/admin.html';
-            adminLink.className = 'auth-link';
-            adminLink.textContent = 'Admin';
-            nav.appendChild(adminLink);
-          }
+      // ── Save username ──
+      window.saveUsername = async function(e) {
+        e.preventDefault();
+        if (!currentUser) return;
+        const newUsername = document.getElementById('usernameInput').value.trim();
+        const btn = document.getElementById('usernameBtn');
 
-          const logoutLink = document.createElement('a');
-          logoutLink.href = '#';
-          logoutLink.className = 'auth-link';
-          logoutLink.textContent = 'Logout';
-          logoutLink.addEventListener('click', async (e) => {
-            e.preventDefault();
-            await signOut(auth);
-            window.location.href = '/';
-          });
-          nav.appendChild(logoutLink);
+        if (!/^[a-zA-Z0-9_-]{3,20}$/.test(newUsername)) {
+          showMsg('usernameMsg', 'Invalid username format', 'error'); return;
+        }
+
+        btn.disabled = true; btn.textContent = 'Checking...';
+        try {
+          const q = query(collection(db, 'users'), where('username', '==', newUsername));
+          const snap = await getDocs(q);
+          if (!snap.empty) { showMsg('usernameMsg', 'Username already taken', 'error'); return; }
+
+          btn.textContent = 'Saving...';
+          await updateDoc(doc(db, 'users', currentUser.uid), { username: newUsername });
+          document.getElementById('currentUsername').textContent = newUsername;
+          document.getElementById('sidebarUsername').textContent = newUsername;
+          document.getElementById('usernameInput').value = '';
+          showMsg('usernameMsg', 'Username updated!', 'success');
+        } catch (err) { showMsg('usernameMsg', 'Failed to update username', 'error'); }
+        finally { btn.disabled = false; btn.textContent = 'Update Username'; }
+      }
+
+      // ── Auth ──
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          currentUser = user;
+          await loadProfile(user);
         } else {
           window.location.href = '/login.html';
         }
