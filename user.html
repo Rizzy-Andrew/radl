@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/style.css">
+    <title>RADL – Profile</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+      .profile-page {
+        max-width: 1100px;
+        margin: 60px auto;
+        padding: 0 20px;
+        display: flex;
+        gap: 32px;
+        align-items: flex-start;
+      }
+
+      .profile-sidebar {
+        width: 220px;
+        flex-shrink: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        position: sticky;
+        top: 80px;
+        align-self: flex-start;
+      }
+
+      .sidebar-user {
+        padding: 24px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+      }
+
+      .sidebar-avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 3px solid var(--accent2);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+      }
+
+      .sidebar-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+      .sidebar-username {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 22px;
+        color: var(--accent2);
+        word-break: break-all;
+      }
+
+      .sidebar-bio {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.5;
+        padding: 0 20px 20px;
+      }
+
+      .sidebar-stats {
+        padding: 16px 20px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .sidebar-stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+      }
+
+      .sidebar-stat-label { color: var(--text-muted); }
+      .sidebar-stat-value { font-family: 'Bebas Neue', cursive; font-size: 18px; color: var(--accent); }
+
+      .profile-main { flex: 1; min-width: 0; }
+
+      .section-title {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 32px;
+        margin-bottom: 24px;
+        color: var(--text);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .stat-value {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 38px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        font-weight: 700;
+        margin-top: 4px;
+      }
+
+      .chart-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 28px;
+      }
+
+      .chart-card h3 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 22px;
+        margin-bottom: 16px;
+        color: var(--accent2);
+      }
+
+      .chart-container { position: relative; height: 260px; }
+
+      .completions-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+      }
+
+      .completions-card h2 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 26px;
+        margin-bottom: 20px;
+        color: var(--accent2);
+      }
+
+      .completion-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 10px;
+        transition: all 0.2s;
+        text-decoration: none;
+        color: var(--text);
+      }
+
+      .completion-item:hover { border-color: var(--accent2); transform: translateX(4px); }
+
+      .completion-rank {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 22px;
+        color: var(--accent);
+        min-width: 44px;
+      }
+
+      .completion-name { flex: 1; font-weight: 600; font-size: 15px; margin-left: 12px; }
+      .completion-points { font-family: 'Bebas Neue', cursive; font-size: 18px; color: var(--accent2); }
+
+      .difficulty-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-left: 10px;
+      }
+
+      .diff-easy { background: rgba(34,197,94,0.15); color: #22c55e; }
+      .diff-medium { background: rgba(251,191,36,0.15); color: #fbbf24; }
+      .diff-hard { background: rgba(239,68,68,0.15); color: #ef4444; }
+      .diff-insane { background: rgba(168,85,247,0.15); color: #a855f7; }
+      .diff-extreme { background: rgba(220,38,38,0.15); color: #dc2626; }
+
+      .loading { text-align: center; padding: 80px; color: var(--text-muted); font-family: 'Bebas Neue', cursive; font-size: 28px; }
+      .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
+
+      .not-found {
+        text-align: center;
+        padding: 100px 20px;
+      }
+
+      .not-found h2 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 48px;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+      }
+
+      .not-found a { color: var(--accent2); text-decoration: none; }
+
+      .is-you-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: rgba(168,85,247,0.2);
+        color: #a855f7;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+
+      .edit-profile-btn {
+        display: block;
+        margin: 12px 20px;
+        padding: 10px;
+        background: var(--accent2);
+        color: white;
+        text-align: center;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.2s;
+      }
+
+      .edit-profile-btn:hover { background: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <nav></nav>
+
+    <div id="loadingPage" class="loading">Loading profile...</div>
+
+    <div id="notFound" class="not-found" style="display:none;">
+      <h2>User Not Found</h2>
+      <p style="color:var(--text-muted);margin-bottom:24px;">This profile doesn't exist.</p>
+      <a href="/">← Back to Home</a>
+    </div>
+
+    <div class="profile-page" id="profilePage" style="display:none;">
+
+      <!-- Sidebar -->
+      <div class="profile-sidebar">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" id="sidebarAvatar">👤</div>
+          <div class="sidebar-username" id="sidebarUsername"></div>
+        </div>
+        <div class="sidebar-bio" id="sidebarBio"></div>
+        <div class="sidebar-stats">
+          <div class="sidebar-stat">
+            <span class="sidebar-stat-label">Completions</span>
+            <span class="sidebar-stat-value" id="sidebarCompletions">0</span>
+          </div>
+          <div class="sidebar-stat">
+            <span class="sidebar-stat-label">Total Points</span>
+            <span class="sidebar-stat-value" id="sidebarPoints">0</span>
+          </div>
+          <div class="sidebar-stat">
+            <span class="sidebar-stat-label">Hardest</span>
+            <span class="sidebar-stat-value" id="sidebarHardest">-</span>
+          </div>
+        </div>
+        <a href="/profile.html" id="editProfileBtn" class="edit-profile-btn" style="display:none;">✏️ Edit My Profile</a>
+      </div>
+
+      <!-- Main -->
+      <div class="profile-main">
+        <div class="section-title" id="profileTitle"></div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="totalCompletions">0</div>
+            <div class="stat-label">Completions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="totalPoints">0</div>
+            <div class="stat-label">Total Points</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="hardestLevel">-</div>
+            <div class="stat-label">Hardest Level</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="averageRank">-</div>
+            <div class="stat-label">Average Rank</div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h3>Difficulty Breakdown</h3>
+          <div class="chart-container">
+            <canvas id="difficultyChart"></canvas>
+          </div>
+        </div>
+
+        <div class="completions-card">
+          <h2>Completions (<span id="completionCount">0</span>)</h2>
+          <div id="completionsList"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/nav.js"></script>
+
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+      import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+      import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAyNCyGdahYYsLbG1sP8GGKc7AAogyI7V4",
+        authDomain: "radl-652e8.firebaseapp.com",
+        projectId: "radl-652e8",
+        storageBucket: "radl-652e8.firebasestorage.app",
+        messagingSenderId: "453756233220",
+        appId: "1:453756233220:web:a43c80ffe66ab17c4f7751"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv';
+
+      // Get username from URL: /user/rizzyandrew
+      const username = window.location.pathname.split('/user/')[1]?.replace(/\//g, '');
+
+      function parseCSV(text) {
+        const lines = text.trim().split('\n');
+        const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
+        return lines.slice(1).filter(l => l.trim()).map(line => {
+          const values = line.split(',');
+          const obj = {};
+          headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/"/g, '').trim(); });
+          return obj;
+        });
+      }
+
+      function getDifficulty(rating) {
+        const r = (rating || '').toLowerCase();
+        if (r.includes('easy')) return 'Easy Demon';
+        if (r.includes('medium')) return 'Medium Demon';
+        if (r.includes('hard')) return 'Hard Demon';
+        if (r.includes('insane')) return 'Insane Demon';
+        if (r.includes('extreme')) return 'Extreme Demon';
+        return 'Unknown';
+      }
+
+      function getDiffClass(diff) {
+        if (diff.includes('Easy')) return 'diff-easy';
+        if (diff.includes('Medium')) return 'diff-medium';
+        if (diff.includes('Hard')) return 'diff-hard';
+        if (diff.includes('Insane')) return 'diff-insane';
+        if (diff.includes('Extreme')) return 'diff-extreme';
+        return '';
+      }
+
+      async function loadUserProfile(loggedInUid) {
+        if (!username) {
+          document.getElementById('loadingPage').style.display = 'none';
+          document.getElementById('notFound').style.display = 'block';
+          return;
+        }
+
+        try {
+          // Find user by username
+          const q = query(collection(db, 'users'), where('username', '==', username));
+          const snap = await getDocs(q);
+
+          if (snap.empty) {
+            document.getElementById('loadingPage').style.display = 'none';
+            document.getElementById('notFound').style.display = 'block';
+            return;
+          }
+
+          const userData = snap.docs[0].data();
+          const uid = snap.docs[0].id;
+          const completions = userData.completions || [];
+          const isOwnProfile = loggedInUid === uid;
+
+          // Update page title
+          document.title = `${userData.username} – RADL`;
+
+          // Sidebar
+          document.getElementById('sidebarUsername').textContent = userData.username;
+          document.getElementById('sidebarBio').textContent = userData.bio || '';
+          if (userData.avatarURL) {
+            document.getElementById('sidebarAvatar').innerHTML = `<img src="${userData.avatarURL}" alt="avatar">`;
+          }
+
+          // Show "Edit My Profile" button if viewing own profile
+          if (isOwnProfile) {
+            document.getElementById('editProfileBtn').style.display = 'block';
+          }
+
+          // Profile title
+          document.getElementById('profileTitle').innerHTML =
+            `${userData.username}'s Profile ${isOwnProfile ? '<span class="is-you-badge">You</span>' : ''}`;
+
+          // Load levels
+          const res = await fetch(CSV_URL);
+          const csvText = await res.text();
+          const allLevels = parseCSV(csvText);
+          const levelMap = {};
+          allLevels.forEach(l => { levelMap[l.slug] = l; });
+
+          const completedLevels = completions.map(s => levelMap[s]).filter(Boolean)
+            .sort((a, b) => parseInt(a.rank) - parseInt(b.rank));
+
+          const totalPoints = completedLevels.reduce((sum, l) => sum + (parseInt(l.points) || 0), 0);
+          const hardest = completedLevels[0];
+          const avgRank = completedLevels.length
+            ? Math.round(completedLevels.reduce((s, l) => s + parseInt(l.rank), 0) / completedLevels.length)
+            : 0;
+
+          // Stats
+          document.getElementById('totalCompletions').textContent = completedLevels.length;
+          document.getElementById('totalPoints').textContent = totalPoints.toLocaleString();
+          document.getElementById('hardestLevel').textContent = hardest ? `#${hardest.rank}` : '-';
+          document.getElementById('averageRank').textContent = avgRank > 0 ? `#${avgRank}` : '-';
+          document.getElementById('completionCount').textContent = completedLevels.length;
+          document.getElementById('sidebarCompletions').textContent = completedLevels.length;
+          document.getElementById('sidebarPoints').textContent = totalPoints.toLocaleString();
+          document.getElementById('sidebarHardest').textContent = hardest ? `#${hardest.rank}` : '-';
+
+          // Chart
+          const diffCount = { 'Easy Demon': 0, 'Medium Demon': 0, 'Hard Demon': 0, 'Insane Demon': 0, 'Extreme Demon': 0 };
+          completedLevels.forEach(l => { const d = getDifficulty(l.inGameRating); if (diffCount[d] !== undefined) diffCount[d]++; });
+
+          new Chart(document.getElementById('difficultyChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+              labels: Object.keys(diffCount),
+              datasets: [{ data: Object.values(diffCount), backgroundColor: ['rgba(34,197,94,0.8)','rgba(251,191,36,0.8)','rgba(239,68,68,0.8)','rgba(168,85,247,0.8)','rgba(220,38,38,0.8)'], borderWidth: 0 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#fff', font: { size: 12 } } } } }
+          });
+
+          // Completions list
+          const container = document.getElementById('completionsList');
+          if (completedLevels.length === 0) {
+            container.innerHTML = '<div class="empty-state">No completions yet!</div>';
+          } else {
+            container.innerHTML = completedLevels.map(l => {
+              const diff = getDifficulty(l.inGameRating);
+              return `
+                <a class="completion-item" href="/level/${l.slug}">
+                  <div class="completion-rank">#${l.rank}</div>
+                  <div class="completion-name">${l.name} <span class="difficulty-badge ${getDiffClass(diff)}">${diff}</span></div>
+                  <div class="completion-points">${l.points} pts</div>
+                </a>`;
+            }).join('');
+          }
+
+          document.getElementById('loadingPage').style.display = 'none';
+          document.getElementById('profilePage').style.display = 'flex';
+
+        } catch (err) {
+          console.error('Error loading profile:', err);
+          document.getElementById('loadingPage').textContent = 'Failed to load profile.';
+        }
+      }
+
+      onAuthStateChanged(auth, (user) => {
+        loadUserProfile(user?.uid || null);
+      });
+    </script>
+  </body>
+</html>
