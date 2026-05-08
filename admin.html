@@ -405,9 +405,13 @@
     </style>
   </head>
   <body>
-<nav></nav>
-
-
+    <nav>
+      <a href="/#classic">Classic Levels</a>
+      <a href="/#platformer">Platformer Levels</a>
+      <a href="/placement-history.html">Placement History</a>
+      <a href="/submit.html">Submit</a>
+      <a href="/leaderboard.html">Leaderboard</a>
+    </nav>
 
     <div class="admin-container" id="adminPanel" style="display: none;">
       <div class="admin-header">
@@ -618,6 +622,7 @@
 
       window.approveSubmission = async function(submissionId, userId, levelSlug) {
         const notes = document.getElementById(`notes-${submissionId}`)?.value || '';
+        const sub = allSubmissions.find(s => s.id === submissionId);
         if (!confirm('Approve this submission? This will add the level to the user\'s completions.')) return;
 
         try {
@@ -638,6 +643,17 @@
             }
           }
 
+          // Send notification
+          await addDoc(collection(db, 'notifications'), {
+            userId: userId,
+            type: 'approved',
+            levelName: sub?.levelName || levelSlug,
+            levelSlug: levelSlug,
+            notes: notes,
+            read: false,
+            createdAt: new Date()
+          });
+
           alert('Submission approved!');
           await loadSubmissions();
         } catch (error) {
@@ -648,6 +664,7 @@
 
       window.rejectSubmission = async function(submissionId) {
         const notes = document.getElementById(`notes-${submissionId}`)?.value || '';
+        const sub = allSubmissions.find(s => s.id === submissionId);
         if (!confirm('Reject this submission?')) return;
 
         try {
@@ -657,6 +674,18 @@
             reviewedBy: auth.currentUser.uid,
             notes: notes
           });
+
+          // Send notification
+          await addDoc(collection(db, 'notifications'), {
+            userId: sub?.userId || '',
+            type: 'rejected',
+            levelName: sub?.levelName || '',
+            levelSlug: sub?.levelSlug || '',
+            notes: notes,
+            read: false,
+            createdAt: new Date()
+          });
+
           alert('Submission rejected.');
           await loadSubmissions();
         } catch (error) {
@@ -868,6 +897,5 @@
         }
       });
     </script>
-    <script type="module" src="/nav.js"></script>
   </body>
 </html>
