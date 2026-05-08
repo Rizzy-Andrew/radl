@@ -283,10 +283,20 @@
             ? `<p style="text-align:center;margin-bottom:40px"><a href="${level.video}" target="_blank" style="color:var(--accent3)">▶ Watch Video</a></p>`
             : ''}
 
-        <!-- Share Buttons -->
+      <!-- Share Buttons -->
         <div id="shareButtons"></div>
 
-       
+        <!-- Rank History Graph -->
+        ${history.length > 1 ? `
+        <div class="section-header" style="max-width:680px;margin:0 auto 16px auto">
+          <h2>Rank History</h2>
+          <div class="section-line"></div>
+        </div>
+        <div style="max-width:680px;margin:0 auto 40px auto;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;">
+          <canvas id="rankChart"></canvas>
+        </div>
+        ` : ''}
+
         <!-- Placement History -->
         <div class="section-header" style="max-width:680px;margin:0 auto 16px auto">
           <h2>Placement History</h2>
@@ -302,6 +312,62 @@
         </div>
         ${renderVictorsTable(victors)}
       `;
+
+      // Add share buttons
+// Rank history chart
+      if (history.length > 1) {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+        script.onload = () => {
+          const rankKey = Object.keys(history[0]).find(k => k.toLowerCase().includes('rank')) || 'rank';
+          const dateKey = Object.keys(history[0]).find(k => k.toLowerCase().includes('date')) || 'date';
+
+          const labels = history.map(h => h[dateKey] || '');
+          const ranks = history.map(h => parseInt(h[rankKey]) || 0);
+
+          new Chart(document.getElementById('rankChart'), {
+            type: 'line',
+            data: {
+              labels,
+              datasets: [{
+                label: 'Rank',
+                data: ranks,
+                borderColor: '#a855f7',
+                backgroundColor: 'rgba(168,85,247,0.1)',
+                borderWidth: 2,
+                pointBackgroundColor: '#a855f7',
+                pointRadius: 4,
+                tension: 0.3,
+                fill: true
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  reverse: true,
+                  ticks: { color: '#8888aa', stepSize: 1 },
+                  grid: { color: 'rgba(255,255,255,0.05)' },
+                  title: { display: true, text: 'Rank', color: '#8888aa' }
+                },
+                x: {
+                  ticks: { color: '#8888aa' },
+                  grid: { display: false }
+                }
+              },
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: ctx => `Rank #${ctx.raw}`
+                  }
+                }
+              }
+            }
+          });
+        };
+        document.head.appendChild(script);
+      }
 
       // Add share buttons
       const { addShareButtons } = await import('/share.js');
