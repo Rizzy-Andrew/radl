@@ -283,8 +283,29 @@
             ? `<p style="text-align:center;margin-bottom:40px"><a href="${level.video}" target="_blank" style="color:var(--accent3)">▶ Watch Video</a></p>`
             : ''}
 
+        <!-- Share Buttons -->
+        <div id="shareButtons"></div>
+
         <!-- Level Stats -->
-      
+        <div class="level-stats-bar">
+          <div class="level-stat">
+            <span class="level-stat-value">${victors.length}</span>
+            <span class="level-stat-label">Completions</span>
+          </div>
+          <div class="level-stat">
+            <span class="level-stat-value">${level.points}</span>
+            <span class="level-stat-label">Points</span>
+          </div>
+          <div class="level-stat">
+            <span class="level-stat-value">#${level.rank}</span>
+            <span class="level-stat-label">Rank</span>
+          </div>
+          <div class="level-stat">
+            <span class="level-stat-value">${level.inGameRating || '—'}</span>
+            <span class="level-stat-label">Difficulty</span>
+          </div>
+        </div>
+
         <!-- Placement History -->
         <div class="section-header" style="max-width:680px;margin:0 auto 16px auto">
           <h2>Placement History</h2>
@@ -300,6 +321,14 @@
         </div>
         ${renderVictorsTable(victors)}
       `;
+
+      // Add share buttons
+      const { addShareButtons } = await import('/share.js');
+      addShareButtons(
+        document.getElementById('shareButtons'),
+        level.name,
+        `/level/${slug}`
+      );
 
     } catch (err) {
       console.error(err);
