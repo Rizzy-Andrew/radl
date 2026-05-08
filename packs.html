@@ -241,56 +241,12 @@
         }
       }
 
-      onAuthStateChanged(auth, async (user) => {
-        const nav = document.querySelector('nav');
-        nav.querySelectorAll('.auth-link').forEach(l => l.remove());
-
-        if (user) {
-          let username = user.email.split('@')[0];
-          let isAdmin = false;
-
-          try {
-            const userDoc = await getDoc(doc(db, 'users', user.uid));
-            if (userDoc.exists()) {
-              username = userDoc.data().username || username;
-              isAdmin = userDoc.data().isAdmin === true;
-            }
-          } catch (e) {}
-
-          const profileLink = document.createElement('a');
-          profileLink.href = '/profile.html';
-          profileLink.className = 'auth-link';
-          profileLink.textContent = username;
-          nav.appendChild(profileLink);
-
-          const settingsLink = document.createElement('a');
-          settingsLink.href = '/settings.html';
-          settingsLink.className = 'auth-link';
-          settingsLink.textContent = 'Settings';
-          nav.appendChild(settingsLink);
-
-          const logoutLink = document.createElement('a');
-          logoutLink.href = '#';
-          logoutLink.className = 'auth-link';
-          logoutLink.textContent = 'Logout';
-          logoutLink.addEventListener('click', async (e) => {
-            e.preventDefault();
-            await signOut(auth);
-            window.location.href = '/';
-          });
-          nav.appendChild(logoutLink);
-        } else {
-          document.getElementById('loginNotice').style.display = 'block';
-
-          const loginLink = document.createElement('a');
-          loginLink.href = '/login.html';
-          loginLink.className = 'auth-link';
-          loginLink.textContent = 'Login';
-          nav.appendChild(loginLink);
-        }
-
-        await loadPacks(user);
-      });
+   onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    document.getElementById('loginNotice').style.display = 'block';
+  }
+  await loadPacks(user);
+});
     </script>
     <script type="module" src="/nav.js"></script>
   </body>
