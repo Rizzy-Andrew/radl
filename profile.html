@@ -508,7 +508,7 @@
             </div>
           </div>
 
-          <!-- Bio -->
+         <!-- Bio -->
           <div class="settings-card">
             <h2>Bio</h2>
             <div id="bioMsg" class="message"></div>
@@ -518,7 +518,12 @@
                 <textarea id="bioInput" placeholder="Tell us about yourself..." maxlength="500"></textarea>
                 <div class="help-text">Max 500 characters</div>
               </div>
-              <button type="submit" class="save-btn" id="bioBtn">Save Bio</button>
+              <div class="form-group">
+                <label>Current Goal</label>
+                <input type="text" id="goalInput" placeholder="e.g. Beat Bloodbath, Reach top 10..." maxlength="100">
+                <div class="help-text">Max 100 characters. Shows on your public profile.</div>
+              </div>
+              <button type="submit" class="save-btn" id="bioBtn">Save</button>
             </form>
           </div>
 
@@ -666,6 +671,8 @@
           // Settings prefill
           document.getElementById('currentUsername').textContent = userData.username || user.email.split('@')[0];
           document.getElementById('bioInput').value = userData.bio || '';
+          document.getElementById('goalInput').value = userData.goal || '';
+          
           if (userData.avatarURL) {
             document.getElementById('avatarPreview').innerHTML = `<img src="${userData.avatarURL}" alt="avatar">`;
             document.getElementById('removeAvatarBtn').style.display = 'inline-block';
@@ -811,17 +818,18 @@
       }
 
       // ── Save bio ──
-      window.saveBio = async function(e) {
+window.saveBio = async function(e) {
         e.preventDefault();
         if (!currentUser) return;
         const bio = document.getElementById('bioInput').value.trim();
+        const goal = document.getElementById('goalInput').value.trim();
         const btn = document.getElementById('bioBtn');
         btn.disabled = true; btn.textContent = 'Saving...';
         try {
-          await updateDoc(doc(db, 'users', currentUser.uid), { bio });
-          showMsg('bioMsg', 'Bio updated!', 'success');
-        } catch (err) { showMsg('bioMsg', 'Failed to save bio', 'error'); }
-        finally { btn.disabled = false; btn.textContent = 'Save Bio'; }
+          await updateDoc(doc(db, 'users', currentUser.uid), { bio, goal });
+          showMsg('bioMsg', 'Saved!', 'success');
+        } catch (err) { showMsg('bioMsg', 'Failed to save', 'error'); }
+        finally { btn.disabled = false; btn.textContent = 'Save'; }
       }
 
       // ── Save username ──
@@ -829,6 +837,7 @@
         e.preventDefault();
         if (!currentUser) return;
         const newUsername = document.getElementById('usernameInput').value.trim();
+        
         const btn = document.getElementById('usernameBtn');
 
         if (!/^[a-zA-Z0-9_-]{3,20}$/.test(newUsername)) {
