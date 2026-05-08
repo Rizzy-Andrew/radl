@@ -406,7 +406,22 @@
 
           // Sidebar
           document.getElementById('sidebarUsername').textContent = userData.username;
-          document.getElementById('sidebarBio').textContent = userData.bio || '';
+          document.getElementById('sidebarBio').innerHTML = `
+            ${userData.bio ? `<p style="margin-bottom:${userData.goal ? '12px' : '0'}">${userData.bio}</p>` : ''}
+            ${userData.goal ? `
+              <div style="
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-left: 3px solid var(--accent2);
+                border-radius: 6px;
+                padding: 8px 12px;
+                font-size: 12px;
+              ">
+                <div style="color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;font-size:10px;margin-bottom:4px;">🎯 Current Goal</div>
+                <div style="color:var(--text);font-weight:600;">${userData.goal}</div>
+              </div>
+            ` : ''}
+          `;
           if (userData.avatarURL) {
             document.getElementById('sidebarAvatar').innerHTML = `<img src="${userData.avatarURL}" alt="avatar">`;
           }
