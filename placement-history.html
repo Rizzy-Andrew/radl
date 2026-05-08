@@ -132,43 +132,19 @@
   const auth = getAuth(app);
 
   // Check auth state and update nav
-  onAuthStateChanged(auth, (user) => {
-    const nav = document.querySelector('nav');
-    
-    // Remove existing auth links
-    const existingAuthLinks = nav.querySelectorAll('.auth-link');
-    existingAuthLinks.forEach(link => link.remove());
-
-    if (user) {
-      // User is logged in - show profile and logout
-      const username = user.email.split('@')[0]; // Use email prefix as username
-      
-      const profileLink = document.createElement('a');
-      profileLink.href = '/profile.html';
-      profileLink.className = 'auth-link';
-      profileLink.textContent = username;
-      nav.appendChild(profileLink);
-
-      const logoutLink = document.createElement('a');
-      logoutLink.href = '#';
-      logoutLink.className = 'auth-link';
-      logoutLink.textContent = 'Logout';
-      logoutLink.addEventListener('click', async (e) => {
-        e.preventDefault();
-        await signOut(auth);
-        window.location.href = '/';
-      });
-      nav.appendChild(logoutLink);
-    } else {
-      // User is logged out - show login
-      const loginLink = document.createElement('a');
-      loginLink.href = '/login.html';
-      loginLink.className = 'auth-link';
-      loginLink.textContent = 'Login';
-      nav.appendChild(loginLink);
-    }
-  });
-</script>
+ onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    await loadForm();
+  } else {
+    document.getElementById('submit-content').innerHTML = `
+      <div class="login-required">
+        <h3>Login Required</h3>
+        <p>You need to <a href="/login.html">log in</a> to submit levels.</p>
+      </div>
+    `;
+  }
+});</script>
     <script type="module" src="/nav.js"></script>
   </body>
 </html>
