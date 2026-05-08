@@ -240,6 +240,25 @@ onAuthStateChanged(auth, async (user) => {
   });
 
   // Theme toggle
+  // Random level button
+  const randomBtn = document.createElement('button');
+  randomBtn.className = 'theme-toggle';
+  randomBtn.textContent = '🎲';
+  randomBtn.title = 'Random Level';
+  randomBtn.addEventListener('click', async () => {
+    randomBtn.textContent = '⏳';
+    try {
+      const res = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv');
+      const text = await res.text();
+      const lines = text.trim().split('\n').slice(1).filter(l => l.trim());
+      const randomLine = lines[Math.floor(Math.random() * lines.length)];
+      const slug = randomLine.split(',')[2]?.replace(/"/g, '').trim();
+      if (slug) window.location.href = `/level/${slug}`;
+    } catch (e) {
+      randomBtn.textContent = '🎲';
+    }
+  });
+  nav.appendChild(randomBtn);
   const themeBtn = document.createElement('button');
   themeBtn.className = 'theme-toggle';
   themeBtn.textContent = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
