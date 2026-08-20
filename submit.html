@@ -4,140 +4,39 @@
     <link rel="stylesheet" href="style.css">
     <title>RADL – Submit</title>
     <style>
-      .submit-form {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 32px;
-        max-width: 580px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 10;
-      }
-
-      .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin-bottom: 20px;
-      }
-
-      .form-group label {
-        font-size: 11px;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        color: var(--accent2);
-        font-weight: 800;
-      }
-
-      .form-group input,
-      .form-group select {
-        background: var(--bg);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 12px 16px;
-        color: var(--text);
-        font-family: 'Shantell Sans', cursive;
-        font-size: 15px;
-        outline: none;
-        transition: border-color 0.2s, box-shadow 0.2s;
-      }
-
-      .form-group input:focus,
-      .form-group select:focus {
-        border-color: var(--accent2);
-        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
-      }
-
-      .form-group select option {
-        background: var(--surface);
-        color: var(--text);
-      }
-
-      .form-note {
-        font-size: 12px;
-        color: var(--text-muted);
-        margin-top: 4px;
-      }
-
-      .submit-btn {
-        width: 100%;
-        padding: 14px;
-        background: linear-gradient(135deg, var(--accent), var(--accent2));
-        border: none;
-        border-radius: 8px;
-        color: white;
-        font-family: 'Shantell Sans', cursive;
-        font-size: 16px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: opacity 0.2s, transform 0.2s;
-        margin-top: 8px;
-      }
-
-      .submit-btn:hover {
-        opacity: 0.9;
-        transform: translateY(-2px);
-      }
-
-      .submit-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        transform: none;
-      }
-
-      .status-msg {
-        text-align: center;
-        margin-top: 16px;
-        font-size: 15px;
-        min-height: 24px;
-      }
-
+      .submit-form { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 32px; max-width: 580px; margin: 0 auto; position: relative; z-index: 10; }
+      .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+      .form-group label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent2); font-weight: 800; }
+      .form-group input, .form-group select { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; color: var(--text); font-family: 'Shantell Sans', cursive; font-size: 15px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+      .form-group input:focus, .form-group select:focus { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15); }
+      .form-group select option { background: var(--surface); color: var(--text); }
+      .form-note { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+      .submit-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; border-radius: 8px; color: white; font-family: 'Shantell Sans', cursive; font-size: 16px; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.2s; margin-top: 8px; }
+      .submit-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+      .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+      .status-msg { text-align: center; margin-top: 16px; font-size: 15px; min-height: 24px; }
       .status-msg.success { color: #4ade80; }
       .status-msg.error { color: #f87171; }
-
-      .login-required {
-        text-align: center;
-        padding: 80px 20px;
-        color: var(--text-muted);
-      }
-
-      .login-required h3 {
-        font-size: 24px;
-        margin-bottom: 16px;
-        color: var(--text);
-      }
-
-      .login-required a {
-        color: var(--accent2);
-        text-decoration: none;
-        font-weight: 700;
-      }
-
-      .login-required a:hover {
-        text-decoration: underline;
-      }
+      .login-required { text-align: center; padding: 80px 20px; color: var(--text-muted); }
+      .login-required h3 { font-size: 24px; margin-bottom: 16px; color: var(--text); }
+      .login-required a { color: var(--accent2); text-decoration: none; font-weight: 700; }
+      .login-required a:hover { text-decoration: underline; }
     </style>
   </head>
   <body>
-<nav></nav>
-
-
+    <nav></nav>
     <div class="container">
       <header>
         <h1>Submit</h1>
         <p class="subtitle">Completed a level? <span>Let us know!</span></p>
       </header>
-
-      <div id="submit-content">
-        <p style="text-align:center;color:var(--text-muted);padding:80px 0">Loading...</p>
-      </div>
+      <div id="submit-content"><p style="text-align:center;color:var(--text-muted);padding:80px 0">Loading...</p></div>
     </div>
 
     <script type="module">
       import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-      import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-      import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+      import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+      import { getFirestore, doc, getDoc, updateDoc, arrayUnion, collection, addDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
       const firebaseConfig = {
         apiKey: "AIzaSyAyNCyGdahYYsLbG1sP8GGKc7AAogyI7V4",
@@ -153,7 +52,6 @@
       const db = getFirestore(app);
 
       const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8piEYpPcelXSiPpyaakaU1phI-WJEKP475A_4-lKhtCRONRqopePPjra8wQyjyMWQIgZ79rH3mQUA/pub?gid=0&single=true&output=csv";
-      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbDv_ccp48CWIosthU4_qRx6Zged0wBvSgvR_w4uUL4LTrihCzRBuCqov3MduLwbMemg/exec";
 
       let allLevels = [];
       let currentUser = null;
@@ -163,9 +61,9 @@
         let current = '';
         let inQuotes = false;
         for (let i = 0; i < line.length; i++) {
-          if (line[i] === '"') { inQuotes = !inQuotes; }
+          if (line[i] === '"') inQuotes = !inQuotes;
           else if (line[i] === ',' && !inQuotes) { result.push(current); current = ''; }
-          else { current += line[i]; }
+          else current += line[i];
         }
         result.push(current);
         return result;
@@ -182,57 +80,55 @@
         });
       }
 
-      // Check auth state
-     onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    currentUser = user;
-    await loadForm();
-  } else {
-    document.getElementById('submit-content').innerHTML = `
-      <div class="login-required">
-        <h3>Login Required</h3>
-        <p>You need to <a href="/login.html">log in</a> to submit levels.</p>
-      </div>
-    `;
-  }
-});
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          currentUser = user;
+          await loadForm();
+        } else {
+          document.getElementById('submit-content').innerHTML = `
+            <div class="login-required">
+              <h3>Login Required</h3>
+              <p>You need to <a href="/login.html">log in</a> to submit levels.</p>
+            </div>`;
+        }
+      });
+
       async function loadForm() {
         const content = document.getElementById('submit-content');
+        try {
+          const text = await fetch(SHEET_URL).then(r => r.text());
+          allLevels = parseCSV(text).sort((a, b) => Number(a.rank) - Number(b.rank));
 
-        // Load levels
-        const text = await fetch(SHEET_URL).then(r => r.text());
-        allLevels = parseCSV(text).sort((a, b) => Number(a.rank) - Number(b.rank));
+          const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+          const userData = userDoc.data();
+          const completions = userData?.completions || [];
 
-        // Get user's existing completions
-        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-        const userData = userDoc.data();
-        const completions = userData?.completions || [];
+          content.innerHTML = `
+            <div class="submit-form">
+              <div class="form-group">
+                <label>Level</label>
+                <select id="level">
+                  <option value="">Select a level...</option>
+                  ${allLevels.map(l => {
+                    const alreadyCompleted = completions.includes(l.slug);
+                    return `<option value="${l.slug}" ${alreadyCompleted ? 'disabled' : ''}>#${l.rank} – ${l.name} ${alreadyCompleted ? '(already completed)' : ''}</option>`;
+                  }).join('')}
+                </select>
+              </div>
 
-        content.innerHTML = `
-          <div class="submit-form">
-            <div class="form-group">
-              <label>Level</label>
-              <select id="level">
-                <option value="">Select a level...</option>
-                ${allLevels.map(l => {
-                  const alreadyCompleted = completions.includes(l.slug);
-                  return `<option value="${l.slug}" ${alreadyCompleted ? 'disabled' : ''}>
-                    #${l.rank} – ${l.name} ${alreadyCompleted ? '(already completed)' : ''}
-                  </option>`;
-                }).join('')}
-              </select>
-            </div>
+              <div class="form-group">
+                <label>Video Link <span style="color:var(--text-muted);font-size:11px">(optional)</span></label>
+                <input type="url" id="video" placeholder="https://youtube.com/watch?v=..." />
+                <span class="form-note">Must be a YouTube link if provided. Required for Insane/Extreme demons.</span>
+              </div>
 
-            <div class="form-group">
-              <label>Video Link <span style="color:var(--text-muted);font-size:11px">(optional)</span></label>
-              <input type="url" id="video" placeholder="https://youtube.com/watch?v=..." />
-              <span class="form-note">Must be a YouTube link if provided. Required for Insane/Extreme demons.</span>
-            </div>
-
-            <button class="submit-btn" id="submit-btn" onclick="window.submitCompletion()">Submit Run</button>
-            <p class="status-msg" id="status"></p>
-          </div>
-        `;
+              <button class="submit-btn" id="submit-btn" onclick="window.submitCompletion()">Submit Run</button>
+              <p class="status-msg" id="status"></p>
+            </div>`;
+        } catch (err) {
+          console.error('Error loading submit form:', err);
+          content.innerHTML = '<p style="text-align:center;color:#f87171;padding:80px 0">Could not load levels. Please try again.</p>';
+        }
       }
 
       function isYouTube(url) {
@@ -245,15 +141,8 @@
         const status = document.getElementById('status');
         const btn = document.getElementById('submit-btn');
 
-        if (!levelSlug) {
-          showStatus('Please select a level.', 'error');
-          return;
-        }
-
-        if (video && !isYouTube(video)) {
-          showStatus('Video must be a YouTube link.', 'error');
-          return;
-        }
+        if (!levelSlug) { showStatus('Please select a level.', 'error'); return; }
+        if (video && !isYouTube(video)) { showStatus('Video must be a YouTube link.', 'error'); return; }
 
         const level = allLevels.find(l => l.slug === levelSlug);
         const difficulty = level?.inGameRating || '';
@@ -269,33 +158,37 @@
 
         try {
           if (isHardcore) {
-            // Send to Google Sheets for manual review
-            await fetch(SCRIPT_URL, {
-              method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                player: currentUser.email.split('@')[0],
-                level: levelSlug,
-                video: video
-              })
+            // Insane/Extreme runs now go directly into Firestore, where the admin panel expects them.
+            // Easy/Medium/Hard remain automatic and bypass review.
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            const userData = userDoc.data() || {};
+            const username = userData.username || currentUser.email?.split('@')[0] || 'Unknown';
+
+            await addDoc(collection(db, 'submissions'), {
+              userId: currentUser.uid,
+              username,
+              levelSlug: levelSlug,
+              levelName: level?.name || levelSlug,
+              difficulty: difficulty,
+              videoURL: video,
+              status: 'pending',
+              notes: '',
+              submittedAt: new Date()
             });
+
             showStatus('✅ Submitted for review! We\'ll approve it shortly.', 'success');
           } else {
-            // Auto-approve: add to user's completions
             await updateDoc(doc(db, 'users', currentUser.uid), {
               completions: arrayUnion(levelSlug)
             });
             showStatus('✅ Level added to your profile!', 'success');
-            
-            // Reload form to update disabled levels
             setTimeout(() => loadForm(), 1500);
           }
 
           document.getElementById('level').value = '';
           document.getElementById('video').value = '';
         } catch (err) {
-          console.error(err);
+          console.error('Submission error:', err);
           showStatus('❌ Something went wrong. Try again.', 'error');
         }
 
